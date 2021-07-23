@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grael2", "Grael2.0\Grael2.csproj", "{A26A222C-681B-4136-A023-AF32893FA99B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A26A222C-681B-4136-A023-AF32893FA99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A26A222C-681B-4136-A023-AF32893FA99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A26A222C-681B-4136-A023-AF32893FA99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A26A222C-681B-4136-A023-AF32893FA99B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6A6C9B7-7C33-4175-A0A6-FD71614C38FD}
+	EndGlobalSection
+EndGlobal
