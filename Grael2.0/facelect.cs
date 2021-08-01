@@ -279,7 +279,7 @@ namespace Grael2
             tx_fletLetras.ReadOnly = true;
             if (Tx_modo.Text == "NUEVO" && v_estcaj == codAbie)      // caja esta abierta?
             {
-                if (fshoy != Grael2.Program.vg_fcaj)  // fecha de la caja vs fecha de hoy
+                /* if (fshoy != Grael2.Program.vg_fcaj)  // fecha de la caja vs fecha de hoy
                 {
                     MessageBox.Show("Las fechas no coinciden" + Environment.NewLine +
                         "Fecha de caja vs Fecha actual", "Caja fuera de fecha", MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -288,12 +288,12 @@ namespace Grael2
                 else
                 {
                     tx_idcaja.Text = v_idcaj;
-                }
+                } */
             }
             if (Tx_modo.Text == "NUEVO")
             {
-                rb_si.Enabled = true;
-                rb_no.Enabled = true;
+                // rb_si.Enabled = true;
+                // rb_no.Enabled = true;
                 if (codsuser_cu.Contains(asd)) chk_cunica.Enabled = true;
                 else chk_cunica.Enabled = false;
                 if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
@@ -302,6 +302,7 @@ namespace Grael2
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
             cargaunica();
+            pan_pago.Enabled = false;
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
         {
@@ -634,7 +635,7 @@ namespace Grael2
                 // datos para el combobox documento de venta
                 cmb_tdv.Items.Clear();
                 string consu = "select distinct a.idcodice,a.descrizionerid,a.enlace1,a.codsunat,b.glosaser,b.serie " +
-                    "from desc_tdv a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and b.sede=@loca";
+                    "from desc_tdo a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and b.sede=@loca";
                 using (MySqlCommand cdv = new MySqlCommand(consu, conn))
                 {
                     cdv.Parameters.AddWithValue("@bloq", 1);
@@ -690,7 +691,7 @@ namespace Grael2
                         cmb_plazoc.ValueMember = "idcodice";
                     }
                 }
-                // jalamos la caja
+                /*      / jalamos la caja
                 using (MySqlCommand micon = new MySqlCommand("select id,fechope,statusc from cabccaja where loccaja=@luc order by id desc limit 1", conn))
                 {
                     micon.Parameters.AddWithValue("@luc", v_clu);
@@ -703,6 +704,7 @@ namespace Grael2
                         }
                     }
                 }
+                */
             }
         }
         private bool valiVars()                 // valida existencia de datos en variables del form
@@ -886,8 +888,8 @@ namespace Grael2
                             "left join anag_cli b1 on b1.tipdoc=a.tidoregri and b1.ruc=a.nudoregri " +
                             "left join anag_cli b2 on b2.tipdoc=a.tidodegri and b2.ruc=a.nudodegri " +
                             "left join desc_mon m on m.idcodice=a.tipmongri " +
-                            "left join desc_loc lo on lo.idcodice=a.locorigen " +
-                            "left join desc_loc ld on ld.idcodice=a.locdestin " +
+                            "left join desc_sds lo on lo.idcodice=a.locorigen " +
+                            "left join desc_sds ld on ld.idcodice=a.locdestin " +
                             "WHERE a.sergui = @ser AND a.numgui = @num AND a.estadoser not IN(@est) AND c.fecdocvta IS NULL";
                         using (MySqlCommand micon = new MySqlCommand(consulta, conn))
                         {

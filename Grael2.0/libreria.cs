@@ -97,7 +97,7 @@ namespace Grael2
         public static string serv = ConfigurationManager.AppSettings["serv"].ToString();
         public static string port = ConfigurationManager.AppSettings["port"].ToString();
         public static string usua = ConfigurationManager.AppSettings["user"].ToString();
-        public static string cont = ConfigurationManager.AppSettings["pass"].ToString();
+        public static string cont = Decrypt(ConfigurationManager.AppSettings["pass"].ToString(), true) + usua; // ConfigurationManager.AppSettings["pass"].ToString();
         public static string data = ConfigurationManager.AppSettings["data"].ToString();
         //public static string ctl = ConfigurationManager.AppSettings["ConnectionLifeTime"].ToString();
         // conexion a la base de datos
@@ -218,7 +218,7 @@ namespace Grael2
             //Return the encrypted data into unreadable string format
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
-        public string Decrypt(string cipherString, bool useHashing)
+        public static string Decrypt(string cipherString, bool useHashing)
         {
             byte[] keyArray;
             //get the byte code of the string
@@ -1176,7 +1176,7 @@ namespace Grael2
             if (conl.State == ConnectionState.Open)
             {
                 string consulta = "select b.descrizionerid from usuarios a " + 
-                    "left join desc_loc b on b.idcodice=a.local " +
+                    "left join desc_sds b on b.idcodice=a.local " +
                     "where a.nom_user=@asd";
                 MySqlCommand micon = new MySqlCommand(consulta, conl);
                 micon.Parameters.AddWithValue("@asd", codigo);
@@ -1575,7 +1575,7 @@ namespace Grael2
         public string[] dirloc(string sede)                                 // retorna direccion sede desde desc_tdi
         {
             string []dires = new string[]{"","","",""};
-            string consulta = "select deta1,deta2,deta3,deta4 from desc_loc where idcodice=@cod";
+            string consulta = "select deta1,deta2,deta3,deta4 from desc_sds where idcodice=@cod";
             MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
             conl.Open();
             if (conl.State == ConnectionState.Open)
@@ -1600,11 +1600,11 @@ namespace Grael2
             }
             return dires;
         }
-        public string dirloca(string sede)                                  // retorna direccion desde desc_loc
+        public string dirloca(string sede)                                  // retorna direccion desde desc_sds
         {
             string retorna = "";
             string consulta = "select concat(trim(deta1),' - ',trim(deta2),' - ',trim(deta3),' - ',trim(deta4)) " +
-                "from desc_loc where idcodice=@cod";
+                "from desc_sds where idcodice=@cod";
             MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
             conl.Open();
             if (conl.State == ConnectionState.Open)
@@ -1811,7 +1811,7 @@ namespace Grael2
         public string serlocs(string loca)                                  // retorna la serie del local
         {
             string retorna = "";
-            string consulta = "select codigo from desc_loc where idcodice=@loc";
+            string consulta = "select codigo from desc_sds where idcodice=@loc";
             MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
             conl.Open();
             if (conl.State == ConnectionState.Open)

@@ -166,7 +166,7 @@ namespace Grael2
             pn_menu.Controls.Add(menuStrip1);
             menuStrip1.Dock = DockStyle.Top;
             //
-            //dataload();                                         // jalamos datos comunes a todo el sistema
+            dataload();                                         // jalamos datos comunes a todo el sistema
         }
         private void jalainfo()
         {
@@ -319,7 +319,7 @@ namespace Grael2
                     {
                         DataTable dtu = new DataTable();
                         da.Fill(dtu);
-                        // CacheManager.AddItem("ubigeos", dtu, 3600);
+                        CacheManager.AddItem("ubigeos", dtu, 3600);
                     }
                 }
             }
