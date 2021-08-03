@@ -17,6 +17,7 @@ namespace Grael2
         public static string usua = ConfigurationManager.AppSettings["user"].ToString();
         public static string cont = Decrypt(ConfigurationManager.AppSettings["pass"].ToString(), true) + usua;    // ConfigurationManager.AppSettings["pass"].ToString();
         public static string data = ConfigurationManager.AppSettings["data"].ToString();
+        public static string dataG = "erp_grael";
         //public static string ctl = ConfigurationManager.AppSettings["ConnectionLifeTime"].ToString();
         string DB_CONN_STR = "server=" + serv + ";uid=" + usua + ";pwd=" + cont + ";database=" + data + ";";
 

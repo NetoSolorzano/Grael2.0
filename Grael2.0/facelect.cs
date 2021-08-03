@@ -119,6 +119,7 @@ namespace Grael2
 
         // string de conexion
         string DB_CONN_STR = "server=" + login.serv + ";uid=" + login.usua + ";pwd=" + login.cont + ";database=" + login.data + ";";
+        string db_conn_grael = "server=" + login.serv + ";uid=" + login.usua + ";pwd=" + login.cont + ";database=" + login.dataG + ";";
 
         DataTable dttd0 = new DataTable();
         DataTable dttd1 = new DataTable();
@@ -843,11 +844,13 @@ namespace Grael2
                 // validamos que la GR: 1.exista, 2.No este facturada, 3.No este anulada
                 // y devolvemos una fila con los datos del remitente y otra fila los datos del destinatario
                 string hay = "no";
-                using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
+                using (MySqlConnection conn = new MySqlConnection(db_conn_grael))   // DB_CONN_STR
                 {
                     lib.procConn(conn);
-                    string cons = "select fecguitra,totguitra,estadoser,fecdocvta,tipdocvta,serdocvta,numdocvta,codmonvta,totdocvta,saldofina " +
-                        "from controlg where serguitra=@ser and numguitra=@num";
+                    //string cons = "select fecguitra,totguitra,estadoser,fecdocvta,tipdocvta,serdocvta,numdocvta,codmonvta,totdocvta,saldofina " +
+                    //    "from controlg where serguitra=@ser and numguitra=@num";
+                    string cons = "select fecgr,totnot,status,fecdv,tipdv,serdv,cordv,mondv,totdv,saldo " +
+                        "from mactacte where sergr=@ser and corgr=@num";
                     using (MySqlCommand mic1 = new MySqlCommand(cons, conn))
                     {
                         mic1.Parameters.AddWithValue("@ser", serie);
@@ -858,9 +861,9 @@ namespace Grael2
                             {
                                 if (dr.Read())
                                 {
-                                    if (dr.GetString("numdocvta").Trim() != "") hay = "sif"; // si hay guía pero ya esta facturado
+                                    if (dr.GetString("cordv").Trim() != "") hay = "sif"; // si hay guía pero ya esta facturado
                                     else hay = "sin";    // si hay guía y no tiene factura
-                                    if (dr.GetString("saldofina") != dr.GetString("totguitra") && dr.GetDecimal("saldofina") > 0)
+                                    if (dr.GetString("saldo") != dr.GetString("totnot") && dr.GetDecimal("saldo") > 0)
                                     {
                                         MessageBox.Show("No esta permitido generar un documento" + Environment.NewLine + 
                                             "de venta de una guía que tiene pago parcial","Atención - no puede continuar");
@@ -876,21 +879,21 @@ namespace Grael2
                     }
                     if (hay == "sin")
                     {
-                        string consulta = "SELECT a.tidoregri,a.nudoregri,b1.razonsocial as nombregri,b1.direcc1 as direregri,b1.ubigeo as ubigregri,ifnull(b1.email,'') as emailR,ifnull(b1.numerotel1,'') as numtel1R," +
-                            "ifnull(b1.numerotel2,'') as numtel2R,a.tidodegri,a.nudodegri,b2.razonsocial as nombdegri,b2.direcc1 as diredegri,b2.ubigeo as ubigdegri,ifnull(b2.email,'') as emailD," +
-                            "ifnull(b2.numerotel1,'') as numtel1D,ifnull(b2.numerotel2,'') as numtel2D,a.tipmongri,a.totgri,a.salgri,SUM(d.cantprodi) AS bultos,date(a.fechopegr) as fechopegr,a.tipcamgri," +
-                            "max(d.descprodi) AS descrip,ifnull(m.descrizionerid,'') as mon,a.totgrMN,a.codMN,c.fecdocvta,b1.tiposocio as tipsrem,b2.tiposocio as tipsdes,a.docsremit," +
-                            "a.plaplagri,a.carplagri,a.autplagri,a.confvegri,concat(lo.descrizionerid,' - ',ld.descrizionerid) as orides,c.saldofina," +
-                            "a.direregri as dirpartida,a.ubigregri as ubigpartida,a.diredegri as dirllegada,a.ubigdegri as ubigllegada,ifnull(a.fechplani,'') as fechplani,a.proplagri,ifnull(p.RazonSocial,'') as RazonSocial " +
-                            "from cabguiai a left join detguiai d on d.idc=a.id " +
-                            "LEFT JOIN controlg c ON c.serguitra = a.sergui AND c.numguitra = a.numgui " +
-                            "left join anag_for p on p.ruc=a.proplagri " +
-                            "left join anag_cli b1 on b1.tipdoc=a.tidoregri and b1.ruc=a.nudoregri " +
-                            "left join anag_cli b2 on b2.tipdoc=a.tidodegri and b2.ruc=a.nudodegri " +
-                            "left join desc_mon m on m.idcodice=a.tipmongri " +
-                            "left join desc_sds lo on lo.idcodice=a.locorigen " +
-                            "left join desc_sds ld on ld.idcodice=a.locdestin " +
-                            "WHERE a.sergui = @ser AND a.numgui = @num AND a.estadoser not IN(@est) AND c.fecdocvta IS NULL";
+                        string consulta = "SELECT a.docrem,a.numdre,b1.nombre as nombregri,b1.direc as direregri,b1.ubigeo as ubigregri,ifnull(b1.email,'') as emailR,ifnull(b1.telef1,'') as numtel1R," +
+                            "ifnull(b1.telef2, '') as numtel2R,a.docdes,a.numdes,b2.nombre as nombdegri,b2.direc as diredegri,b2.ubigeo as ubigdegri,ifnull(b2.email, '') as emailD," +
+                            "ifnull(b2.telef1, '') as numtel1D,ifnull(b2.telef2, '') as numtel2D,a.moneda,a.doctot,a.saldo,SUM(d.cantid) AS bultos, date(a.fechope) as fechopegr,a.tipcam," +
+                            "max(d.descrip) AS descrip, ifnull(m.descrizionerid, '') as mon,a.doctot as totgrMN,a.moneda as codMN,c.fecdv,' ' as tipsrem,' ' as tipsdes,a.docremi," +
+                            "a.placa,a.carreta,a.cerinsc,a.nfv,concat(lo.descrizionerid, ' - ', ld.descrizionerid) as orides,c.saldo,a.dirorig1 as dirpartida," +
+                            "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial " +
+                            "from magrem a left join detagrem d on d.idc = a.id " +
+                            "LEFT JOIN mactacte c ON c.sergr = a.sergre AND c.corgr = a.corgre " +
+                            "left join anag_for p on p.ruc = a.ruc " +
+                            "left join anag_cli b1 on b1.docu = a.docrem and b1.ruc = a.numdre " +
+                            "left join anag_cli b2 on b2.docu = a.docdes and b2.ruc = a.numdes " +
+                            "left join desc_mon m on m.idcodice = a.moneda " +
+                            "left join desc_sds lo on lo.idcodice = a.origen " +
+                            "left join desc_sds ld on ld.idcodice = a.destino " +
+                            "WHERE a.sergre = @ser AND a.corgre = @num AND a.status not IN(@est) AND c.fecdv IS NULL";
                         using (MySqlCommand micon = new MySqlCommand(consulta, conn))
                         {
                             micon.Parameters.AddWithValue("@ser", serie);
@@ -902,8 +905,8 @@ namespace Grael2
                                 {
                                     if (!dr.IsDBNull(0))    //  && dr[24] == DBNull.Value
                                     {
-                                        datcltsR[0] = dr.GetString("tidoregri");        // datos del remitente de la GR
-                                        datcltsR[1] = dr.GetString("nudoregri");
+                                        datcltsR[0] = dr.GetString("docrem");        // datos del remitente de la GR
+                                        datcltsR[1] = dr.GetString("numdre");
                                         datcltsR[2] = dr.GetString("nombregri");
                                         datcltsR[3] = dr.GetString("direregri");
                                         datcltsR[4] = dr.GetString("ubigregri");
@@ -912,8 +915,8 @@ namespace Grael2
                                         datcltsR[7] = dr.GetString("numtel2R");
                                         datcltsR[8] = dr.GetString("tipsrem");
                                         //
-                                        datcltsD[0] = dr.GetString("tidodegri");        // datos del destinatario de la GR
-                                        datcltsD[1] = dr.GetString("nudodegri");
+                                        datcltsD[0] = dr.GetString("docdes");        // datos del destinatario de la GR
+                                        datcltsD[1] = dr.GetString("numdes");
                                         datcltsD[2] = dr.GetString("nombdegri");
                                         datcltsD[3] = dr.GetString("diredegri");
                                         datcltsD[4] = dr.GetString("ubigdegri");
@@ -926,20 +929,20 @@ namespace Grael2
                                         datguias[1] = (dr.IsDBNull(20)) ? "" : dr.GetString("descrip");         // descrip
                                         datguias[2] = (dr.IsDBNull(19)) ? "0" : dr.GetString("bultos");          // cant bultos
                                         datguias[3] = dr.GetString("mon");             // nombre moneda de la GR
-                                        datguias[4] = dr.GetString("totgri");          // valor GR en su moneda
+                                        datguias[4] = dr.GetString("doctot");          // valor GR en su moneda
                                         datguias[5] = dr.GetString("totgrMN");         // valor GR en moneda local
                                         datguias[6] = dr.GetString("codMN");            // codigo moneda local
-                                        datguias[7] = dr.GetString("tipmongri");        // codigo moneda de la guía
-                                        datguias[8] = dr.GetString("tipcamgri");     // tipo de cambio de la GR
+                                        datguias[7] = dr.GetString("moneda");           // codigo moneda de la guía
+                                        datguias[8] = dr.GetString("tipcam");           // tipo de cambio de la GR
                                         var a = dr.GetString("fechopegr").Substring(0, 10);
                                         datguias[9] = a.Substring(6,4) + "-" + a.Substring(3,2) + "-" + a.Substring(0,2);     // fecha de la GR
-                                        datguias[10] = dr.GetString("docsremit");
-                                        datguias[11] = dr.GetString("plaplagri"); 
-                                        datguias[12] = dr.GetString("carplagri");
-                                        datguias[13] = dr.GetString("autplagri");
-                                        datguias[14] = dr.GetString("confvegri");
+                                        datguias[10] = dr.GetString("docremi");
+                                        datguias[11] = dr.GetString("placa"); 
+                                        datguias[12] = dr.GetString("carreta");
+                                        datguias[13] = dr.GetString("cerinsc");
+                                        datguias[14] = dr.GetString("nfv");
                                         datguias[15] = dr.GetString("orides");
-                                        datguias[16] = dr.GetString("salgri");
+                                        datguias[16] = dr.GetString("saldo");
                                         //
                                         datcargu[0] = dr.GetString("dirpartida");
                                         datcargu[4] = dr.GetString("ubigpartida");   // ubigeo punto partida
@@ -953,11 +956,11 @@ namespace Grael2
                                         datcargu[6] = aa[0];   // depart. pto. llegada
                                         datcargu[7] = aa[1];   // provin. pto. llegada
                                         datcargu[8] = aa[2];   // distri. pto. llegada
-                                        datcargu[10] = dr.GetString("proplagri");  // ruc del camion
+                                        datcargu[10] = dr.GetString("ruc");  // ruc del camion
                                         datcargu[11] = dr.GetString("RazonSocial");  // razon social del ruc
                                         datcargu[12] = dr.GetString("fechplani");    // fecha inicio traslado
                                         //
-                                        tx_dat_saldoGR.Text = dr.GetString("salgri");
+                                        tx_dat_saldoGR.Text = dr.GetString("saldo");
                                         retorna = true;
                                     }
                                 }
@@ -3492,7 +3495,7 @@ namespace Grael2
             if (Tx_modo.Text != "NUEVO" && tx_numero.Text.Trim() != "")
             {
                 // en el caso de las pre guias el numero es el mismo que el ID del registro
-                tx_numero.Text = lib.Right("00000000" + tx_numero.Text, 8);
+                tx_numero.Text = lib.Right("0000000" + tx_numero.Text, 7);
                 //tx_idr.Text = tx_numero.Text;
                 jalaoc("sernum");
                 dataGridView1.Rows.Clear();
@@ -3501,7 +3504,7 @@ namespace Grael2
         }
         private void tx_serie_Leave(object sender, EventArgs e)
         {
-            tx_serie.Text = lib.Right("0000" + tx_serie.Text, 4);
+            tx_serie.Text = lib.Right("000" + tx_serie.Text, 3);
             if (Tx_modo.Text == "NUEVO") tx_serGR.Focus();
         }
         private void tx_flete_Leave(object sender, EventArgs e)
@@ -3565,13 +3568,13 @@ namespace Grael2
         }
         private void tx_serGR_Leave(object sender, EventArgs e)
         {
-            tx_serGR.Text = lib.Right("0000" + tx_serGR.Text, 4);
+            tx_serGR.Text = lib.Right("000" + tx_serGR.Text, 3);
         }
         private void tx_numGR_Leave(object sender, EventArgs e)
         {
             if (Tx_modo.Text == "NUEVO" && tx_serGR.Text.Trim() != "" && tx_numGR.Text.Trim() != "")
             {
-                tx_numGR.Text = lib.Right("00000000" + tx_numGR.Text, 8);
+                tx_numGR.Text = lib.Right("0000000" + tx_numGR.Text, 7);
             }
         }
         private void rb_remGR_Click(object sender, EventArgs e)         // datos del remitente de la GR
