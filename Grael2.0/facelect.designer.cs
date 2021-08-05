@@ -548,7 +548,6 @@
             this.tx_mld.Name = "tx_mld";
             this.tx_mld.Size = new System.Drawing.Size(26, 18);
             this.tx_mld.TabIndex = 274;
-            this.tx_mld.Visible = false;
             // 
             // tx_distRtt
             // 
@@ -699,7 +698,6 @@
             this.tx_dat_tdRem.Name = "tx_dat_tdRem";
             this.tx_dat_tdRem.Size = new System.Drawing.Size(46, 18);
             this.tx_dat_tdRem.TabIndex = 234;
-            this.tx_dat_tdRem.Visible = false;
             // 
             // button1
             // 

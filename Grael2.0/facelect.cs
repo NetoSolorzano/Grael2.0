@@ -127,8 +127,8 @@ namespace Grael2
         DataTable dtp = new DataTable();        // plazo de credito 
         DataTable tcfe = new DataTable();       // facturacion electronica - cabecera
         DataTable tdfe = new DataTable();       // facturacion electronica -detalle
-        string[] datcltsR = { "", "", "", "", "", "", "", "", "" };
-        string[] datcltsD = { "", "", "", "", "", "", "", "", "" };
+        string[] datcltsR = { "", "", "", "", "", "", "", "", "", "" };
+        string[] datcltsD = { "", "", "", "", "", "", "", "", "", "" };
         string[] datguias = { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" }; // 17
         string[] datcargu = { "", "", "", "", "", "", "", "", "", "", "", "", "", "" };    // 14
         public facelect()
@@ -653,7 +653,7 @@ namespace Grael2
                 }
                 //  datos para los combobox de tipo de documento
                 cmb_docRem.Items.Clear();
-                using (MySqlCommand cdu = new MySqlCommand("select idcodice,descrizionerid,codigo,codsunat from desc_doc where numero=@bloq", conn))
+                using (MySqlCommand cdu = new MySqlCommand("select idcodice,descrizionerid,marca1 as codigo,codsunat from desc_doc where numero=@bloq", conn))
                 {
                     cdu.Parameters.AddWithValue("@bloq", 1);
                     using (MySqlDataAdapter datd = new MySqlDataAdapter(cdu))
@@ -798,6 +798,7 @@ namespace Grael2
                 datcltsR[6] = "";
                 datcltsR[7] = "";
                 datcltsR[8] = "";
+                datcltsR[9] = "";
                 //
                 datcltsD[0] = "";
                 datcltsD[1] = "";
@@ -808,6 +809,7 @@ namespace Grael2
                 datcltsD[6] = "";
                 datcltsD[7] = "";
                 datcltsD[8] = "";
+                datcltsD[9] = "";
                 //
                 datguias[0] = "";   // num GR
                 datguias[1] = "";   // descrip
@@ -884,7 +886,7 @@ namespace Grael2
                             "ifnull(b2.telef1, '') as numtel1D,ifnull(b2.telef2, '') as numtel2D,a.moneda,a.doctot,a.saldo,SUM(d.cantid) AS bultos, date(a.fechope) as fechopegr,a.tipcam," +
                             "max(d.descrip) AS descrip, ifnull(m.descrizionerid, '') as mon,a.doctot as totgrMN,a.moneda as codMN,c.fecdv,' ' as tipsrem,' ' as tipsdes,a.docremi," +
                             "a.placa,a.carreta,a.cerinsc,a.nfv,concat(lo.descrizionerid, ' - ', ld.descrizionerid) as orides,c.saldo,a.dirorig1 as dirpartida," +
-                            "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial " +
+                            "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial,dr.flag1 as dr,dd.flag1 as dd " +
                             "from magrem a left join detagrem d on d.idc = a.id " +
                             "LEFT JOIN mactacte c ON c.sergr = a.sergre AND c.corgr = a.corgre " +
                             "left join anag_for p on p.ruc = a.ruc " +
@@ -893,6 +895,8 @@ namespace Grael2
                             "left join desc_mon m on m.idcodice = a.moneda " +
                             "left join desc_sds lo on lo.idcodice = a.origen " +
                             "left join desc_sds ld on ld.idcodice = a.destino " +
+                            "left join desc_doc dr on dr.idcodice = a.docrem " +
+                            "left join desc_doc dd on dd.idcodice = a.docdes " +
                             "WHERE a.sergre = @ser AND a.corgre = @num AND a.status not IN(@est) AND c.fecdv IS NULL";
                         using (MySqlCommand micon = new MySqlCommand(consulta, conn))
                         {
@@ -914,6 +918,7 @@ namespace Grael2
                                         datcltsR[6] = dr.GetString("numtel1R");
                                         datcltsR[7] = dr.GetString("numtel2R");
                                         datcltsR[8] = dr.GetString("tipsrem");
+                                        datcltsR[9] = dr.GetString("dr");
                                         //
                                         datcltsD[0] = dr.GetString("docdes");        // datos del destinatario de la GR
                                         datcltsD[1] = dr.GetString("numdes");
@@ -924,6 +929,7 @@ namespace Grael2
                                         datcltsD[6] = dr.GetString("numtel1D");
                                         datcltsD[7] = dr.GetString("numtel2D");
                                         datcltsD[8] = dr.GetString("tipsdes");
+                                        datcltsD[9] = dr.GetString("dd");
                                         //
                                         datguias[0] = serie + "-" + corre;                 // GR
                                         datguias[1] = (dr.IsDBNull(20)) ? "" : dr.GetString("descrip");         // descrip
@@ -3411,9 +3417,9 @@ namespace Grael2
                 else tx_dd_dis.Text = "";
             }
         }
-        private void textBox3_Leave(object sender, EventArgs e)         // número de documento remitente
+        private void textBox3_Leave(object sender, EventArgs e)         // número de documento del cliente
         {
-            if (tx_numDocRem.Text.Trim() != "" && tx_mld.Text.Trim() != "")
+            if (tx_numDocRem.Text.Trim() != "") //  && tx_mld.Text.Trim() != ""
             {
                 if (tx_numDocRem.Text.Trim().Length != Int16.Parse(tx_mld.Text))
                 {
@@ -3580,6 +3586,7 @@ namespace Grael2
         private void rb_remGR_Click(object sender, EventArgs e)         // datos del remitente de la GR
         {
             tx_dat_tdRem.Text = datcltsR[0];
+            tx_mld.Text = datcltsR[9];
             cmb_docRem.SelectedValue = tx_dat_tdRem.Text;
             tx_numDocRem.Text = datcltsR[1];
             tx_nomRem.Text = datcltsR[2];
@@ -3608,6 +3615,7 @@ namespace Grael2
         private void rb_desGR_Click(object sender, EventArgs e)         // datos del destinatario de la GR
         {
             tx_dat_tdRem.Text = datcltsD[0];
+            tx_mld.Text = datcltsD[9];
             cmb_docRem.SelectedValue = tx_dat_tdRem.Text;
             tx_numDocRem.Text = datcltsD[1];
             tx_nomRem.Text = datcltsD[2];

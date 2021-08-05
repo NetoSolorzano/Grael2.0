@@ -485,7 +485,7 @@ namespace Grael2
         {   // vr = num.documento, tp=tipo documento
             int cdig = 0;
             string docu = "";
-            string consulta = "select codigo,descrizionerid from desc_doc where idcodice=@tp";
+            string consulta = "select marca1,descrizionerid from desc_doc where idcodice=@tp";
             MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
             conl.Open();
             if (conl.State == ConnectionState.Open)
