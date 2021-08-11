@@ -66,6 +66,7 @@ namespace Grael2
         string vint_A0 = "";            // variable codigo anulacion interna por BD
         string v_codidv = "";           // variable codifo interno de documento de venta en vista TDV
         string codfact = "";            // idcodice de factura
+        string codbole = "";            // codigo de boleta electronica
         string v_igv = "";              // valor igv %
         string v_estcaj = "";           // estado de la caja
         string v_idcaj = "";            // id de la caja actual
@@ -76,6 +77,7 @@ namespace Grael2
         string codsuser_cu = "";        // usuarios autorizados a crear Ft de cargas unicas
         int v_cdpa = 0;                 // cantidad de días despues de emitida la fact. en que un usuario normal puede anular
         string vint_gg = "";            // glosa del detalle inicial de la guía "sin verificar contenido"
+        decimal limbolsd = 0;           // limite en soles para boletas sin direccion
         //
         string rutatxt = "";            // ruta de los txt para la fact. electronica
         string tipdo = "";              // CODIGO SUNAT tipo de documento de venta
@@ -293,8 +295,8 @@ namespace Grael2
             }
             if (Tx_modo.Text == "NUEVO")
             {
-                // rb_si.Enabled = true;
-                // rb_no.Enabled = true;
+                //rb_si.Enabled = true;
+                rb_no.Enabled = true;
                 if (codsuser_cu.Contains(asd)) chk_cunica.Enabled = true;
                 else chk_cunica.Enabled = false;
                 if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
@@ -303,7 +305,8 @@ namespace Grael2
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
             cargaunica();
-            pan_pago.Enabled = false;
+            //pan_pago.Enabled = false;
+            rb_no.PerformClick();
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
         {
@@ -374,13 +377,15 @@ namespace Grael2
                             if (row["param"].ToString() == "serieAnu") v_sanu = row["valor"].ToString().Trim();               // serie anulacion interna
                             if (row["param"].ToString() == "mpagdef") v_mpag = row["valor"].ToString().Trim();               // medio de pago x defecto para cobranzas
                             if (row["param"].ToString() == "factura") codfact = row["valor"].ToString().Trim();               // codigo doc.venta factura
+                            if (row["param"].ToString() == "boleta") codbole = row["valor"].ToString().Trim();               // codigo doc.venta boleta
                             if (row["param"].ToString() == "plazocred") codppc = row["valor"].ToString().Trim();               // codigo plazo de pago x defecto para fact. a CREDITO
                             if (row["param"].ToString() == "usercar_unic") codsuser_cu = row["valor"].ToString().Trim();       // usuarios autorizados a crear Ft de cargas unicas
                             if (row["param"].ToString() == "diasanul") v_cdpa = int.Parse(row["valor"].ToString());            // cant dias en que usuario normal puede anular 
                             if (row["param"].ToString() == "useranul") codusanu = row["valor"].ToString();                      // usuarios autorizados a anular fuera de plazo 
                             if (row["param"].ToString() == "userdscto") cusdscto = row["valor"].ToString();                 // usuarios que pueden hacer descuentos
                             if (row["param"].ToString() == "cltesBol") tdocsBol = row["valor"].ToString();                  // tipos de documento de clientes para boletas
-                            if (row["param"].ToString() == "cltesFac") tdocsFac = row["valor"].ToString();
+                            if (row["param"].ToString() == "cltesFac") tdocsFac = row["valor"].ToString();                  // tipo de documentos para facturas
+                            if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());                  // limite soles para boletas sin direccion
                         }
                         if (row["campo"].ToString() == "impresion")
                         {
@@ -1249,6 +1254,92 @@ namespace Grael2
             //tdfe.Columns.Add("Imonbas");                    // monto base (valor sin igv * cantidad)
             //tdfe.Columns.Add("Isumigv");                    // Sumatoria de igv
             //tdfe.Columns.Add("Iindgra");                    // indicador de gratuito
+        }
+        private void validaclt()
+        {
+            if (tx_numDocRem.Text.Trim().Length != Int16.Parse(tx_mld.Text))
+            {
+                MessageBox.Show("El número de caracteres para" + Environment.NewLine +
+                    "su tipo de documento debe ser: " + tx_mld.Text, "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                tx_numDocRem.Focus();
+                return;
+            }
+            if (tx_dat_tdRem.Text == vtc_ruc && lib.valiruc(tx_numDocRem.Text, vtc_ruc) == false)
+            {
+                MessageBox.Show("Número de RUC inválido", "Atención - revise", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                tx_numDocRem.Focus();
+                return;
+            }
+            string encuentra = "no";
+            if (Tx_modo.Text == "NUEVO" || Tx_modo.Text == "EDITAR")
+            {
+                string[] datos = lib.datossn("CLI", tx_dat_tdRem.Text.Trim(), tx_numDocRem.Text.Trim());
+                if (datos[0] != "")  // datos.Length > 0
+                {
+                    tx_nomRem.Text = datos[0];
+                    tx_nomRem.Select(0, 0);
+                    tx_dirRem.Text = datos[1];
+                    tx_dirRem.Select(0, 0);
+                    tx_dptoRtt.Text = datos[2];
+                    tx_dptoRtt.Select(0, 0);
+                    tx_provRtt.Text = datos[3];
+                    tx_provRtt.Select(0, 0);
+                    tx_distRtt.Text = datos[4];
+                    tx_distRtt.Select(0, 0);
+                    tx_ubigRtt.Text = datos[5];
+                    tx_ubigRtt.Select(0, 0);
+                    tx_email.Text = datos[7];
+                    tx_email.Select(0, 0);
+                    tx_telc1.Text = datos[6];
+                    tx_telc1.Select(0, 0);
+                    encuentra = "si";
+                    tx_dat_m1clte.Text = "E";
+                }
+                if (tx_dat_tdRem.Text == vtc_ruc)
+                {
+                    if (encuentra == "no")
+                    {
+                        if (Grael2.Program.vg_conSol == true) // conector solorsoft para ruc
+                        {
+                            string[] rl = lib.conectorSolorsoft("RUC", tx_numDocRem.Text);
+                            tx_nomRem.Text = rl[0];      // razon social
+                            tx_ubigRtt.Text = rl[1];     // ubigeo
+                            tx_dirRem.Text = rl[2];      // direccion
+                            tx_dptoRtt.Text = rl[3];      // departamento
+                            tx_provRtt.Text = rl[4];      // provincia
+                            tx_distRtt.Text = rl[5];      // distrito
+                            tx_dat_m1clte.Text = "N";
+                        }
+                    }
+                }
+                if (tx_dat_tdRem.Text == vtc_dni)
+                {
+                    if (encuentra == "no")
+                    {
+                        if (Grael2.Program.vg_conSol == true) // conector solorsoft para dni
+                        {
+                            string[] rl = lib.conectorSolorsoft("DNI", tx_numDocRem.Text);
+                            tx_nomRem.Text = rl[0];      // nombre
+                                                         //tx_numDocRem.Text = rl[1];     // num dni
+                            tx_dat_m1clte.Text = "N";
+                        }
+                        if (rb_remGR.Checked == true)
+                        {
+                            tx_dirRem.Text = datcltsR[3].ToString();    // datcltsR[3] = dr.GetString("direregri");
+                            tx_ubigRtt.Text = datcltsR[4].ToString();    // datcltsR[4] = dr.GetString("ubigregri");
+                        }
+                        if (rb_desGR.Checked == true)
+                        {
+                            tx_dirRem.Text = datcltsD[3].ToString();
+                            tx_ubigRtt.Text = datcltsD[4].ToString();
+                        }
+                        string[] aa = lib.retDPDubigeo(tx_ubigRtt.Text);
+                        tx_dptoRtt.Text = aa[0].ToString();
+                        tx_provRtt.Text = aa[1].ToString();
+                        tx_distRtt.Text = aa[2].ToString();
+                    }
+                }
+            }
         }
 
         #region facturacion electronica
@@ -2636,23 +2727,26 @@ namespace Grael2
                 tx_nomRem.Focus();
                 return;
             }
-            if (tx_dirRem.Text.Trim() == "")
-            {
-                MessageBox.Show("Ingrese la dirección", " Error en Remitente ");
-                tx_dirRem.Focus();
-                return;
-            }
-            if (tx_dptoRtt.Text.Trim() == "" || tx_provRtt.Text.Trim() == "" || tx_distRtt.Text.Trim() == "")
-            {
-                MessageBox.Show("Ingrese departamento, provincia y distrito", "Dirección incompleta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                tx_dptoRtt.Focus();
-                return;
-            }
             if (tx_email.Text.Trim() == "")
             {
                 MessageBox.Show("Debe ingresar un correo electrónico", " Error en Cliente ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 tx_email.Focus();
                 return;
+            }
+            if (tx_dat_tdv.Text == codfact || (tx_dat_tdv.Text == codbole && decimal.Parse(tx_fletMN.Text) > limbolsd))
+            {
+                if (tx_dirRem.Text.Trim() == "")
+                {
+                    MessageBox.Show("Ingrese la dirección", " Error en Remitente ");
+                    tx_dirRem.Focus();
+                    return;
+                }
+                if (tx_dptoRtt.Text.Trim() == "" || tx_provRtt.Text.Trim() == "" || tx_distRtt.Text.Trim() == "")
+                {
+                    MessageBox.Show("Ingrese departamento, provincia y distrito", "Dirección incompleta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    tx_dptoRtt.Focus();
+                    return;
+                }
             }
             /*
             if (tx_dat_tdec.Text != tx_dat_tdRem.Text)
@@ -2725,20 +2819,19 @@ namespace Grael2
                     var aa = MessageBox.Show("Confirma que desea crear el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (aa == DialogResult.Yes)
                     {
-                        if (lib.DirectoryVisible(rutatxt) == true)
+                        if (true)  // lib.DirectoryVisible(rutatxt) == true
                         {
                             if (graba() == true)
                             {
                                 if (factElec(nipfe, "txt", "alta", 0) == true)       // facturacion electrónica
                                 {
-                                    // actualizamos la tabla seguimiento de usuarios
+                                    /* actualizamos la tabla seguimiento de usuarios
                                     string resulta = lib.ult_mov(nomform, nomtab, asd);
                                     if (resulta != "OK")
                                     {
                                         MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
-                                    //  TODO DOC.VTA. SE ENVIA A LA ETIQUETERA DE FRENTE ... 28/10/2020
-                                    //  AL GRABAR SE ASUME IMPRESA 28/10/2020 ... ya no 13/12/2020
+                                    */
                                     var bb = MessageBox.Show("Desea imprimir el documento?" + Environment.NewLine +
                                         "El formato actual es " + vi_formato, "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                                     if (bb == DialogResult.Yes)
@@ -2948,27 +3041,10 @@ namespace Grael2
         private bool graba()
         {
             bool retorna = false;
-            MySqlConnection conn = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conn = new MySqlConnection(db_conn_grael);   // DB_CONN_STR
             conn.Open();
             if(conn.State == ConnectionState.Open)
             {
-                string todo = "corre_serie";
-                using (MySqlCommand micon = new MySqlCommand(todo, conn))
-                {
-                    micon.CommandType = CommandType.StoredProcedure;
-                    micon.Parameters.AddWithValue("td", tx_dat_tdv.Text);
-                    micon.Parameters.AddWithValue("ser", tx_serie.Text);
-                    using (MySqlDataReader dr0 = micon.ExecuteReader())
-                    {
-                        if (dr0.Read())
-                        {
-                            if (dr0[0] != null && dr0.GetString(0) != "")
-                            {
-                                tx_numero.Text = lib.Right("00000000" + dr0.GetString(0), 8);
-                            }
-                        }
-                    }
-                }
                 if (tx_tipcam.Text == "") tx_tipcam.Text = "0";
                 decimal fletMN = 0;
                 decimal subtMN = 0;
@@ -3014,6 +3090,24 @@ namespace Grael2
                         tx_dat_m1clte.Text = "E";
                     }
                 }
+                string todo = "corre_serie";
+                using (MySqlCommand micon = new MySqlCommand(todo, conn))
+                {
+                    micon.CommandType = CommandType.StoredProcedure;
+                    micon.Parameters.AddWithValue("td", tx_dat_tdv.Text);
+                    micon.Parameters.AddWithValue("ser", tx_serie.Text);
+                    using (MySqlDataReader dr0 = micon.ExecuteReader())
+                    {
+                        if (dr0.Read())
+                        {
+                            if (dr0[0] != null && dr0.GetString(0) != "")
+                            {
+                                tx_numero.Text = lib.Right("00000000" + dr0.GetString(0), 8);
+                            }
+                        }
+                    }
+                }
+                /*
                 string inserta = "insert into cabfactu (" +
                     "fechope,martdve,tipdvta,serdvta,numdvta,ticltgr,tidoclt,nudoclt,nombclt,direclt,dptoclt,provclt,distclt,ubigclt,corrclt,teleclt," +
                     "locorig,dirorig,ubiorig,obsdvta,canfidt,canbudt,mondvta,tcadvta,subtota,igvtota,porcigv,totdvta,totpags,saldvta,estdvta,frase01," +
@@ -3025,39 +3119,55 @@ namespace Grael2
                     "@ticlre,@m1clte,@tipacc,@feredv,@impSN,@codMN,@subMN,@igvMN,@totMN,@pagaut,@tipdco,@idcaj,@plazc,@pordesc,@valdesc," +
                     "@caruni,@placa,@confv,@autor,@dPeso,@dputil,@dMon1,@dMon2,@dMon3,@dporig,@uporig,@dpdest,@updest," +
                     "@verApp,@asd,now(),@iplan,@ipwan,@nbnam)";
+                */
+                string inserta = "fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
+                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
+                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild)" +
+                    "values (" +
+                    "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
+                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now()," +
+                    "@ldcpgr,@rd3,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil)";
+
+                //                    "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
+                //                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
                 {
                     micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
-                    micon.Parameters.AddWithValue("@mtdvta", cmb_tdv.Text.Substring(0,1));
+                    micon.Parameters.AddWithValue("@tcoper", tx_tipcam.Text);                   // TIPO DE CAMBIO
                     micon.Parameters.AddWithValue("@ctdvta", tx_dat_tdv.Text);
                     micon.Parameters.AddWithValue("@serdv", tx_serie.Text);
                     micon.Parameters.AddWithValue("@numdv", tx_numero.Text);
-                    micon.Parameters.AddWithValue("@tcdvta", (rb_remGR.Checked == true)? "1" : (rb_desGR.Checked == true)? "2" : "3");
                     micon.Parameters.AddWithValue("@tdcrem", tx_dat_tdRem.Text);
                     micon.Parameters.AddWithValue("@ndcrem", tx_numDocRem.Text);
-                    micon.Parameters.AddWithValue("@nomrem", tx_nomRem.Text);
                     micon.Parameters.AddWithValue("@dircre", tx_dirRem.Text);
-                    micon.Parameters.AddWithValue("@dptocl", tx_dptoRtt.Text);
-                    micon.Parameters.AddWithValue("@provcl", tx_provRtt.Text);
-                    micon.Parameters.AddWithValue("@distcl", tx_distRtt.Text);
-                    micon.Parameters.AddWithValue("@ubicre", tx_ubigRtt.Text);
-                    micon.Parameters.AddWithValue("@mailcl", tx_email.Text);
-                    micon.Parameters.AddWithValue("@telecl", tx_telc1.Text);
-                    micon.Parameters.AddWithValue("@ldcpgr", Grael2.Program.almuser);         // local origen
-                    micon.Parameters.AddWithValue("@didegr", dirloc);                             // direccion origen
-                    micon.Parameters.AddWithValue("@ubdegr", ubiloc);                             // ubigeo origen
+                    micon.Parameters.AddWithValue("@nomrem", tx_nomRem.Text);
                     micon.Parameters.AddWithValue("@obsprg", tx_obser1.Text);
-                    micon.Parameters.AddWithValue("@canfil", tx_tfil.Text);     // cantidad de filas de detalle
-                    micon.Parameters.AddWithValue("@totcpr", tx_totcant.Text);  // total bultos
                     micon.Parameters.AddWithValue("@monppr", tx_dat_mone.Text);
-                    micon.Parameters.AddWithValue("@tcoper", tx_tipcam.Text);                   // TIPO DE CAMBIO
+                    micon.Parameters.AddWithValue("@aig", "");  // aumenta igv ??
                     micon.Parameters.AddWithValue("@subpgr", tx_subt.Text);                     // sub total
                     micon.Parameters.AddWithValue("@igvpgr", tx_igv.Text);                      // igv
-                    micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@totpgr", tx_flete.Text);                    // total inc. igv
-                    micon.Parameters.AddWithValue("@pagpgr", (rb_si.Checked == true) ? tx_fletMN.Text : "0");  // (tx_pagado.Text == "") ? "0" : tx_pagado.Text);
-                    micon.Parameters.AddWithValue("@salxpa", (tx_salxcob.Text == "") ? "0" : tx_salxcob.Text);
                     micon.Parameters.AddWithValue("@estpgr", (tx_pagado.Text == "" || tx_pagado.Text == "0.00") ? tx_dat_estad.Text : codCanc); // estado
+                    micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
+                    micon.Parameters.AddWithValue("@asd", asd);
+                    micon.Parameters.AddWithValue("@ldcpgr", Grael2.Program.almuser);         // local origen
+                    micon.Parameters.AddWithValue("@rd3", "");  // que va aca ??
+                    micon.Parameters.AddWithValue("@distcl", tx_distRtt.Text);
+                    micon.Parameters.AddWithValue("@provcl", tx_provRtt.Text);
+                    micon.Parameters.AddWithValue("@dptocl", tx_dptoRtt.Text);
+                    micon.Parameters.AddWithValue("@salxpa", (tx_salxcob.Text == "") ? "0" : tx_salxcob.Text);
+                    micon.Parameters.AddWithValue("@cdr", "");  // cdr ???
+                    micon.Parameters.AddWithValue("@mtdvta", cmb_tdv.Text.Substring(0,1));
+                    micon.Parameters.AddWithValue("@mailcl", tx_email.Text);
+                    micon.Parameters.AddWithValue("@ubicre", tx_ubigRtt.Text);
+                    micon.Parameters.AddWithValue("@canfil", tx_tfil.Text);     // cantidad de filas de detalle ..... AGREGAR A LA B.D.
+                    /*
+                    micon.Parameters.AddWithValue("@tcdvta", (rb_remGR.Checked == true)? "1" : (rb_desGR.Checked == true)? "2" : "3");
+                    micon.Parameters.AddWithValue("@telecl", tx_telc1.Text);
+                    micon.Parameters.AddWithValue("@didegr", dirloc);                             // direccion origen
+                    micon.Parameters.AddWithValue("@ubdegr", ubiloc);                             // ubigeo origen
+                    micon.Parameters.AddWithValue("@totcpr", tx_totcant.Text);  // total bultos
+                    micon.Parameters.AddWithValue("@pagpgr", (rb_si.Checked == true) ? tx_fletMN.Text : "0");  // (tx_pagado.Text == "") ? "0" : tx_pagado.Text);
                     micon.Parameters.AddWithValue("@frase1", "");                   // no hay nada que poner 19/11/2020
                     micon.Parameters.AddWithValue("@ticlre", tx_dat_tcr.Text);      // tipo de cliente credito o contado
                     micon.Parameters.AddWithValue("@m1clte", tx_dat_m1clte.Text);
@@ -3088,10 +3198,10 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@dpdest", tx_dat_dpd.Text);
                     micon.Parameters.AddWithValue("@updest", tx_dat_upd.Text);
                     micon.Parameters.AddWithValue("@verApp", verapp);
-                    micon.Parameters.AddWithValue("@asd", asd);
                     micon.Parameters.AddWithValue("@iplan", lib.iplan());
                     micon.Parameters.AddWithValue("@ipwan", Grael2.Program.vg_ipwan);
                     micon.Parameters.AddWithValue("@nbnam", Environment.MachineName);
+                    */
                     micon.ExecuteNonQuery();
                 }
                 using (MySqlCommand micon = new MySqlCommand("select last_insert_id()", conn))
@@ -3421,75 +3531,7 @@ namespace Grael2
         {
             if (tx_numDocRem.Text.Trim() != "") //  && tx_mld.Text.Trim() != ""
             {
-                if (tx_numDocRem.Text.Trim().Length != Int16.Parse(tx_mld.Text))
-                {
-                    MessageBox.Show("El número de caracteres para" + Environment.NewLine +
-                        "su tipo de documento debe ser: " + tx_mld.Text, "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    tx_numDocRem.Focus();
-                    return;
-                }
-                if (tx_dat_tdRem.Text == vtc_ruc && lib.valiruc(tx_numDocRem.Text, vtc_ruc) == false)
-                {
-                    MessageBox.Show("Número de RUC inválido", "Atención - revise", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    tx_numDocRem.Focus();
-                    return;
-                }
-                string encuentra = "no";
-                if (Tx_modo.Text == "NUEVO" || Tx_modo.Text == "EDITAR")
-                {
-                    string[] datos = lib.datossn("CLI", tx_dat_tdRem.Text.Trim(), tx_numDocRem.Text.Trim());
-                    if (datos[0] != "")  // datos.Length > 0
-                    {
-                        tx_nomRem.Text = datos[0];
-                        tx_nomRem.Select(0, 0);
-                        tx_dirRem.Text = datos[1];
-                        tx_dirRem.Select(0, 0);
-                        tx_dptoRtt.Text = datos[2];
-                        tx_dptoRtt.Select(0, 0);
-                        tx_provRtt.Text = datos[3];
-                        tx_provRtt.Select(0, 0);
-                        tx_distRtt.Text = datos[4];
-                        tx_distRtt.Select(0, 0);
-                        tx_ubigRtt.Text = datos[5];
-                        tx_ubigRtt.Select(0, 0);
-                        tx_email.Text = datos[7];
-                        tx_email.Select(0, 0);
-                        tx_telc1.Text = datos[6];
-                        tx_telc1.Select(0, 0);
-                        encuentra = "si";
-                        tx_dat_m1clte.Text = "E";
-                    }
-                    if (tx_dat_tdRem.Text == vtc_ruc)
-                    {
-                        if (encuentra == "no")
-                        {
-                            if (Grael2.Program.vg_conSol == true) // conector solorsoft para ruc
-                            {
-                                string[] rl = lib.conectorSolorsoft("RUC", tx_numDocRem.Text);
-                                tx_nomRem.Text = rl[0];      // razon social
-                                tx_ubigRtt.Text = rl[1];     // ubigeo
-                                tx_dirRem.Text = rl[2];      // direccion
-                                tx_dptoRtt.Text = rl[3];      // departamento
-                                tx_provRtt.Text = rl[4];      // provincia
-                                tx_distRtt.Text = rl[5];      // distrito
-                                tx_dat_m1clte.Text = "N";
-                            }
-                        }
-                    }
-                    if (tx_dat_tdRem.Text == vtc_dni)
-                    {
-                        if (encuentra == "no")
-                        {
-                            if (Grael2.Program.vg_conSol == true) // conector solorsoft para dni
-                            {
-                                string[] rl = lib.conectorSolorsoft("DNI", tx_numDocRem.Text);
-                                tx_nomRem.Text = rl[0];      // nombre
-                                //tx_numDocRem.Text = rl[1];     // num dni
-                                tx_dat_m1clte.Text = "N";
-                            }
-                        }
-                    }
-                }
+                validaclt();
             }
             if (tx_numDocRem.Text.Trim() != "" && tx_mld.Text.Trim() == "")
             {
@@ -3611,6 +3653,10 @@ namespace Grael2
             cmb_docRem.Enabled = false;
             tx_numDocRem.ReadOnly = true;
             tx_nomRem.ReadOnly = true;
+            // accionar el tipo de doc de venta acorde al tipo de documento del cliente
+            if (tdocsFac.Contains(tx_dat_tdRem.Text)) cmb_tdv.SelectedValue = codfact;
+            else cmb_tdv.SelectedValue = codbole;
+            validaclt();
         }
         private void rb_desGR_Click(object sender, EventArgs e)         // datos del destinatario de la GR
         {
@@ -3648,6 +3694,10 @@ namespace Grael2
             cmb_docRem.Enabled = false;
             tx_numDocRem.ReadOnly = true;
             tx_nomRem.ReadOnly = true;
+            // accionar el tipo de doc de venta acorde al tipo de documento del cliente
+            if (tdocsFac.Contains(tx_dat_tdRem.Text)) cmb_tdv.SelectedValue = codfact;
+            else cmb_tdv.SelectedValue = codbole;
+            validaclt();
         }
         private void rb_otro_Click(object sender, EventArgs e)
         {
@@ -3889,7 +3939,7 @@ namespace Grael2
             initIngreso();
             tx_numero.ReadOnly = true;
             cmb_tdv_SelectedIndexChanged(null, null);
-            cmb_tdv.Focus();
+            tx_serGR.Focus();
         }
         private void Bt_edit_Click(object sender, EventArgs e)
         {

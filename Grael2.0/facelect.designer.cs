@@ -548,6 +548,7 @@
             this.tx_mld.Name = "tx_mld";
             this.tx_mld.Size = new System.Drawing.Size(26, 18);
             this.tx_mld.TabIndex = 274;
+            this.tx_mld.Visible = false;
             // 
             // tx_distRtt
             // 
@@ -698,6 +699,7 @@
             this.tx_dat_tdRem.Name = "tx_dat_tdRem";
             this.tx_dat_tdRem.Size = new System.Drawing.Size(46, 18);
             this.tx_dat_tdRem.TabIndex = 234;
+            this.tx_dat_tdRem.Visible = false;
             // 
             // button1
             // 
@@ -981,7 +983,7 @@
             this.tx_ubigRtt.Location = new System.Drawing.Point(142, 90);
             this.tx_ubigRtt.MaxLength = 6;
             this.tx_ubigRtt.Name = "tx_ubigRtt";
-            this.tx_ubigRtt.Size = new System.Drawing.Size(23, 18);
+            this.tx_ubigRtt.Size = new System.Drawing.Size(55, 18);
             this.tx_ubigRtt.TabIndex = 294;
             this.tx_ubigRtt.Visible = false;
             this.tx_ubigRtt.Leave += new System.EventHandler(this.textBox13_Leave);
@@ -1759,11 +1761,10 @@
             // 
             this.tx_fletMN.BackColor = System.Drawing.SystemColors.Window;
             this.tx_fletMN.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_fletMN.Location = new System.Drawing.Point(736, 359);
+            this.tx_fletMN.Location = new System.Drawing.Point(730, 359);
             this.tx_fletMN.Name = "tx_fletMN";
-            this.tx_fletMN.Size = new System.Drawing.Size(32, 18);
+            this.tx_fletMN.Size = new System.Drawing.Size(40, 18);
             this.tx_fletMN.TabIndex = 365;
-            this.tx_fletMN.Visible = false;
             // 
             // tx_dat_saldoGR
             // 
@@ -2494,6 +2495,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(769, 576);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tx_dat_porcDscto);
             this.Controls.Add(this.lin_dscto);
             this.Controls.Add(this.lb_dscto);
@@ -2527,7 +2529,6 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.bt_agr);
             this.Controls.Add(this.lb_GR);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tx_numGR);
             this.Controls.Add(this.tx_serGR);
             this.Controls.Add(this.groupBox11);
