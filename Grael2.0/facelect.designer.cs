@@ -1558,7 +1558,6 @@
             this.tx_dat_tcr.Name = "tx_dat_tcr";
             this.tx_dat_tcr.Size = new System.Drawing.Size(26, 18);
             this.tx_dat_tcr.TabIndex = 348;
-            this.tx_dat_tcr.Visible = false;
             // 
             // groupBox3
             // 
@@ -1735,7 +1734,6 @@
             this.tx_dat_tdec.Name = "tx_dat_tdec";
             this.tx_dat_tdec.Size = new System.Drawing.Size(31, 18);
             this.tx_dat_tdec.TabIndex = 362;
-            this.tx_dat_tdec.Visible = false;
             // 
             // tx_dat_m1clte
             // 

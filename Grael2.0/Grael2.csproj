@@ -145,6 +145,7 @@
     <None Include="Resources\process24.png" />
     <None Include="Resources\Close_32.png" />
     <None Include="Resources\docum32.png" />
+    <Content Include="leeme.txt" />
     <Content Include="Resources\fec_elect21.png" />
     <Content Include="Resources\logo_grael.png" />
     <None Include="Resources\service_manager.png" />

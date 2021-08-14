@@ -1,0 +1,2 @@
+﻿11/08/2021
+me quede en agregar los procedimientos y triggers a la base erp_grael para el ingreso del comprobante
