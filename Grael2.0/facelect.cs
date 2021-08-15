@@ -1663,6 +1663,14 @@ namespace Grael2
                     }
                 }
                 */
+                string ubiPtoO2 = "";           // ubigeoPtoOrigen
+                string dirPtoO2 = "";           // direccionCompletaPtoOrigen
+                string ubiPtoD2 = "";          // ubigeoPtoDestino
+                string dirPtoD2 = "";           // direccionCompletaPtoDestino
+                string detViaj2 = "";             // detalleViaje
+                string monRefS2 = "1.00";           // montoRefServicioTransporte
+                string monRefC2 = "1.00";           // montoRefCargaEfectiva
+                string monRefU2 = "1.00";
                 string nuori2 = "";
                 string codprd2 = "";
                 string coprsu2 = "";
