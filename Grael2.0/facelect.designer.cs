@@ -197,6 +197,7 @@
             this.lb_dscto = new System.Windows.Forms.Label();
             this.tx_dat_porcDscto = new System.Windows.Forms.TextBox();
             this.tx_dat_nombd = new System.Windows.Forms.TextBox();
+            this.chk_consol = new System.Windows.Forms.CheckBox();
             this.tx_valdscto = new Grael2.NumericTextBox();
             this.tx_idcaja = new Grael2.NumericTextBox();
             this.tx_numGR = new Grael2.NumericTextBox();
@@ -496,7 +497,7 @@
             // 
             this.tx_mld.BackColor = System.Drawing.SystemColors.Window;
             this.tx_mld.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_mld.Location = new System.Drawing.Point(249, 51);
+            this.tx_mld.Location = new System.Drawing.Point(339, 50);
             this.tx_mld.Name = "tx_mld";
             this.tx_mld.Size = new System.Drawing.Size(26, 18);
             this.tx_mld.TabIndex = 274;
@@ -647,7 +648,7 @@
             // 
             this.tx_dat_tdRem.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_tdRem.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_tdRem.Location = new System.Drawing.Point(183, 55);
+            this.tx_dat_tdRem.Location = new System.Drawing.Point(273, 54);
             this.tx_dat_tdRem.Name = "tx_dat_tdRem";
             this.tx_dat_tdRem.Size = new System.Drawing.Size(46, 18);
             this.tx_dat_tdRem.TabIndex = 234;
@@ -656,7 +657,7 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(671, 329);
+            this.button1.Location = new System.Drawing.Point(662, 372);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(62, 56);
             this.button1.TabIndex = 18;
@@ -959,8 +960,9 @@
             this.unidad});
             this.dataGridView1.Location = new System.Drawing.Point(6, 144);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(597, 162);
+            this.dataGridView1.Size = new System.Drawing.Size(597, 286);
             this.dataGridView1.TabIndex = 21;
+            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
             // 
             // guias
             // 
@@ -1319,9 +1321,9 @@
             this.label32.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label32.Location = new System.Drawing.Point(9, 144);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(53, 13);
+            this.label32.Size = new System.Drawing.Size(54, 13);
             this.label32.TabIndex = 402;
-            this.label32.Text = "Cancela";
+            this.label32.Text = "Contado";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tx_pagado
@@ -1391,7 +1393,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label12.Location = new System.Drawing.Point(291, 315);
+            this.label12.Location = new System.Drawing.Point(291, 439);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 13);
             this.label12.TabIndex = 319;
@@ -1414,7 +1416,7 @@
             // 
             this.tx_impreso.BackColor = System.Drawing.SystemColors.Window;
             this.tx_impreso.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_impreso.Location = new System.Drawing.Point(155, 313);
+            this.tx_impreso.Location = new System.Drawing.Point(155, 437);
             this.tx_impreso.Name = "tx_impreso";
             this.tx_impreso.ReadOnly = true;
             this.tx_impreso.Size = new System.Drawing.Size(20, 18);
@@ -1435,7 +1437,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label18.Location = new System.Drawing.Point(105, 315);
+            this.label18.Location = new System.Drawing.Point(105, 439);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(50, 13);
             this.label18.TabIndex = 329;
@@ -1446,7 +1448,7 @@
             // 
             this.groupBox17.BackColor = System.Drawing.Color.White;
             this.groupBox17.Controls.Add(this.groupBox18);
-            this.groupBox17.Location = new System.Drawing.Point(101, 330);
+            this.groupBox17.Location = new System.Drawing.Point(101, 454);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(358, 1);
             this.groupBox17.TabIndex = 330;
@@ -1464,9 +1466,9 @@
             // 
             this.groupBox27.BackColor = System.Drawing.Color.White;
             this.groupBox27.Controls.Add(this.groupBox28);
-            this.groupBox27.Location = new System.Drawing.Point(12, 379);
+            this.groupBox27.Location = new System.Drawing.Point(12, 502);
             this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Size = new System.Drawing.Size(628, 1);
+            this.groupBox27.Size = new System.Drawing.Size(749, 1);
             this.groupBox27.TabIndex = 334;
             this.groupBox27.TabStop = false;
             // 
@@ -1482,7 +1484,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label19.Location = new System.Drawing.Point(12, 364);
+            this.label19.Location = new System.Drawing.Point(12, 487);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(78, 13);
             this.label19.TabIndex = 333;
@@ -1492,10 +1494,10 @@
             // 
             this.tx_obser1.BackColor = System.Drawing.SystemColors.Window;
             this.tx_obser1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_obser1.Location = new System.Drawing.Point(91, 362);
+            this.tx_obser1.Location = new System.Drawing.Point(91, 485);
             this.tx_obser1.MaxLength = 0;
             this.tx_obser1.Name = "tx_obser1";
-            this.tx_obser1.Size = new System.Drawing.Size(550, 18);
+            this.tx_obser1.Size = new System.Drawing.Size(671, 18);
             this.tx_obser1.TabIndex = 332;
             this.tx_obser1.Leave += new System.EventHandler(this.tx_obser1_Leave);
             // 
@@ -1503,7 +1505,7 @@
             // 
             this.label28.AutoSize = true;
             this.label28.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label28.Location = new System.Drawing.Point(191, 315);
+            this.label28.Location = new System.Drawing.Point(191, 439);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(55, 13);
             this.label28.TabIndex = 344;
@@ -1523,7 +1525,7 @@
             // 
             this.groupBox3.BackColor = System.Drawing.Color.White;
             this.groupBox3.Controls.Add(this.groupBox4);
-            this.groupBox3.Location = new System.Drawing.Point(173, 54);
+            this.groupBox3.Location = new System.Drawing.Point(263, 53);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(183, 1);
             this.groupBox3.TabIndex = 351;
@@ -1541,7 +1543,7 @@
             // 
             this.lb_GR.AutoSize = true;
             this.lb_GR.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_GR.Location = new System.Drawing.Point(176, 39);
+            this.lb_GR.Location = new System.Drawing.Point(266, 38);
             this.lb_GR.Name = "lb_GR";
             this.lb_GR.Size = new System.Drawing.Size(59, 13);
             this.lb_GR.TabIndex = 352;
@@ -1551,7 +1553,7 @@
             // bt_agr
             // 
             this.bt_agr.Image = global::Grael2.Properties.Resources.process24;
-            this.bt_agr.Location = new System.Drawing.Point(359, 30);
+            this.bt_agr.Location = new System.Drawing.Point(449, 31);
             this.bt_agr.Name = "bt_agr";
             this.bt_agr.Size = new System.Drawing.Size(32, 31);
             this.bt_agr.TabIndex = 4;
@@ -1564,15 +1566,15 @@
             this.panel1.Controls.Add(this.rb_otro);
             this.panel1.Controls.Add(this.rb_desGR);
             this.panel1.Controls.Add(this.rb_remGR);
-            this.panel1.Location = new System.Drawing.Point(414, 32);
+            this.panel1.Location = new System.Drawing.Point(508, 35);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(278, 27);
+            this.panel1.Size = new System.Drawing.Size(255, 23);
             this.panel1.TabIndex = 5;
             // 
             // rb_otro
             // 
             this.rb_otro.AutoSize = true;
-            this.rb_otro.Location = new System.Drawing.Point(207, 4);
+            this.rb_otro.Location = new System.Drawing.Point(196, 2);
             this.rb_otro.Name = "rb_otro";
             this.rb_otro.Size = new System.Drawing.Size(45, 17);
             this.rb_otro.TabIndex = 2;
@@ -1584,7 +1586,7 @@
             // rb_desGR
             // 
             this.rb_desGR.AutoSize = true;
-            this.rb_desGR.Location = new System.Drawing.Point(117, 4);
+            this.rb_desGR.Location = new System.Drawing.Point(109, 2);
             this.rb_desGR.Name = "rb_desGR";
             this.rb_desGR.Size = new System.Drawing.Size(64, 17);
             this.rb_desGR.TabIndex = 1;
@@ -1596,7 +1598,7 @@
             // rb_remGR
             // 
             this.rb_remGR.AutoSize = true;
-            this.rb_remGR.Location = new System.Drawing.Point(19, 4);
+            this.rb_remGR.Location = new System.Drawing.Point(9, 2);
             this.rb_remGR.Name = "rb_remGR";
             this.rb_remGR.Size = new System.Drawing.Size(73, 17);
             this.rb_remGR.TabIndex = 0;
@@ -1728,7 +1730,7 @@
             // 
             this.tx_dat_saldoGR.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_saldoGR.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_saldoGR.Location = new System.Drawing.Point(708, 35);
+            this.tx_dat_saldoGR.Location = new System.Drawing.Point(482, 35);
             this.tx_dat_saldoGR.Name = "tx_dat_saldoGR";
             this.tx_dat_saldoGR.Size = new System.Drawing.Size(26, 18);
             this.tx_dat_saldoGR.TabIndex = 366;
@@ -1758,7 +1760,7 @@
             // 
             this.groupBox29.BackColor = System.Drawing.Color.White;
             this.groupBox29.Controls.Add(this.groupBox30);
-            this.groupBox29.Location = new System.Drawing.Point(6, 330);
+            this.groupBox29.Location = new System.Drawing.Point(6, 454);
             this.groupBox29.Name = "groupBox29";
             this.groupBox29.Size = new System.Drawing.Size(94, 1);
             this.groupBox29.TabIndex = 410;
@@ -1776,7 +1778,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label16.Location = new System.Drawing.Point(4, 315);
+            this.label16.Location = new System.Drawing.Point(4, 439);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(40, 13);
             this.label16.TabIndex = 408;
@@ -1787,10 +1789,10 @@
             // 
             this.tx_fletLetras.BackColor = System.Drawing.SystemColors.Window;
             this.tx_fletLetras.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_fletLetras.Location = new System.Drawing.Point(91, 338);
+            this.tx_fletLetras.Location = new System.Drawing.Point(91, 461);
             this.tx_fletLetras.Name = "tx_fletLetras";
             this.tx_fletLetras.ReadOnly = true;
-            this.tx_fletLetras.Size = new System.Drawing.Size(550, 18);
+            this.tx_fletLetras.Size = new System.Drawing.Size(671, 18);
             this.tx_fletLetras.TabIndex = 411;
             // 
             // tx_dat_monsunat
@@ -1807,9 +1809,9 @@
             // 
             this.groupBox21.BackColor = System.Drawing.Color.White;
             this.groupBox21.Controls.Add(this.groupBox22);
-            this.groupBox21.Location = new System.Drawing.Point(12, 355);
+            this.groupBox21.Location = new System.Drawing.Point(12, 478);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(630, 1);
+            this.groupBox21.Size = new System.Drawing.Size(751, 1);
             this.groupBox21.TabIndex = 414;
             this.groupBox21.TabStop = false;
             // 
@@ -1825,7 +1827,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(12, 340);
+            this.label9.Location = new System.Drawing.Point(12, 463);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 13);
             this.label9.TabIndex = 413;
@@ -1845,9 +1847,9 @@
             // 
             this.tx_dat_upd.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_upd.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_upd.Location = new System.Drawing.Point(5, 465);
+            this.tx_dat_upd.Location = new System.Drawing.Point(686, 436);
             this.tx_dat_upd.Name = "tx_dat_upd";
-            this.tx_dat_upd.Size = new System.Drawing.Size(47, 18);
+            this.tx_dat_upd.Size = new System.Drawing.Size(24, 18);
             this.tx_dat_upd.TabIndex = 424;
             this.tx_dat_upd.Visible = false;
             // 
@@ -1855,9 +1857,9 @@
             // 
             this.tx_dat_upo.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_upo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_upo.Location = new System.Drawing.Point(5, 445);
+            this.tx_dat_upo.Location = new System.Drawing.Point(644, 434);
             this.tx_dat_upo.Name = "tx_dat_upo";
-            this.tx_dat_upo.Size = new System.Drawing.Size(47, 18);
+            this.tx_dat_upo.Size = new System.Drawing.Size(24, 18);
             this.tx_dat_upo.TabIndex = 423;
             this.tx_dat_upo.Visible = false;
             // 
@@ -1865,7 +1867,7 @@
             // 
             this.lin_dscto.BackColor = System.Drawing.Color.White;
             this.lin_dscto.Controls.Add(this.groupBox44);
-            this.lin_dscto.Location = new System.Drawing.Point(476, 330);
+            this.lin_dscto.Location = new System.Drawing.Point(476, 454);
             this.lin_dscto.Name = "lin_dscto";
             this.lin_dscto.Size = new System.Drawing.Size(127, 1);
             this.lin_dscto.TabIndex = 427;
@@ -1884,7 +1886,7 @@
             // 
             this.lb_dscto.AutoSize = true;
             this.lb_dscto.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_dscto.Location = new System.Drawing.Point(477, 315);
+            this.lb_dscto.Location = new System.Drawing.Point(477, 439);
             this.lb_dscto.Name = "lb_dscto";
             this.lb_dscto.Size = new System.Drawing.Size(59, 13);
             this.lb_dscto.TabIndex = 426;
@@ -1896,7 +1898,7 @@
             // 
             this.tx_dat_porcDscto.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_porcDscto.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_porcDscto.Location = new System.Drawing.Point(523, 304);
+            this.tx_dat_porcDscto.Location = new System.Drawing.Point(608, 434);
             this.tx_dat_porcDscto.Name = "tx_dat_porcDscto";
             this.tx_dat_porcDscto.Size = new System.Drawing.Size(22, 18);
             this.tx_dat_porcDscto.TabIndex = 428;
@@ -1906,16 +1908,28 @@
             // 
             this.tx_dat_nombd.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_nombd.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_nombd.Location = new System.Drawing.Point(392, 313);
+            this.tx_dat_nombd.Location = new System.Drawing.Point(392, 437);
             this.tx_dat_nombd.Name = "tx_dat_nombd";
             this.tx_dat_nombd.Size = new System.Drawing.Size(66, 18);
             this.tx_dat_nombd.TabIndex = 429;
+            // 
+            // chk_consol
+            // 
+            this.chk_consol.AutoSize = true;
+            this.chk_consol.ForeColor = System.Drawing.Color.Black;
+            this.chk_consol.Location = new System.Drawing.Point(152, 38);
+            this.chk_consol.Name = "chk_consol";
+            this.chk_consol.Size = new System.Drawing.Size(84, 17);
+            this.chk_consol.TabIndex = 430;
+            this.chk_consol.Text = "Consolidado";
+            this.chk_consol.UseVisualStyleBackColor = true;
+            this.chk_consol.CheckStateChanged += new System.EventHandler(this.chk_consol_CheckStateChanged);
             // 
             // tx_valdscto
             // 
             this.tx_valdscto.AllowSpace = false;
             this.tx_valdscto.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_valdscto.Location = new System.Drawing.Point(542, 311);
+            this.tx_valdscto.Location = new System.Drawing.Point(542, 435);
             this.tx_valdscto.Name = "tx_valdscto";
             this.tx_valdscto.ReadOnly = true;
             this.tx_valdscto.Size = new System.Drawing.Size(61, 20);
@@ -1926,7 +1940,7 @@
             // tx_idcaja
             // 
             this.tx_idcaja.AllowSpace = false;
-            this.tx_idcaja.Location = new System.Drawing.Point(47, 311);
+            this.tx_idcaja.Location = new System.Drawing.Point(47, 435);
             this.tx_idcaja.Name = "tx_idcaja";
             this.tx_idcaja.Size = new System.Drawing.Size(44, 20);
             this.tx_idcaja.TabIndex = 409;
@@ -1935,7 +1949,7 @@
             // 
             this.tx_numGR.AllowSpace = false;
             this.tx_numGR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_numGR.Location = new System.Drawing.Point(283, 35);
+            this.tx_numGR.Location = new System.Drawing.Point(373, 34);
             this.tx_numGR.Name = "tx_numGR";
             this.tx_numGR.Size = new System.Drawing.Size(73, 20);
             this.tx_numGR.TabIndex = 3;
@@ -1946,7 +1960,7 @@
             // 
             this.tx_serGR.AllowSpace = false;
             this.tx_serGR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_serGR.Location = new System.Drawing.Point(237, 35);
+            this.tx_serGR.Location = new System.Drawing.Point(327, 34);
             this.tx_serGR.Name = "tx_serGR";
             this.tx_serGR.Size = new System.Drawing.Size(46, 20);
             this.tx_serGR.TabIndex = 2;
@@ -1957,7 +1971,7 @@
             // 
             this.tx_tfil.AllowSpace = false;
             this.tx_tfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfil.Location = new System.Drawing.Point(247, 311);
+            this.tx_tfil.Location = new System.Drawing.Point(247, 435);
             this.tx_tfil.Name = "tx_tfil";
             this.tx_tfil.ReadOnly = true;
             this.tx_tfil.Size = new System.Drawing.Size(29, 20);
@@ -1968,7 +1982,7 @@
             // 
             this.tx_totcant.AllowSpace = false;
             this.tx_totcant.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_totcant.Location = new System.Drawing.Point(349, 311);
+            this.tx_totcant.Location = new System.Drawing.Point(349, 435);
             this.tx_totcant.Name = "tx_totcant";
             this.tx_totcant.ReadOnly = true;
             this.tx_totcant.Size = new System.Drawing.Size(41, 20);
@@ -1982,13 +1996,12 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(769, 576);
+            this.Controls.Add(this.chk_consol);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tx_dat_porcDscto);
             this.Controls.Add(this.lin_dscto);
             this.Controls.Add(this.lb_dscto);
             this.Controls.Add(this.tx_valdscto);
-            this.Controls.Add(this.tx_dat_upd);
-            this.Controls.Add(this.tx_dat_upo);
             this.Controls.Add(this.chk_sinco);
             this.Controls.Add(this.groupBox21);
             this.Controls.Add(this.label9);
@@ -2057,6 +2070,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tx_dat_nombd);
+            this.Controls.Add(this.tx_dat_upd);
+            this.Controls.Add(this.tx_dat_upo);
             this.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2278,5 +2293,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn OriDest;
         private System.Windows.Forms.DataGridViewTextBoxColumn saldo;
         private System.Windows.Forms.DataGridViewTextBoxColumn unidad;
+        private System.Windows.Forms.CheckBox chk_consol;
     }
 }

@@ -280,6 +280,7 @@ namespace Grael2
             }
             if (Tx_modo.Text == "NUEVO")
             {
+                tx_tfil.Text = "0";
                 //rb_si.Enabled = true;
                 rb_no.Enabled = true;
                 if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
@@ -288,6 +289,7 @@ namespace Grael2
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
             //pan_pago.Enabled = false;
+            inivarGR();
             rb_no.PerformClick();
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
@@ -776,66 +778,68 @@ namespace Grael2
             // aca falta agregar resto  ...........
             return retorna;
         }
+        private void inivarGR()                 // inicializa vars de la guia que se van ingresando
+        {
+            datcltsR[0] = "";
+            datcltsR[1] = "";
+            datcltsR[2] = "";
+            datcltsR[3] = "";
+            datcltsR[4] = "";
+            datcltsR[5] = "";
+            datcltsR[6] = "";
+            datcltsR[7] = "";
+            datcltsR[8] = "";
+            datcltsR[9] = "";
+            //
+            datcltsD[0] = "";
+            datcltsD[1] = "";
+            datcltsD[2] = "";
+            datcltsD[3] = "";
+            datcltsD[4] = "";
+            datcltsD[5] = "";
+            datcltsD[6] = "";
+            datcltsD[7] = "";
+            datcltsD[8] = "";
+            datcltsD[9] = "";
+            //
+            datguias[0] = "";   // num GR
+            datguias[1] = "";   // descrip
+            datguias[2] = "";   // cant bultos
+            datguias[3] = "";   // nombre de la moneda de la GR
+            datguias[4] = "";   // valor de la guía en su moneda
+            datguias[5] = "";   // valor en moneda local
+            datguias[6] = "";   // codigo moneda local
+            datguias[7] = "";   // codigo moneda de la guia
+            datguias[8] = "";   // tipo de cambio
+            datguias[9] = "";   // fecha de la GR
+            datguias[10] = "";  // guia del cliente, sustento del cliente
+            datguias[11] = "";   // placa
+            datguias[12] = "";   // carreta
+            datguias[13] = "";   // autoriz circulacion
+            datguias[14] = "";   // conf. vehicular
+            datguias[15] = "";  // local origen-destino
+            datguias[16] = "";  // saldo de la GR
+            datguias[17] = "";  // unidad de medida 
+                                //
+            datcargu[0] = "";   // direc. partida
+            datcargu[1] = "";   // depart. pto. partida
+            datcargu[2] = "";   // provin. pto. partida
+            datcargu[3] = "";   // distri. pto. partida
+            datcargu[4] = "";   // ubigeo punto partida
+            datcargu[5] = "";   // direc. llegada
+            datcargu[6] = "";   // depart. pto. llegada
+            datcargu[7] = "";   // provin. pto. llegada
+            datcargu[8] = "";   // distri. pto. llegada
+            datcargu[9] = "";   // ubigeo punto llegada
+            datcargu[10] = "";  // ruc del camion
+            datcargu[11] = "";  // razon social del ruc
+            datcargu[12] = "";  // fecha inicio del traslado
+        }   
         private bool validGR(string serie, string corre)    // validamos y devolvemos datos
         {
             bool retorna = false;
             if (serie != "" && corre != "")
             {
-                datcltsR[0] = "";
-                datcltsR[1] = "";
-                datcltsR[2] = "";
-                datcltsR[3] = "";
-                datcltsR[4] = "";
-                datcltsR[5] = "";
-                datcltsR[6] = "";
-                datcltsR[7] = "";
-                datcltsR[8] = "";
-                datcltsR[9] = "";
-                //
-                datcltsD[0] = "";
-                datcltsD[1] = "";
-                datcltsD[2] = "";
-                datcltsD[3] = "";
-                datcltsD[4] = "";
-                datcltsD[5] = "";
-                datcltsD[6] = "";
-                datcltsD[7] = "";
-                datcltsD[8] = "";
-                datcltsD[9] = "";
-                //
-                datguias[0] = "";   // num GR
-                datguias[1] = "";   // descrip
-                datguias[2] = "";   // cant bultos
-                datguias[3] = "";   // nombre de la moneda de la GR
-                datguias[4] = "";   // valor de la guía en su moneda
-                datguias[5] = "";   // valor en moneda local
-                datguias[6] = "";   // codigo moneda local
-                datguias[7] = "";   // codigo moneda de la guia
-                datguias[8] = "";   // tipo de cambio
-                datguias[9] = "";   // fecha de la GR
-                datguias[10] = "";  // guia del cliente, sustento del cliente
-                datguias[11] = "";   // placa
-                datguias[12] = "";   // carreta
-                datguias[13] = "";   // autoriz circulacion
-                datguias[14] = "";   // conf. vehicular
-                datguias[15] = "";  // local origen-destino
-                datguias[16] = "";  // saldo de la GR
-                datguias[17] = "";  // unidad de medida 
-                //
-                datcargu[0] = "";   // direc. partida
-                datcargu[1] = "";   // depart. pto. partida
-                datcargu[2] = "";   // provin. pto. partida
-                datcargu[3] = "";   // distri. pto. partida
-                datcargu[4] = "";   // ubigeo punto partida
-                datcargu[5] = "";   // direc. llegada
-                datcargu[6] = "";   // depart. pto. llegada
-                datcargu[7] = "";   // provin. pto. llegada
-                datcargu[8] = "";   // distri. pto. llegada
-                datcargu[9] = "";   // ubigeo punto llegada
-                datcargu[10] = "";  // ruc del camion
-                datcargu[11] = "";  // razon social del ruc
-                datcargu[12] = "";  // fecha inicio del traslado
-
                 // validamos que la GR: 1.exista, 2.No este facturada, 3.No este anulada
                 // y devolvemos una fila con los datos del remitente y otra fila los datos del destinatario
                 string hay = "no";
@@ -902,6 +906,23 @@ namespace Grael2
                                 {
                                     if (!dr.IsDBNull(0))    //  && dr[24] == DBNull.Value
                                     {
+                                        if (int.Parse(tx_tfil.Text) > 0)
+                                        {
+                                            if ((tx_dat_tdRem.Text + tx_numDocRem != dr.GetString("docrem") + dr.GetString("numdre")) && (tx_dat_tdRem.Text + tx_numDocRem != dr.GetString("docdes") + dr.GetString("numdes")))
+                                            {
+                                                var aaa = MessageBox.Show("El remitente y destinatario de la GR" + Environment.NewLine +
+                                                    "no coinciden con el cliente del comprobante" + Environment.NewLine +
+                                                    "Desea continuar?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                                if (aaa == DialogResult.No)
+                                                {
+                                                    //inivarGR();
+                                                    tx_numGR.Text = "";
+                                                    tx_numGR.Focus();
+                                                    return retorna;
+                                                }
+                                            }
+                                        }
+                                        inivarGR();
                                         datcltsR[0] = dr.GetString("docrem");        // datos del remitente de la GR
                                         datcltsR[1] = dr.GetString("numdre");
                                         datcltsR[2] = dr.GetString("nombregri");
@@ -1011,6 +1032,37 @@ namespace Grael2
             }
             tx_igv.Text = tigv.ToString("#0.00");
             tx_subt.Text = tsub.ToString("#0.00");
+        }
+        private void totalizaG()                            // calcula totales de la grilla
+        {
+            int totfil = 0;
+            int totcant = 0;
+            decimal totflet = 0;    // acumulador en moneda de la GR 
+            decimal totflMN = 0;
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[0].Value != null)
+                {
+                    totcant = totcant + int.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
+                    totfil += 1;
+                    if (tx_dat_mone.Text != MonDeft)
+                    {
+                        totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR de la GR
+                        totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
+                    }
+                    else
+                    {
+                        totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR DE LA GR EN SU MONEDA
+                        totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
+                    }
+                }
+            }
+            tx_tfmn.Text = totflMN.ToString("#0.00");
+            tx_totcant.Text = totcant.ToString();
+            tx_tfil.Text = totfil.ToString();
+            tx_flete.Text = totflet.ToString("#0.00");
+            tx_fletMN.Text = totflMN.ToString("#0.00"); // Math.Round(decimal.Parse(tx_flete.Text) * decimal.Parse(tx_tipcam.Text), 2).ToString();
+
         }
         int CentimeterToPixel(double Centimeter)
         {
@@ -1333,6 +1385,7 @@ namespace Grael2
                 string provemi = Program.provfis;                                                     // v provinciaEmisor
                 string depaemi = Program.depfisc;                                                     // v departamentoEmisor
                 string distemi = Program.distfis;                                                     // v distritoEmisor
+                string urbemis = "-";                                                                   // urbanizacion (parte de la direccion) del emisor
                 string pasiemi = "PE";                                                                  // v paisEmisor
                 DataRow[] rowc = dttd0.Select("idcodice='" + tx_dat_tdRem.Text + "'");
                 string tidoad = rowc[0][3].ToString().Trim();                                           // v tipoDocumentoAdquiriente
@@ -1375,10 +1428,10 @@ namespace Grael2
                 // ***************** EN OTROS CASOS VAN LAS GUIAS DEL CLIENTE
                 string insertcab = "insert into SPE_EINVOICEHEADER (serieNumero,fechaEmision,tipoDocumento,tipoMoneda," +
                     "numeroDocumentoEmisor,tipoDocumentoEmisor,nombreComercialEmisor,razonSocialEmisor,correoEmisor,codigoLocalAnexoEmisor," +
-                    "ubigeoEmisor,direccionEmisor,provinciaEmisor,departamentoEmisor,distritoEmisor,paisEmisor,codigoAuxiliar40_1,textoAuxiliar40_1," +
+                    "ubigeoEmisor,direccionEmisor,provinciaEmisor,departamentoEmisor,distritoEmisor,urbanizacion,paisEmisor,codigoAuxiliar40_1,textoAuxiliar40_1," +
                     "tipoDocumentoAdquiriente,numeroDocumentoAdquiriente,razonSocialAdquiriente,correoAdquiriente,totalImpuestos," +
                     "totalValorVentaNetoOpGravadas,codigoLeyenda_1,textoLeyenda_1,bl_estadoRegistro," +
-                    "totalIgv,totalVenta,tipoOperacion,codigoAuxiliar500_1,textoAuxiliar500_1";
+                    "totalIgv,totalVenta,tipoOperacion,totalValorVenta,totalPrecioVenta,codigoAuxiliar500_1,textoAuxiliar500_1";
                 if (!string.IsNullOrEmpty(nudor2) && !string.IsNullOrWhiteSpace(nudor2))
                 {
                     insertcab = insertcab + ",codigoAuxiliar500_2,textoAuxiliar500_2";
@@ -1408,10 +1461,10 @@ namespace Grael2
                 insertcab = insertcab + ") " +
                     "values (@sernum,@fecemi,@tipdoc,@tipmon," +
                     "@nudoem,@tidoem,@nocoem,@rasoem,@coremi,@coloem," +
-                    "@ubiemi,@diremi,@provemi,@depaemi,@distemi,@pasiemi,@codaux40_1,@etiaux40_1," +
+                    "@ubiemi,@diremi,@provemi,@depaemi,@distemi,@urbemi,@pasiemi,@codaux40_1,@etiaux40_1," +
                     "@tidoad,@nudoad,@rasoad,@coradq,@totimp," +
                     "@tovane,@coley1,@teley1,@estreg," +
-                    "@totigv,@totvta,@tipope,@tiref1,@nudor1";
+                    "@totigv,@totvta,@tipope,@tovane,@totvta,@tiref1,@nudor1";
                 if (!string.IsNullOrEmpty(nudor2) && !string.IsNullOrWhiteSpace(nudor2)) insertcab = insertcab + ",@tiref2,@nudor2";
                 if (!string.IsNullOrEmpty(nudor3) && !string.IsNullOrWhiteSpace(nudor3)) insertcab = insertcab + ",@tiref3,@nudor3";
                 if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
@@ -1740,6 +1793,7 @@ namespace Grael2
                     inserta.Parameters.AddWithValue("@provemi", provemi);                                                     // v provinciaEmisor
                     inserta.Parameters.AddWithValue("@depaemi", depaemi);                                                     // v departamentoEmisor
                     inserta.Parameters.AddWithValue("@distemi", distemi);                                                     // v distritoEmisor
+                    inserta.Parameters.AddWithValue("@urbemi", urbemis);                                                      // v urbanizacion
                     inserta.Parameters.AddWithValue("@pasiemi", pasiemi);                                                     // v paisEmisor
                     inserta.Parameters.AddWithValue("@codaux40_1", codaux40_1);                                               // v codigoAuxiliar40_1,
                     inserta.Parameters.AddWithValue("@etiaux40_1", etiaux40_1);                                               // v textoAuxiliar40_1
@@ -1785,44 +1839,89 @@ namespace Grael2
                     return;
                 }
                 // adicionales cabecera     SPE_EINVOICEHEADER_ADD
-                string diradq = tx_dirRem.Text.Trim();
-                string ubiadq = tx_ubigRtt.Text; // "150101";
-                string urbadq = "";
-                string proadq = tx_provRtt.Text.Trim();       // 
-                string depadq = tx_dptoRtt.Text.Trim();
-                string disadq = tx_distRtt.Text.Trim();
-                string paiadq = "PE";                       // prueba
-                string formpa = "009";
+                string diradq = (tx_dirRem.Text.Trim() == "") ? "-" : tx_dirRem.Text.Trim();
+                string ubiadq = tx_ubigRtt.Text;
+                string urbadq = "-";
+                string proadq = (tx_provRtt.Text.Trim() == "") ? "-" : tx_provRtt.Text.Trim();
+                string depadq = (tx_dptoRtt.Text.Trim() == "") ? "-" : tx_dptoRtt.Text.Trim();
+                string disadq = (tx_distRtt.Text.Trim() == "") ? "-" : tx_distRtt.Text.Trim();
+                string paiadq = "PE";
+                string formpa = (rb_si.Checked == true) ? "0" : "1";
+                DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
+                string fecpag = fecpd.AddDays(int.Parse(tx_dat_dpla.Text)).ToString("dd'/'MM'/'yyyy");
                 string insadd = "insert into SPE_EINVOICEHEADER_ADD (" +
-                    "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values " +
-                    "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
-                    "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
-                    "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
-                    "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
-                    "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)";
-                    //"('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@formpa)";
-                //  "('ubigeoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@ubiadq)," +   // no va por el momento hasta tenerlo
-                SqlCommand insertadd = new SqlCommand(insadd, conms);
-                insertadd.Parameters.AddWithValue("@nudoem", nudoem);
-                insertadd.Parameters.AddWithValue("@sernum", sernum);
-                insertadd.Parameters.AddWithValue("@tipdoc", tipdoc);
-                insertadd.Parameters.AddWithValue("@tidoem", tidoem);
-                insertadd.Parameters.AddWithValue("@diradq", diradq);
-                insertadd.Parameters.AddWithValue("@ubiadq", ubiadq);
-                insertadd.Parameters.AddWithValue("@proadq", proadq);
-                insertadd.Parameters.AddWithValue("@depadq", depadq);
-                insertadd.Parameters.AddWithValue("@disadq", disadq);
-                insertadd.Parameters.AddWithValue("@paiadq", paiadq);
-                insertadd.Parameters.AddWithValue("@formpa", formpa);
-                try
+                        "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values ";
+                if (tx_dat_tdv.Text == tdocsFac)    // esto aplica solo para facturas
                 {
-                    insertadd.ExecuteNonQuery();
+                    if (formpa == "0")
+                    {
+                        insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
+                            "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
+                            "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
+                            "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
+                            "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)," +
+                            "('formaPagoNegociable',@nudoem,@sernum,@tipdoc,@tidoem,@formpa)";
+                    }
+                    else
+                    {
+                        insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
+                            "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
+                            "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
+                            "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
+                            "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)," +
+                            "('formaPagoNegociable',@nudoem,@sernum,@tipdoc,@tidoem,@formpa)," +
+                            "('montoNetoPendiente',@nudoem,@sernum,@tipdoc,@tidoem,@totvta)," +
+                            "('montoPagoCuota1',@nudoem,@sernum,@tipdoc,@tidoem,@totvta)," +
+                            "('fechaPagoCuota1',@nudoem,@sernum,@tipdoc,@tidoem,@fecpag)";
+                    }
+                    //  "('ubigeoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@ubiadq)," +   // no va por el momento hasta tenerlo
+                    SqlCommand insertadd = new SqlCommand(insadd, conms);
+                    insertadd.Parameters.AddWithValue("@nudoem", nudoem);
+                    insertadd.Parameters.AddWithValue("@sernum", sernum);
+                    insertadd.Parameters.AddWithValue("@tipdoc", tipdoc);
+                    insertadd.Parameters.AddWithValue("@tidoem", tidoem);
+                    insertadd.Parameters.AddWithValue("@diradq", diradq);
+                    insertadd.Parameters.AddWithValue("@ubiadq", ubiadq);
+                    insertadd.Parameters.AddWithValue("@proadq", proadq);
+                    insertadd.Parameters.AddWithValue("@depadq", depadq);
+                    insertadd.Parameters.AddWithValue("@disadq", disadq);
+                    insertadd.Parameters.AddWithValue("@paiadq", paiadq);
+                    insertadd.Parameters.AddWithValue("@formpa", formpa);
+                    if (formpa == "1")
+                    {
+                        insertadd.Parameters.AddWithValue("@totvta", totvta);
+                        insertadd.Parameters.AddWithValue("@fecpag", fecpag);
+                    }
+                    try
+                    {
+                        insertadd.ExecuteNonQuery();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error en insertar adicional cabecera");
+                        Application.Exit();
+                        return;
+                    }
                 }
-                catch (MySqlException ex)
-                {
-                    MessageBox.Show(ex.Message, "Error en insertar adicional cabecera");
-                    Application.Exit();
-                    return;
+                else
+                {   // boleta
+                    insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
+                            "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
+                            "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
+                            "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
+                            "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)";
+                    SqlCommand insertadd = new SqlCommand(insadd, conms);
+                    insertadd.Parameters.AddWithValue("@nudoem", nudoem);
+                    insertadd.Parameters.AddWithValue("@sernum", sernum);
+                    insertadd.Parameters.AddWithValue("@tipdoc", tipdoc);
+                    insertadd.Parameters.AddWithValue("@tidoem", tidoem);
+                    insertadd.Parameters.AddWithValue("@diradq", diradq);
+                    insertadd.Parameters.AddWithValue("@ubiadq", ubiadq);
+                    insertadd.Parameters.AddWithValue("@proadq", proadq);
+                    insertadd.Parameters.AddWithValue("@depadq", depadq);
+                    insertadd.Parameters.AddWithValue("@disadq", disadq);
+                    insertadd.Parameters.AddWithValue("@paiadq", paiadq);
+                    insertadd.ExecuteNonQuery();
                 }
             }
             else
@@ -1959,6 +2058,21 @@ namespace Grael2
                         }
                     }
                 }
+                // validamos que no sea mas guias de las posibles
+                if (chk_consol.Checked == true && dataGridView1.Rows.Count > int.Parse(v_mfildet))
+                {
+                    MessageBox.Show("Limite máximo de guías alcanzado!", "Atención - modo consolidado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    tx_numGR.Text = "";
+                    tx_numGR.Focus();
+                    return;
+                }
+                if (chk_consol.Checked == false && dataGridView1.Rows.Count > 3)
+                {
+                    MessageBox.Show("Limite máximo de guías alcanzado!", "Atención - modo simple", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    tx_numGR.Text = "";
+                    tx_numGR.Focus();
+                    return;
+                }
                 // validamos que la GR: 1.exista, 2.No este facturada, 3.No este anulada
                 if (validGR(tx_serGR.Text, tx_numGR.Text) == false)
                 {
@@ -1967,49 +2081,34 @@ namespace Grael2
                     tx_numGR.Focus();
                     return;
                 }
+                // validamos que alguno de los clientes de la GR sea igual al existente en el formulario
+                if (int.Parse(tx_tfil.Text) > 0)
+                {
+                    /*
+                    if ((tx_dat_tdRem.Text + tx_numDocRem != datcltsR[0].ToString() + datcltsR[1]) && (tx_dat_tdRem.Text + tx_numDocRem != datcltsD[0].ToString() + datcltsD[1]))
+                    {
+                        var aa = MessageBox.Show("El remitente y destinatario de la GR" + Environment.NewLine +
+                            "no coinciden con el cliente del comprobante" + Environment.NewLine +
+                            "Desea continuar?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (aa == DialogResult.No)
+                        {
+                            inivarGR();
+                            tx_numGR.Text = "";
+                            tx_numGR.Focus();
+                            return;
+                        }
+                    }
+                    */
+                }
                 else
                 {
                     rb_desGR.PerformClick();
                 }
-                // validamos que no sea mas guias de las posibles
-                if (dataGridView1.Rows.Count > int.Parse(v_mfildet))
-                {
-                    MessageBox.Show("Limite máximo de guías alcanzado!", " Atención ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    tx_numGR.Text = "";
-                    tx_numGR.Focus();
-                    return;
-                }
                 //dataGridView1.Rows.Clear(); nooooo, se puede hacer una fact de varias guias, n guias
                 dataGridView1.Rows.Add(datguias[0], datguias[1], datguias[2], datguias[3], datguias[4], datguias[5], datguias[6], datguias[9], datguias[10], datguias[7], datguias[15],datguias[16],datguias[17]);     // insertamos en la grilla los datos de la GR
-                int totfil = 0;
-                int totcant = 0;
-                decimal totflet = 0;    // acumulador en moneda de la GR 
-                decimal totflMN = 0;
+                totalizaG();
                 tx_dat_mone.Text = datguias[7].ToString();
                 cmb_mon.SelectedValue = datguias[7].ToString();
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    if (dataGridView1.Rows[i].Cells[0].Value != null)
-                    {
-                        totcant = totcant + int.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
-                        totfil += 1;
-                        if (tx_dat_mone.Text != MonDeft)
-                        {
-                            totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR de la GR
-                            totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
-                        }
-                        else
-                        {
-                            totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR DE LA GR EN SU MONEDA
-                            totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
-                        }
-                    }
-                }
-                tx_tfmn.Text = totflMN.ToString("#0.00");
-                tx_totcant.Text = totcant.ToString();
-                tx_tfil.Text = totfil.ToString();
-                tx_flete.Text = totflet.ToString("#0.00");
-                tx_fletMN.Text = totflMN.ToString("#0.00"); // Math.Round(decimal.Parse(tx_flete.Text) * decimal.Parse(tx_tipcam.Text), 2).ToString();
                 if (tx_dat_mone.Text != MonDeft && datguias[9].ToString().Substring(0,10) != tx_fechope.Text)
                 {
                     // llamanos a tipo de cambio
@@ -3180,6 +3279,30 @@ namespace Grael2
                 }
             }
         }
+        private void chk_consol_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (Tx_modo.Text == "NUEVO")
+            {
+                if (chk_consol.Checked == false)
+                {
+                    if (int.Parse(tx_tfil.Text) > 1)
+                    {
+                        var aa = MessageBox.Show("Desea pasar a modo simple?" + Environment.NewLine +
+                            "Perdera las guías registradas", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (aa == DialogResult.Yes)
+                        {
+                            initIngreso();
+                            tx_serGR.Focus();
+                            // modo simple, maximo 3 guias
+                        }
+                    }
+                }
+                else
+                {
+                    // modo consolidado, maximo 200 guias
+                }
+            }
+        }
         #endregion
 
         #region botones_de_comando
@@ -3960,5 +4083,9 @@ namespace Grael2
         }
         #endregion
 
+        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            totalizaG();
+        }
     }
 }
