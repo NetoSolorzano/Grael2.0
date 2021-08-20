@@ -290,7 +290,9 @@ namespace Grael2
             tx_dat_nombd.ReadOnly = true;
             //pan_pago.Enabled = false;
             inivarGR();
-            rb_no.PerformClick();
+            rb_no.Checked = false;
+            rb_si.Checked = false;
+            //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
         {
@@ -2104,6 +2106,38 @@ namespace Grael2
                 {
                     rb_desGR.PerformClick();
                 }
+                // validamos que las guias esten con saldo o no
+                if (rb_si.Checked == false && rb_no.Checked == false)
+                {
+                    // estamos ante la primera guia
+                    if (double.Parse(datguias[16].ToString()) > 0)
+                    {
+                        rb_no.Checked = true;
+                        rb_no.PerformClick();
+                    }
+                    else
+                    {
+                        rb_si.Checked = true;
+                        rb_si.PerformClick();
+                    }
+                }
+                else
+                {
+                    if (rb_si.Checked == true && double.Parse(datguias[16].ToString()) > 0)
+                    {
+                        MessageBox.Show("Las Guías deben ser todas con o sin saldo","Error en ingreso",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        tx_numGR.Text = "";
+                        tx_numGR.Focus();
+                        return;
+                    }
+                    if (rb_no.Checked == true && double.Parse(datguias[16].ToString()) <= 0)
+                    {
+                        MessageBox.Show("Las Guías deben ser todas con o sin saldo", "Error en ingreso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        tx_numGR.Text = "";
+                        tx_numGR.Focus();
+                        return;
+                    }
+                }
                 //dataGridView1.Rows.Clear(); nooooo, se puede hacer una fact de varias guias, n guias
                 dataGridView1.Rows.Add(datguias[0], datguias[1], datguias[2], datguias[3], datguias[4], datguias[5], datguias[6], datguias[9], datguias[10], datguias[7], datguias[15],datguias[16],datguias[17]);     // insertamos en la grilla los datos de la GR
                 totalizaG();
@@ -2160,8 +2194,8 @@ namespace Grael2
                     else tx_flete.ReadOnly = true;
                 }
                 tx_flete_Leave(null, null);
-                rb_si.Checked = false;
-                rb_no.Checked = false;   // true
+                //rb_si.Checked = false;
+                //rb_no.Checked = false;   // true
             }
         }
         private void button1_Click(object sender, EventArgs e)
