@@ -102,6 +102,7 @@ namespace Grael2
         //public static string ctl = ConfigurationManager.AppSettings["ConnectionLifeTime"].ToString();
         // conexion a la base de datos
         string DB_CONN_STR = "server=" + serv + ";uid=" + usua + ";pwd=" + cont + ";database=" + data + ";";
+        string db_conn_grael = "server=" + login.serv + ";uid=" + login.usua + ";pwd=" + login.cont + ";database=" + login.dataG + ";";
         //
         public string ult_mov(string formu, string tabla, string usuar)     // ultimo movimiento del usuario
         {
@@ -667,7 +668,7 @@ namespace Grael2
         {
             string retorno = "";
             string consulta = "select id from " + tabla + " limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
@@ -700,7 +701,7 @@ namespace Grael2
             string retorno = "";
             string consulta = "";
             consulta = "select id from " + tabla + " where " + campo + " = @ida limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
@@ -735,7 +736,7 @@ namespace Grael2
             string consulta = "";
             if (regact == "") consulta = "select id from " + tabla + " order by id desc limit 1";
             else consulta = "select id from " + tabla + " where id <= @ra order by id desc limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
@@ -771,7 +772,7 @@ namespace Grael2
             if (regact != "")   //consulta = "select id from " + tabla + " order by id desc limit 1";
             {
                 consulta = "select id from " + tabla + " where id <= @ra and " + campo + " = @ida order by id desc limit 1";
-                MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+                MySqlConnection conl = new MySqlConnection(db_conn_grael);
                 conl.Open();
                 if (conl.State == ConnectionState.Open)
                 {
@@ -811,7 +812,7 @@ namespace Grael2
             string consulta = "";
             if (regact == "") consulta = "select id from " + tabla + " order by id asc limit 1";
             else consulta = "select id from " + tabla + " where id >= @ra limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
@@ -847,7 +848,7 @@ namespace Grael2
             if (regact != "")   //consulta = "select id from " + tabla + " order by id asc limit 1";
             {
                 consulta = "select id from " + tabla + " where id >= @ra and " + campo + "=@ida limit 1";
-                MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+                MySqlConnection conl = new MySqlConnection(db_conn_grael);
                 conl.Open();
                 if (conl.State == ConnectionState.Open)
                 {
@@ -885,7 +886,7 @@ namespace Grael2
         {
             string retorno = "";
             string consulta = "select id from " + tabla + " order by id desc limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
@@ -918,7 +919,7 @@ namespace Grael2
             string retorno = "";
             string consulta = "";
             consulta = "select id from " + tabla + " where " + campo + " = @ida order by id desc limit 1";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {

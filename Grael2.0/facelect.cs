@@ -27,7 +27,7 @@ namespace Grael2
         string colsfgr = Grael2.Program.colsfc;   // color seleccion grilla
         string colstrp = Grael2.Program.colstr;   // color del strip
         bool conectS = Grael2.Program.vg_conSol;    // usa conector solorsoft? true=si; false=no
-        static string nomtab = "cabfactu";              // ????
+        static string nomtab = "madocvtas";         // maestra de comprobantes del ERP_Grael 1.0 
 
         #region variables
         string img_btN = "";
@@ -456,21 +456,30 @@ namespace Grael2
                 }
                 if (campo == "sernum")
                 {
-                    parte = "where a.tipdvta=@tdv and a.serdvta=@ser and a.numdvta=@num";
+                    parte = "where a.docvta=@tdv and a.servta=@ser and a.corvta=@num";
                 }
-                MySqlConnection conn = new MySqlConnection(DB_CONN_STR);
+                MySqlConnection conn = new MySqlConnection(db_conn_grael);
                 conn.Open();
                 if (conn.State == ConnectionState.Open)
                 {
+                    /*
                     string consulta = "select a.id,a.fechope,a.martdve,a.tipdvta,a.serdvta,a.numdvta,a.ticltgr,a.tidoclt,a.nudoclt,a.nombclt,a.direclt,a.dptoclt,a.provclt,a.distclt,a.ubigclt,a.corrclt,a.teleclt," +
                         "a.locorig,a.dirorig,a.ubiorig,a.obsdvta,a.canfidt,a.canbudt,a.mondvta,a.tcadvta,a.subtota,a.igvtota,a.porcigv,a.totdvta,a.totpags,a.saldvta,a.estdvta,a.frase01,a.impreso," +
                         "a.tipoclt,a.m1clien,a.tippago,a.ferecep,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id,'') as cobra,a.idcaja," +
                         "a.cargaunica,a.placa,a.confveh,a.autoriz,a.detPeso,a.detputil,a.detMon1,a.detMon2,a.detMon3,a.dirporig,a.ubiporig,a.dirpdest,a.ubipdest,a.porcendscto,a.valordscto " +
                         "from cabfactu a left join desc_est b on b.idcodice=a.estdvta " +
                         "left join cabcobran c on c.tipdoco=a.tipdvta and c.serdoco=a.serdvta and c.numdoco=a.numdvta and c.estdcob<>@coda "
+                    */
+                    string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
+                        "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
+                        "'' as tipoclt,'' as m1clien,'' as tippago,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
+                        "0 as porcendscto,a.dscto,a.docvta " +
+                        "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
+                        "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
+                        "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " 
                         + parte;
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
-                    micon.Parameters.AddWithValue("@tdep", vtc_ruc);
+                    //micon.Parameters.AddWithValue("@tdep", vtc_ruc);
                     micon.Parameters.AddWithValue("@coda", codAnul);
                     if (campo == "tx_idr")
                     {
@@ -491,35 +500,35 @@ namespace Grael2
                             tx_idcaja.Text = dr.GetString("idcaja");
                             tx_fechope.Text = dr.GetString("fechope").Substring(0, 10);
                             //.Text = dr.GetString("martdve");
-                            tx_dat_tdv.Text = dr.GetString("tipdvta");
-                            tx_serie.Text = dr.GetString("serdvta");
-                            tx_numero.Text = dr.GetString("numdvta");
-                            rb_remGR.Checked = (dr.GetString("ticltgr") == "1")? true : false;
-                            rb_desGR.Checked = (dr.GetString("ticltgr") == "2") ? true : false;
-                            rb_otro.Checked = (dr.GetString("ticltgr") == "3") ? true : false;
-                            tx_dat_tdRem.Text = dr.GetString("tidoclt");
-                            tx_numDocRem.Text = dr.GetString("nudoclt");
-                            tx_nomRem.Text = dr.GetString("nombclt");
-                            tx_dirRem.Text = dr.GetString("direclt");
-                            tx_dptoRtt.Text = dr.GetString("dptoclt");
-                            tx_provRtt.Text = dr.GetString("provclt");
-                            tx_distRtt.Text = dr.GetString("distclt");
-                            tx_ubigRtt.Text = dr.GetString("ubigclt");
-                            tx_email.Text = dr.GetString("corrclt");
-                            tx_telc1.Text = dr.GetString("teleclt");
+                            tx_dat_tdv.Text = dr.GetString("docvta");
+                            tx_serie.Text = dr.GetString("servta");
+                            tx_numero.Text = dr.GetString("corvta");
+                            rb_remGR.Checked = (dr.GetString("rd3") == "1")? true : false;
+                            rb_desGR.Checked = (dr.GetString("rd3") == "2") ? true : false;
+                            rb_otro.Checked = (dr.GetString("rd3") == "3") ? true : false;
+                            tx_dat_tdRem.Text = dr.GetString("doccli");
+                            tx_numDocRem.Text = dr.GetString("numdcli");
+                            tx_nomRem.Text = dr.GetString("nomclie");
+                            tx_dirRem.Text = dr.GetString("direc");
+                            tx_dptoRtt.Text = dr.GetString("dpto");
+                            tx_provRtt.Text = dr.GetString("prov");
+                            tx_distRtt.Text = dr.GetString("dist");
+                            tx_ubigRtt.Text = dr.GetString("ubiclte");
+                            tx_email.Text = dr.GetString("email");
+                            tx_telc1.Text = dr.GetString("telef1");
                             //locorig,dirorig,ubiorig
-                            tx_obser1.Text = dr.GetString("obsdvta");
+                            tx_obser1.Text = dr.GetString("observ");
                             tx_tfil.Text = dr.GetString("canfidt");
                             tx_totcant.Text = dr.GetString("canbudt");  // total bultos
-                            tx_dat_mone.Text = dr.GetString("mondvta");
-                            tx_tipcam.Text = dr.GetString("tcadvta");
-                            tx_subt.Text = Math.Round(dr.GetDecimal("subtota"),2).ToString();
-                            tx_igv.Text = Math.Round(dr.GetDecimal("igvtota"), 2).ToString();
+                            tx_dat_mone.Text = dr.GetString("moneda");
+                            tx_tipcam.Text = dr.GetString("tipcam");
+                            tx_subt.Text = Math.Round(dr.GetDecimal("subtot"),2).ToString();
+                            tx_igv.Text = Math.Round(dr.GetDecimal("igv"), 2).ToString();
                             //,,,porcigv
-                            tx_flete.Text = Math.Round(dr.GetDecimal("totdvta"),2).ToString();           // total inc. igv
+                            tx_flete.Text = Math.Round(dr.GetDecimal("doctot"),2).ToString();           // total inc. igv
                             tx_pagado.Text = dr.GetString("totpags");
-                            tx_salxcob.Text = dr.GetString("saldvta");
-                            tx_dat_estad.Text = dr.GetString("estdvta");        // estado
+                            tx_salxcob.Text = dr.GetString("saldo");
+                            tx_dat_estad.Text = dr.GetString("status");        // estado
                             tx_dat_tcr.Text = dr.GetString("tipoclt");          // tipo de cliente credito o contado
                             tx_dat_m1clte.Text = dr.GetString("m1clien");
                             tx_impreso.Text = dr.GetString("impreso");
@@ -527,7 +536,7 @@ namespace Grael2
                             //
                             cmb_tdv.SelectedValue = tx_dat_tdv.Text;
                             cmb_tdv_SelectedIndexChanged(null, null);
-                            tx_numero.Text = dr.GetString("numdvta");       // al cambiar el indice en el combox se borra numero, por eso lo volvemos a jalar
+                            tx_numero.Text = dr.GetString("corvta");       // al cambiar el indice en el combox se borra numero, por eso lo volvemos a jalar
                             cmb_docRem.SelectedValue = tx_dat_tdRem.Text;
                             cmb_mon.SelectedValue = tx_dat_mone.Text;
                             tx_estado.Text = dr.GetString("nomest");   // lib.nomstat(tx_dat_estad.Text);
@@ -536,9 +545,9 @@ namespace Grael2
                             if (decimal.Parse(tx_salxcob.Text) == decimal.Parse(tx_flete.Text)) rb_no.Checked = true;
                             else rb_si.Checked = true;
                             // campos de carga unica
-                            tx_dat_upd.Text = dr.GetString("ubipdest");
-                            tx_dat_upo.Text = dr.GetString("ubiporig");
-                            tx_valdscto.Text = dr.GetString("valordscto");
+                            //tx_dat_upd.Text = dr.GetString("ubipdest");
+                            //tx_dat_upo.Text = dr.GetString("ubiporig");
+                            tx_valdscto.Text = dr.GetString("dscto");
                             tx_dat_porcDscto.Text = dr.GetString("porcendscto");
                         }
                         else
