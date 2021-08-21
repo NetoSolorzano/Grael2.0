@@ -749,8 +749,7 @@ namespace Grael2
         //
         private void pc_usuarios_Click(object sender, EventArgs e)
         {
-            /*
-            users fuser = new Grael2._0.users();
+            users fuser = new Grael2.users();
             fuser.TopLevel = false;
             fuser.Parent = this;
             pn_centro.Controls.Add(fuser);
@@ -758,11 +757,9 @@ namespace Grael2
             fuser.Anchor = AnchorStyles.None;
             fuser.Show();
             fuser.BringToFront();
-            */
         }
         private void pc_definiciones_Click(object sender, EventArgs e)
         {
-            /*
             defs fdefs = new defs();
             fdefs.TopLevel = false;
             fdefs.Parent = this;
@@ -771,7 +768,6 @@ namespace Grael2
             fdefs.Anchor = AnchorStyles.None;
             fdefs.Show();
             fdefs.BringToFront();
-            */
         }
         private void pc_series_Click(object sender, EventArgs e)
         {
@@ -788,7 +784,6 @@ namespace Grael2
         }
         private void pc_enlaces_Click(object sender, EventArgs e)
         {
-            /*
             enlaces fenl = new enlaces();
             fenl.TopLevel = false;
             fenl.Parent = this;
@@ -797,11 +792,9 @@ namespace Grael2
             fenl.Anchor = AnchorStyles.None;
             fenl.Show();
             fenl.BringToFront();
-            */
         }
         private void pc_permisos_Click(object sender, EventArgs e)
         {
-            /*
             permisos fper = new permisos();
             fper.TopLevel = false;
             fper.Parent = this;
@@ -810,7 +803,6 @@ namespace Grael2
             fper.Anchor = AnchorStyles.None;
             fper.Show();
             fper.BringToFront();
-            */
         }
         //
         private void bt_almacen_Click(object sender, EventArgs e)       // Almacen

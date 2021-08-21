@@ -36,6 +36,9 @@
     <StartupObject>Grael2.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AdvancedDataGridView, Version=0.1.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ADGV.0.1.0.10\lib\net40\AdvancedDataGridView.dll</HintPath>
+    </Reference>
     <Reference Include="CrystalDecisions.CrystalReports.Design, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.CrystalReports.TemplateEngine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
@@ -70,6 +73,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="defs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="defs.designer.cs">
+      <DependentUpon>defs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="enlaces.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="enlaces.designer.cs">
+      <DependentUpon>enlaces.cs</DependentUpon>
+    </Compile>
     <Compile Include="facelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,15 +107,33 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="NumLetra.cs" />
+    <Compile Include="permisos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="permisos.designer.cs">
+      <DependentUpon>permisos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="publico.cs" />
+    <Compile Include="users.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="users.designer.cs">
+      <DependentUpon>users.cs</DependentUpon>
+    </Compile>
     <Compile Include="vtipcam.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="vtipcam.designer.cs">
       <DependentUpon>vtipcam.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="defs.resx">
+      <DependentUpon>defs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="enlaces.resx">
+      <DependentUpon>enlaces.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="facelect.resx">
       <DependentUpon>facelect.cs</DependentUpon>
     </EmbeddedResource>
@@ -109,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="permisos.resx">
+      <DependentUpon>permisos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -120,6 +156,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="users.resx">
+      <DependentUpon>users.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vtipcam.resx">
       <DependentUpon>vtipcam.cs</DependentUpon>
     </EmbeddedResource>

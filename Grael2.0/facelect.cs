@@ -585,9 +585,20 @@ namespace Grael2
         }
         private void jaladet(string idr)         // jala el detalle
         {
+            /*
             string jalad = "select filadet,codgror,cantbul,unimedp,descpro,pesogro,codmogr,totalgr " +
                 "from detfactu where idc=@idr";
-            using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
+            */
+            string jalad = "select a.idc,a.docvta,a.servta,a.corvta,a.sergr,a.corgr,a.moneda," +
+                        "a.valor,a.ruta,a.glosa,a.status,a.userc,a.fechc,a.docremi,a.bultos,a.monrefd1,a.monrefd2,a.monrefd3," +
+                        "c.moneda as nomMon,c.fechope,c.docremi,concat(lo.descrizionerid,'-',ld.descrizionerid),c.saldo,max(d.unidad) as unidad " +
+                        "from detavtas a left join desc_mon b on b.idcodice=a.moneda " +
+                        "left join magrem c on c.sergre=a.sergr and c.corgre=a.corgr " +
+                        "left join detagrem d on d.idc=a.id " +
+                        "left join desc_sds lo on lo.idcodice = c.origen " +
+                        "left join desc_sds ld on ld.idcodice = c.destino " +
+                        "where a.idc=@idr";
+            using (MySqlConnection conn = new MySqlConnection(db_conn_grael))
             {
                 conn.Open();
                 using (MySqlCommand micon = new MySqlCommand(jalad, conn))
@@ -600,16 +611,19 @@ namespace Grael2
                         foreach (DataRow row in dt.Rows)
                         {
                             dataGridView1.Rows.Add(
-                                row[1].ToString(),
-                                row[4].ToString(),
-                                row[2].ToString(),
+                                row[4].ToString() + "-" + row[5].ToString(),
+                                row[9].ToString(),
+                                row[14].ToString(),
                                 row[6].ToString(),
                                 row[7].ToString(),
                                 "",
+                                row[18].ToString(),
+                                row[19].ToString().Substring(0,10),
+                                row[20].ToString(),
                                 "",
-                                "",
-                                "",
-                                "");
+                                row[21].ToString(),
+                                row[22].ToString(),
+                                row[23].ToString());
                         }
                         dt.Dispose();
                     }
@@ -2822,7 +2836,7 @@ namespace Grael2
         }
         private void edita()
         {
-            MySqlConnection conn = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conn = new MySqlConnection(db_conn_grael);
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
@@ -2830,20 +2844,16 @@ namespace Grael2
                 {
                     if (true)     // EDICION DE CABECERA
                     {
-                        string actua = "update cabfactu a set obsdvta=@obsprg," +
-                            "a.verApp=@verApp,a.userm=@asd,a.fechm=now(),a.diriplan4=@iplan,a.diripwan4=@ipwan,a.netbname=@nbnam " +
+                        string actua = "update madocvtas a set observ=@obsprg," +
+                            "a.userm=@asd,a.fechm=now() " +
                             "where a.id=@idr";
                         MySqlCommand micon = new MySqlCommand(actua, conn);
                         micon.Parameters.AddWithValue("@idr", tx_idr.Text);
                         micon.Parameters.AddWithValue("@obsprg", tx_obser1.Text);
-                        micon.Parameters.AddWithValue("@verApp", verapp);
                         micon.Parameters.AddWithValue("@asd", asd);
-                        micon.Parameters.AddWithValue("@iplan", lib.iplan());
-                        micon.Parameters.AddWithValue("@ipwan", Grael2.Program.vg_ipwan);
-                        micon.Parameters.AddWithValue("@nbnam", Environment.MachineName);
                         micon.ExecuteNonQuery();
                         //
-                        // EDICION DEL DETALLE .... no hay 28/10/2020
+                        // EDICION DEL DETALLE .... no hay 
                         micon.Dispose();
                     }
                     conn.Close();
@@ -2865,19 +2875,19 @@ namespace Grael2
         private int anula(string tipo)
         {
             int ctanul = 0;
-            // en el caso de documentos de venta HAY 1: ANULACION FISICA ... 28/10/2020
-            // tambien podría haber ANULACION interna con la serie ANU1 .... 19/11/2020
+            // en el caso de documentos de venta HAY 1: ANULACION FISICA ... 
+            // tambien podría haber ANULACION interna con la serie ANU1 .... 
             // Anulacion fisica se "anula" el numero del documento en sistema y en fisico se tacha y en prov. fact.electronica se da baja de numeracion
             // se borran todos los enlaces mediante triggers en la B.D.
             if (tipo == "FIS")
             {
-                using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
+                using (MySqlConnection conn = new MySqlConnection(db_conn_grael))
                 {
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
-                        string canul = "update cabfactu set estdvta=@estser,obsdvta=@obse,usera=@asd,fecha=now()," +
-                            "verApp=@veap,diriplan4=@dil4,diripwan4=@diw4,netbname=@nbnp,estintreg=@eiar " +
+                        string canul = "update madocvtas set status=@estser,observ=@obse,usera=@asd,fecha=now()" +
+                            " " +
                             "where id=@idr";
                         using (MySqlCommand micon = new MySqlCommand(canul, conn))
                         {
@@ -2885,11 +2895,6 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@estser", codAnul);
                             micon.Parameters.AddWithValue("@obse", tx_obser1.Text);
                             micon.Parameters.AddWithValue("@asd", asd);
-                            micon.Parameters.AddWithValue("@dil4", lib.iplan());
-                            micon.Parameters.AddWithValue("@diw4", Grael2.Program.vg_ipwan);
-                            micon.Parameters.AddWithValue("@nbnp", Environment.MachineName);
-                            micon.Parameters.AddWithValue("@veap", verapp);
-                            micon.Parameters.AddWithValue("@eiar", (vint_A0 == codAnul) ? "A0" : "");  // codigo anulacion interna en DB A0
                             micon.ExecuteNonQuery();
                         }
                         string consul = "select count(id) from cabfactu where date(fecha)=@fech and estdvta=@estser";
@@ -2910,13 +2915,12 @@ namespace Grael2
             }
             if (tipo == "INT")
             {
-                using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
+                using (MySqlConnection conn = new MySqlConnection(db_conn_grael))
                 {
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
-                        string canul = "update cabfactu set serdvta=@sain,estdvta=@estser,obsdvta=@obse,usera=@asd,fecha=now()," +
-                            "verApp=@veap,diriplan4=@dil4,diripwan4=@diw4,netbname=@nbnp,estintreg=@eiar " +
+                        string canul = "update madocvtas set servta=@sain,status=@estser,observ=@obse,usera=@asd,fecha=now() " +
                             "where id=@idr";
                         using (MySqlCommand micon = new MySqlCommand(canul, conn))
                         {
@@ -2925,11 +2929,6 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@estser", codAnul);
                             micon.Parameters.AddWithValue("@obse", tx_obser1.Text);
                             micon.Parameters.AddWithValue("@asd", asd);
-                            micon.Parameters.AddWithValue("@dil4", lib.iplan());
-                            micon.Parameters.AddWithValue("@diw4", Grael2.Program.vg_ipwan);
-                            micon.Parameters.AddWithValue("@nbnp", Environment.MachineName);
-                            micon.Parameters.AddWithValue("@veap", verapp);
-                            micon.Parameters.AddWithValue("@eiar", (vint_A0 == codAnul) ? "A0" : "");  // codigo anulacion interna en DB A0
                             micon.ExecuteNonQuery();
                         }
                         string updser = "update series set actual=actual-1 where tipdoc=@tipd AND serie=@serd";
@@ -3437,7 +3436,7 @@ namespace Grael2
         private void Bt_edit_Click(object sender, EventArgs e)
         {
             sololee();          
-            Tx_modo.Text = "EDITAR";                    // solo puede editarse la observacion 28/10/2020
+            Tx_modo.Text = "EDITAR";
             button1.Image = Image.FromFile(img_grab);
             tx_flete.ReadOnly = true;
             initIngreso();
