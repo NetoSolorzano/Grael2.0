@@ -1466,9 +1466,9 @@
             // 
             this.groupBox27.BackColor = System.Drawing.Color.White;
             this.groupBox27.Controls.Add(this.groupBox28);
-            this.groupBox27.Location = new System.Drawing.Point(12, 502);
+            this.groupBox27.Location = new System.Drawing.Point(5, 502);
             this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Size = new System.Drawing.Size(749, 1);
+            this.groupBox27.Size = new System.Drawing.Size(757, 1);
             this.groupBox27.TabIndex = 334;
             this.groupBox27.TabStop = false;
             // 
@@ -1484,7 +1484,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label19.Location = new System.Drawing.Point(12, 487);
+            this.label19.Location = new System.Drawing.Point(5, 487);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(78, 13);
             this.label19.TabIndex = 333;
@@ -1520,6 +1520,7 @@
             this.tx_dat_tcr.Name = "tx_dat_tcr";
             this.tx_dat_tcr.Size = new System.Drawing.Size(26, 18);
             this.tx_dat_tcr.TabIndex = 348;
+            this.tx_dat_tcr.Visible = false;
             // 
             // groupBox3
             // 
@@ -1696,6 +1697,7 @@
             this.tx_dat_tdec.Name = "tx_dat_tdec";
             this.tx_dat_tdec.Size = new System.Drawing.Size(31, 18);
             this.tx_dat_tdec.TabIndex = 362;
+            this.tx_dat_tdec.Visible = false;
             // 
             // tx_dat_m1clte
             // 
@@ -1725,6 +1727,7 @@
             this.tx_fletMN.Name = "tx_fletMN";
             this.tx_fletMN.Size = new System.Drawing.Size(40, 18);
             this.tx_fletMN.TabIndex = 365;
+            this.tx_fletMN.Visible = false;
             // 
             // tx_dat_saldoGR
             // 
@@ -1809,9 +1812,9 @@
             // 
             this.groupBox21.BackColor = System.Drawing.Color.White;
             this.groupBox21.Controls.Add(this.groupBox22);
-            this.groupBox21.Location = new System.Drawing.Point(12, 478);
+            this.groupBox21.Location = new System.Drawing.Point(5, 478);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(751, 1);
+            this.groupBox21.Size = new System.Drawing.Size(756, 1);
             this.groupBox21.TabIndex = 414;
             this.groupBox21.TabStop = false;
             // 
@@ -1827,7 +1830,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(12, 463);
+            this.label9.Location = new System.Drawing.Point(5, 463);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 13);
             this.label9.TabIndex = 413;

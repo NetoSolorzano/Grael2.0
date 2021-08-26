@@ -2494,8 +2494,8 @@ namespace Grael2
                             {
                                 if (lib.DirectoryVisible(rutatxt) == true)
                                 {
-                                    /*
                                     int cta = anula("FIS");      // cantidad de doc.vtas anuladas en la fecha
+                                    /*                                    
                                     if (factElec(nipfe, "txt", "baja", cta) == true)
                                     {
                                         string resulta = lib.ult_mov(nomform, nomtab, asd);
@@ -2539,8 +2539,8 @@ namespace Grael2
                         {
                             if (lib.DirectoryVisible(rutatxt) == true)
                             {
-                                /*
                                 int cta = anula("FIS");      // cantidad de doc.vtas anuladas en la fecha
+                                /*
                                 if (factElec(nipfe, "txt", "baja", cta) == true)
                                 {
                                     string resulta = lib.ult_mov(nomform, nomtab, asd);
@@ -2820,6 +2820,9 @@ namespace Grael2
                                 micon.ExecuteNonQuery();
                                 fila += 1;
                                 retorna = true;         // no hubo errores!
+                                //
+                                // OJO, las actualizaciones en las tablas magrem, manoen y mactacte, las hace el TRIGGER de la tabla detvtas
+                                // 
                             }
                         }
                     }
@@ -2886,9 +2889,9 @@ namespace Grael2
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
-                        string canul = "update madocvtas set status=@estser,observ=@obse,usera=@asd,fecha=now()" +
-                            " " +
-                            "where id=@idr";
+                        string canul = "update madocvtas a, detavtas b set a.status=@estser,a.observ=@obse,a.usera=@asd,a.fecha=now()," +
+                            "b.usera=@asd,b.fecha=now(),b.status=@estser " +
+                            "where a.id = b.idc and a.id = @idr";
                         using (MySqlCommand micon = new MySqlCommand(canul, conn))
                         {
                             micon.Parameters.AddWithValue("@idr", tx_idr.Text);
@@ -2897,6 +2900,8 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@asd", asd);
                             micon.ExecuteNonQuery();
                         }
+                        // falta actualizar con TRIGGER  mactacte,magrem y manoen
+                        /*
                         string consul = "select count(id) from cabfactu where date(fecha)=@fech and estdvta=@estser";
                         using (MySqlCommand micon = new MySqlCommand(consul, conn))
                         {
@@ -2910,10 +2915,11 @@ namespace Grael2
                                 }
                             }
                         }
+                        */
                     }
                 }
             }
-            if (tipo == "INT")
+            if (tipo == "INT")      /// esta no se usa 25/08/2021
             {
                 using (MySqlConnection conn = new MySqlConnection(db_conn_grael))
                 {
@@ -2931,6 +2937,9 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@asd", asd);
                             micon.ExecuteNonQuery();
                         }
+
+                        // falta actualizar detavtas y con su TRIGGER actualizar mactacte,magrem y manoen
+                        /*
                         string updser = "update series set actual=actual-1 where tipdoc=@tipd AND serie=@serd";
                         using (MySqlCommand micon = new MySqlCommand(updser, conn))
                         {
@@ -2938,6 +2947,7 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@serd", tx_serie.Text);
                             micon.ExecuteNonQuery();
                         }
+                        */
                     }
                 }
             }
@@ -3234,6 +3244,7 @@ namespace Grael2
         }
         private void rb_si_Click(object sender, EventArgs e)
         {
+            /*
             if (tx_idcaja.Text != "")
             {
                 // validamos la fecha de la caja
@@ -3280,6 +3291,7 @@ namespace Grael2
                 rb_si.Checked = false;
                 rb_no.PerformClick();
             }
+            */
         }
         private void rb_no_Click(object sender, EventArgs e)
         {

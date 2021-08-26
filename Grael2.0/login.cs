@@ -28,9 +28,10 @@ namespace Grael2
         private void login_Load(object sender, EventArgs e)
         {
             lb_version.Text = "Versión " + System.Diagnostics.FileVersionInfo.GetVersionInfo(Application.ExecutablePath).FileVersion;
-            lb_titulo.Text = "Expreso Grael - ERP_GRAEL 2.0" + Program.tituloF;
+            lb_titulo.Text = Program.tituloF;
             lb_titulo.BackColor = System.Drawing.Color.White;
-            lb_titulo.Parent = pictureBox1;
+            lb_titulo.ForeColor = System.Drawing.Color.Black;
+            //lb_titulo.Parent = pictureBox1;
             Image logo = Properties.Resources.logo_fb;
             Image salir = Properties.Resources.Close_32;
             //Image entrar = Image.FromFile("recursos/ok.png");

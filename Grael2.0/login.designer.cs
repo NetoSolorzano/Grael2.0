@@ -128,7 +128,7 @@
             // lb_titulo
             // 
             this.lb_titulo.BackColor = System.Drawing.Color.White;
-            this.lb_titulo.Font = new System.Drawing.Font("Palatino Linotype", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_titulo.Font = new System.Drawing.Font("Russo One", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lb_titulo.ForeColor = System.Drawing.Color.DimGray;
             this.lb_titulo.Location = new System.Drawing.Point(287, 36);
             this.lb_titulo.Name = "lb_titulo";
