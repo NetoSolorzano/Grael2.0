@@ -204,6 +204,7 @@
             this.tx_serGR = new Grael2.NumericTextBox();
             this.tx_tfil = new Grael2.NumericTextBox();
             this.tx_totcant = new Grael2.NumericTextBox();
+            this.tx_dat_loca = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -1992,6 +1993,16 @@
             this.tx_totcant.TabIndex = 25;
             this.tx_totcant.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // tx_dat_loca
+            // 
+            this.tx_dat_loca.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_dat_loca.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_dat_loca.Location = new System.Drawing.Point(210, 22);
+            this.tx_dat_loca.Name = "tx_dat_loca";
+            this.tx_dat_loca.Size = new System.Drawing.Size(50, 18);
+            this.tx_dat_loca.TabIndex = 431;
+            this.tx_dat_loca.Visible = false;
+            // 
             // facelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1999,6 +2010,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(769, 576);
+            this.Controls.Add(this.tx_dat_loca);
             this.Controls.Add(this.chk_consol);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tx_dat_porcDscto);
@@ -2297,5 +2309,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn saldo;
         private System.Windows.Forms.DataGridViewTextBoxColumn unidad;
         private System.Windows.Forms.CheckBox chk_consol;
+        private System.Windows.Forms.TextBox tx_dat_loca;
     }
 }

@@ -1812,7 +1812,7 @@ namespace Grael2
         public string serlocs(string loca)                                  // retorna la serie del local
         {
             string retorna = "";
-            string consulta = "select codigo from desc_sds where idcodice=@loc";
+            string consulta = "select codsunat from desc_sds where idcodice=@loc";    //select codigo from desc_sds where idcodice=@loc
             MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
             conl.Open();
             if (conl.State == ConnectionState.Open)

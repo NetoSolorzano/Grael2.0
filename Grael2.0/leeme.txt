@@ -1,5 +1,6 @@
 ﻿11/08/2021
 me quede en agregar los procedimientos y triggers a la base erp_grael para :
-- ingreso del comprobante
-- anulacion del comprobante
+- ingreso del comprobante ..................................................... OK 26/08/2021
+- anulacion del comprobante ................................................... OK 26/08/2021
+
 

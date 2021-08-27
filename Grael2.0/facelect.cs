@@ -434,7 +434,7 @@ namespace Grael2
                 dt.Dispose();
                 // jalamos datos del usuario y local
                 v_clu = Grael2.Program.vg_luse;                // codigo local usuario
-                v_slu = lib.serlocs(v_clu);                        // serie local usuario
+                v_slu = lib.serlocs(v_clu);                    // serie local usuario
                 v_nbu = Grael2.Program.vg_nuse;                // nombre del usuario
                 conn.Close();
             }
@@ -516,6 +516,7 @@ namespace Grael2
                             tx_ubigRtt.Text = dr.GetString("ubiclte");
                             tx_email.Text = dr.GetString("email");
                             tx_telc1.Text = dr.GetString("telef1");
+                            tx_dat_loca.Text = dr.GetString("local");
                             //locorig,dirorig,ubiorig
                             tx_obser1.Text = dr.GetString("observ");
                             tx_tfil.Text = dr.GetString("canfidt");
@@ -2478,7 +2479,7 @@ namespace Grael2
                 // validaciones de fecha para poder anular
                 DateTime fedv = DateTime.Parse(tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
                 TimeSpan span = DateTime.Parse(lib.fechaServ("ansi")) - fedv;
-                if (span.Days > v_cdpa)
+                if ((span.Days > v_cdpa) || v_clu != tx_dat_loca.Text)
                 {
                     // no se puede anular ... a menos que sea un usuario autorizado
                     if (codusanu.Contains(asd))
@@ -2527,7 +2528,7 @@ namespace Grael2
                     }
                     else
                     {
-                        MessageBox.Show("No se puede anular por estar fuera de plazo","Usuario no permito",MessageBoxButtons.OK,MessageBoxIcon.Asterisk);
+                        MessageBox.Show("No se puede anular por estar fuera de plazo o sede","Usuario no permitido",MessageBoxButtons.OK,MessageBoxIcon.Asterisk);
                     }
                 }
                 else
@@ -2788,9 +2789,9 @@ namespace Grael2
                                 "where idc=@idr and filadet=@fila";
                             */
                             string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda," +
-                        "valor,ruta,glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3) " +
+                        "valor,ruta,glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc) " +
                         "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm," +
-                        "@pret,@ruta,@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3)";
+                        "@pret,@ruta,@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr)";
                             using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
                             {
                                 micon.Parameters.AddWithValue("@idr", tx_idr.Text);
@@ -2810,6 +2811,9 @@ namespace Grael2
                                 micon.Parameters.AddWithValue("@mrd1", "0.00"); // (tx_dref1.Text == "") ? "0.00" : tx_dref1.Text
                                 micon.Parameters.AddWithValue("@mrd2", "0.00"); // (tx_dcar1.Text == "") ? "0.00" : tx_dcar1.Text
                                 micon.Parameters.AddWithValue("@mrd3", "0.00");   // (tx_dnom1.Text == "") ? "0.00" : tx_dnom1.Text
+                                micon.Parameters.AddWithValue("@mtdvta", cmb_tdv.Text.Substring(0, 1));
+                                micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
+                                micon.Parameters.AddWithValue("@totpgr", tx_flete.Text);                    // total inc. igv
                                 //micon.Parameters.AddWithValue("@fila", fila);
                                 /*
                                 micon.Parameters.AddWithValue("@unim", "");

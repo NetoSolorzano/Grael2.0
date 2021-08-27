@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
 [assembly: AssemblyTitle("Grael2.0")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Erp de gestión para Expreso Grael SAC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SOLORSOFT")]
 [assembly: AssemblyProduct("Grael2.0")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("SolorSoft.com")]
 [assembly: AssemblyCulture("")]
 
 // Si establece ComVisible en false, los tipos de este ensamblado no estarán visibles 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión
 // utilizando el carácter "*", como se muestra a continuación:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2021.8.25")]
-[assembly: AssemblyFileVersion("1.2021.8.25")]
+[assembly: AssemblyVersion("1.2021.8.26")]
+[assembly: AssemblyFileVersion("1.2021.8.26")]
