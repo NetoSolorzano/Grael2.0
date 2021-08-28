@@ -292,6 +292,8 @@ namespace Grael2
             inivarGR();
             rb_no.Checked = false;
             rb_si.Checked = false;
+            rb_no.Enabled = false;
+            rb_si.Enabled = false;
             //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
@@ -592,10 +594,9 @@ namespace Grael2
             */
             string jalad = "select a.idc,a.docvta,a.servta,a.corvta,a.sergr,a.corgr,a.moneda," +
                         "a.valor,a.ruta,a.glosa,a.status,a.userc,a.fechc,a.docremi,a.bultos,a.monrefd1,a.monrefd2,a.monrefd3," +
-                        "c.moneda as nomMon,c.fechope,c.docremi,concat(lo.descrizionerid,'-',ld.descrizionerid),c.saldo,max(d.unidad) as unidad " +
+                        "c.moneda as nomMon,c.fechope,c.docremi,concat(lo.descrizionerid,'-',ld.descrizionerid),c.saldo,SUBSTRING_INDEX(SUBSTRING_INDEX(a.bultos, ' ', 2), ' ', -1) AS unidad " +
                         "from detavtas a left join desc_mon b on b.idcodice=a.moneda " +
                         "left join magrem c on c.sergre=a.sergr and c.corgre=a.corgr " +
-                        "left join detagrem d on d.idc=a.id " +
                         "left join desc_sds lo on lo.idcodice = c.origen " +
                         "left join desc_sds ld on ld.idcodice = c.destino " +
                         "where a.idc=@idr";
