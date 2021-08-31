@@ -1531,7 +1531,7 @@ namespace Grael2
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
                         double intos1 = inuns1;                                                                 // importeTotalSinImpuesto
-                        gpadqui = dataGridView1.Rows[q].Cells["GUIA CLIENTE"].Value.ToString().Trim();
+                        gpadqui = gpadqui + "," + dataGridView1.Rows[q].Cells[8].Value.ToString().Trim();
                         if (gpadqui.Length > 1 && gpadqui.Length < 500)
                         {
                             tiref1 = "9840";   // G.R. remitente                                                // codigoAuxiliar500_1
@@ -1556,7 +1556,7 @@ namespace Grael2
                                 nudor3 = gpadqui.Substring(999, 500);                                          // textoAuxiliar500_3
                             }
                         }
-                        gpgrael = gpgrael + " - " + dataGridView1.Rows[q].Cells[5].Value.ToString();            // guias de grael ..... ACA ESTA EL TESORO Rows[0] 04/07/2019
+                        gpgrael = gpgrael + "," + dataGridView1.Rows[q].Cells[0].Value.ToString();            // guias de grael ..... ACA ESTA EL TESORO Rows[0] 04/07/2019
                         if (gpgrael.Length > 1 && gpgrael.Length < 501)
                         {
                             Ctiref1 = "8054";   // G.R. transportista de grael                                  // codigoAuxiliar500_1
@@ -1719,7 +1719,7 @@ namespace Grael2
                                 nudor3 = gpadqui.Substring(999, 500);                                          // textoAuxiliar500_3
                             }
                         }
-                        gpgrael = dataGridView1.Rows[q].Cells[5].Value.ToString().Trim();
+                        gpgrael = gpgrael + "," + dataGridView1.Rows[q].Cells[0].Value.ToString().Trim();
                         Ctiref1 = "8054";     // G.R. transportista de grael                                  // codigoAuxiliar500_1    ... 06/07/2019
                         Cnudor1 = gpgrael;                                                                    // agregado 06/07/2019
                         string ubiPtoOri = "";              // ubigeoPtoOrigen
