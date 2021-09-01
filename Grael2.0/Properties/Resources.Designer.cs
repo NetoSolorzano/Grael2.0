@@ -73,6 +73,16 @@ namespace Grael2.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap contab32 {
+            get {
+                object obj = ResourceManager.GetObject("contab32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap docum32 {
             get {
                 object obj = ResourceManager.GetObject("docum32", resourceCulture);

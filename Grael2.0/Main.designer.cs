@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.pn_phor = new System.Windows.Forms.Panel();
-            this.pic_icon_menu = new System.Windows.Forms.PictureBox();
             this.pn_menu = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.bt_solorsoft = new System.Windows.Forms.Button();
@@ -45,16 +44,17 @@
             this.bt_contab = new System.Windows.Forms.Button();
             this.bt_pcontrol = new System.Windows.Forms.Button();
             this.bt_facele = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bt_salir = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pn_centro = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pic_icon_menu = new System.Windows.Forms.PictureBox();
             this.pn_phor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic_icon_menu)).BeginInit();
             this.pn_menu.SuspendLayout();
             this.pn_user.SuspendLayout();
             this.pn_pver.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_icon_menu)).BeginInit();
             this.SuspendLayout();
             // 
             // pn_phor
@@ -69,17 +69,6 @@
             this.pn_phor.Name = "pn_phor";
             this.pn_phor.Size = new System.Drawing.Size(945, 53);
             this.pn_phor.TabIndex = 0;
-            // 
-            // pic_icon_menu
-            // 
-            this.pic_icon_menu.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pic_icon_menu.BackColor = System.Drawing.Color.White;
-            this.pic_icon_menu.Location = new System.Drawing.Point(1, 26);
-            this.pic_icon_menu.Name = "pic_icon_menu";
-            this.pic_icon_menu.Size = new System.Drawing.Size(30, 26);
-            this.pic_icon_menu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pic_icon_menu.TabIndex = 7;
-            this.pic_icon_menu.TabStop = false;
             // 
             // pn_menu
             // 
@@ -260,16 +249,6 @@
             this.bt_facele.UseVisualStyleBackColor = true;
             this.bt_facele.Click += new System.EventHandler(this.bt_facele_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(188, 128);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // bt_salir
             // 
             this.bt_salir.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -297,6 +276,27 @@
             this.pn_centro.Size = new System.Drawing.Size(944, 768);
             this.pn_centro.TabIndex = 2;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(188, 128);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // pic_icon_menu
+            // 
+            this.pic_icon_menu.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.pic_icon_menu.BackColor = System.Drawing.Color.White;
+            this.pic_icon_menu.Location = new System.Drawing.Point(1, 26);
+            this.pic_icon_menu.Name = "pic_icon_menu";
+            this.pic_icon_menu.Size = new System.Drawing.Size(30, 26);
+            this.pic_icon_menu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pic_icon_menu.TabIndex = 7;
+            this.pic_icon_menu.TabStop = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -312,12 +312,12 @@
             this.Load += new System.EventHandler(this.Main_Load);
             this.pn_phor.ResumeLayout(false);
             this.pn_phor.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic_icon_menu)).EndInit();
             this.pn_menu.ResumeLayout(false);
             this.pn_user.ResumeLayout(false);
             this.pn_user.PerformLayout();
             this.pn_pver.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_icon_menu)).EndInit();
             this.ResumeLayout(false);
 
         }

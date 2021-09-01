@@ -458,7 +458,7 @@ namespace Grael2
                 }
                 if (campo == "sernum")
                 {
-                    parte = "where a.docvta=@tdv and a.servta=@ser and a.corvta=@num";
+                    parte = "where a.docvta=@tdv and a.servta=@ser and a.corvta=@num and a.mfe=@mfe";
                 }
                 MySqlConnection conn = new MySqlConnection(db_conn_grael);
                 conn.Open();
@@ -492,6 +492,7 @@ namespace Grael2
                         micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
                         micon.Parameters.AddWithValue("@ser", tx_serie.Text);
                         micon.Parameters.AddWithValue("@num", tx_numero.Text);
+                        micon.Parameters.AddWithValue("@mfe", cmb_tdv.Text.Substring(0,1));
                     }
                     MySqlDataReader dr = micon.ExecuteReader();
                     if (dr != null)
@@ -1019,7 +1020,7 @@ namespace Grael2
             }
             return retorna;
         }
-        private void tipcambio(string codmod)                // funcion para calculos con el tipo de cambio
+        private void tipcambio(string codmod)               // funcion para calculos con el tipo de cambio
         {
             decimal totflet = 0;
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
@@ -2472,8 +2473,9 @@ namespace Grael2
                 }
                 if (tx_idcob.Text != "")
                 {
-                    MessageBox.Show("El documento de venta tiene Cobranza activa" + Environment.NewLine +
-                        "La cobranza permanece sin cambios", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    //MessageBox.Show("El documento de venta tiene Cobranza activa" + Environment.NewLine +
+                    //    "La cobranza permanece sin cambios", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    // 31/08/2021 en esta etapa no tenemos nada que ver con cobranzas para hacer anulaciones
                     //tx_numero.Focus();
                     //return;
                 }
@@ -3524,7 +3526,7 @@ namespace Grael2
             tx_numero.ReadOnly = false;
             tx_obser1.Enabled = true;
             tx_obser1.ReadOnly = false;
-            tx_serie.Focus();
+            cmb_tdv.Focus();
             //
             Bt_ini.Enabled = true;
             Bt_sig.Enabled = true;

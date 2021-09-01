@@ -59,7 +59,7 @@ namespace Grael2
         string img_pcon = "";                                           // imagen para el boton de panel de control
         string img_fact = "";                                           // imagen para el boton de facturacion
         string img_vent = "";                                           // imagen para el boton de ventas contratos
-        string img_pedi = "";                                           // imagen para el boton de pedidos de fab.
+        string img_conta = "";                                          // imagen para el boton de contabilidad
         string img_alma = "";                                           // imagen para el boton de almacen
         string img_maes = "";                                           // imagen para el boton de maestras
         string imgF1 = "";                                              // imagen1 de menu facturacion
@@ -88,6 +88,8 @@ namespace Grael2
         string imgvsc1 = "";                                            // imagen 1 operaciones - 
         string imgvtc1 = "";                                            // imagen 1 operaciones - transbordos
         string imgvre1 = "";                                            // imagen 1 operaciones - reportes
+        string imgcon0 = "";                                            // imagen 1 contabilidad - boleteo masivo
+        string imgcon3 = "";                                            // imagen 3 contabilidad - reportes
         string imgalm0 = "";                                            // imagen 0 almacen - mov. ingresos
         string imgalm1 = "";                                            // imagen 1 almacen - gestion
         string imgalm2 = "";                                            // imagen 2 almacen - movimientos fiscos
@@ -117,7 +119,7 @@ namespace Grael2
             Image salir = Image.FromFile(img_sali);
             Image factu = Image.FromFile(img_fact);
             //Image venta = Image.FromFile(img_vent);
-            //Image pedid = Image.FromFile(img_pedi);
+            Image pedid = Image.FromFile(img_conta);
             Image almac = Image.FromFile(img_alma);
             Image maest = Image.FromFile(img_maes);
             Image panel = Image.FromFile(img_pcon);
@@ -127,7 +129,7 @@ namespace Grael2
             bt_facele.Image = factu;
             //bt_ventas.Image = venta;
             //bt_pedidos.Image = pedid;
-            bt_contab.Image = almac;
+            bt_contab.Image = pedid;
             bt_maestras.Image = maest;
             bt_pcontrol.Image = panel;
             // botones de acciones
@@ -241,7 +243,7 @@ namespace Grael2
                         if (row["param"].ToString() == "imgpcont") img_pcon = row["valor"].ToString().Trim();   // imagen boton panel de control
                         if (row["param"].ToString() == "imgfactu") img_fact = row["valor"].ToString().Trim();   // imagen boton facturacion
                         if (row["param"].ToString() == "imgventa") img_vent = row["valor"].ToString().Trim();   // imagen para el boton de ventas contratos
-                        if (row["param"].ToString() == "imgpedid") img_pedi = row["valor"].ToString().Trim();   // imagen para el boton de pedidos fab.
+                        if (row["param"].ToString() == "imgconta") img_conta = row["valor"].ToString().Trim();   // imagen para el boton de CONTABILIDAD
                         if (row["param"].ToString() == "imgalmac") img_alma = row["valor"].ToString().Trim();   // imagen para el boton de almacen
                         if (row["param"].ToString() == "imgmaest") img_maes = row["valor"].ToString().Trim();   // imagen para el boton de maestras
                         if (row["param"].ToString() == "imgF1") imgF1 = row["valor"].ToString().Trim();         // imagen1 del menu de facturacion opcion1
@@ -270,6 +272,8 @@ namespace Grael2
                         if (row["param"].ToString() == "imgvsc1") imgvsc1 = row["valor"].ToString().Trim();         // imagen1 de ventas salidas pedidos clientes
                         if (row["param"].ToString() == "imgvtc1") imgvtc1 = row["valor"].ToString().Trim();         // imagen1 operaciones transbordos
                         if (row["param"].ToString() == "imgvre1") imgvre1 = row["valor"].ToString().Trim();         // imagen1 de ventas clientes reportes
+                        if (row["param"].ToString() == "imgcon0") imgcon0 = row["valor"].ToString().Trim();         // imagen1 de contabilidad
+                        if (row["param"].ToString() == "imgcon3") imgcon3 = row["valor"].ToString().Trim();         // imagen3 de contabilidad
                         if (row["param"].ToString() == "imgalm0") imgalm0 = row["valor"].ToString().Trim();         // imagen1 de almace - mov. ingresos
                         if (row["param"].ToString() == "imgalm1") imgalm1 = row["valor"].ToString().Trim();         // imagen1 de almace - gestion
                         if (row["param"].ToString() == "imgalm2") imgalm2 = row["valor"].ToString().Trim();         // imagen2 de almace - movimientos fisicos
@@ -805,23 +809,21 @@ namespace Grael2
             fper.BringToFront();
         }
         //
-        private void bt_almacen_Click(object sender, EventArgs e)       // Almacen
+        private void bt_almacen_Click(object sender, EventArgs e)                   // contabilidad
         {
-            /*
-            pic_icon_menu.Image = Properties.Resources.almacen48;
-            Image img_alm0 = Image.FromFile(imgalm0);
-            Image img_alm1 = Image.FromFile(imgalm1);
-            Image img_alm2 = Image.FromFile(imgalm2);
-            Image img_alm3 = Image.FromFile(imgalm3);
+            pic_icon_menu.Image = Properties.Resources.contab32;
+            Image img_con0 = Image.FromFile(imgcon0);
+            //Image img_alm1 = Image.FromFile(imgalm1);
+            //Image img_alm2 = Image.FromFile(imgalm2);
+            Image img_con3 = Image.FromFile(imgcon3);
             menuStrip1.Items.Clear();
-            menuStrip1.Items.Add("Mov. Ingresos", img_alm0, alm_movingresos_Click);     // movimientos fisicos ingresos
-            menuStrip1.Items.Add("Gestión", img_alm1, alm_gestion_Click);               // gestion de almacen
-            menuStrip1.Items.Add("Mov. Salidas", img_alm2, alm_movfisicos_Click);       // movimientos fisicos salidas
-            menuStrip1.Items.Add("Reportes", img_alm3, alm_historicos_Click);           // reportes
+            menuStrip1.Items.Add("C.Masivos", img_con0, cont_masivos_Click);        // boleteo masivo
+            //menuStrip1.Items.Add("", img_alm1, alm_gestion_Click);                // 
+            //menuStrip1.Items.Add("", img_alm2, alm_movfisicos_Click);             // 
+            menuStrip1.Items.Add("Reportes", img_con3, cont_reportes_Click);       // reportes
             menuStrip1.Visible = true;
-            */
         }
-        private void alm_movingresos_Click(object sender, EventArgs e)          // INGRESOS ALMACEN
+        private void cont_masivos_Click(object sender, EventArgs e)                 // BOLETEO MASIVO
         {
             /*
             ingcargalm fic = new ingcargalm();
@@ -840,7 +842,7 @@ namespace Grael2
         {
             //MessageBox.Show("Form Gestión de Entradas/Salidas", "Primavera 2021", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private void alm_historicos_Click(object sender, EventArgs e)           // REPORTES ALMACEN
+        private void cont_reportes_Click(object sender, EventArgs e)                // REPORTES CONTABILIDAD
         {
             /*
             repsalmac fral = new repsalmac();
