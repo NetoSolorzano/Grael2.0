@@ -90,7 +90,6 @@ namespace Grael2
             }
         }
     }
-
     class libreria
     {
         string asd = Grael2.Program.vg_user;                             // usuario conectado al sistema

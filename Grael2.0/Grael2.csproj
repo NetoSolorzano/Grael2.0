@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cmasivo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="cmasivo.designer.cs">
+      <DependentUpon>cmasivo.cs</DependentUpon>
+    </Compile>
     <Compile Include="defs.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +134,9 @@
     <Compile Include="vtipcam.designer.cs">
       <DependentUpon>vtipcam.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="cmasivo.resx">
+      <DependentUpon>cmasivo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="defs.resx">
       <DependentUpon>defs.cs</DependentUpon>
     </EmbeddedResource>
@@ -185,6 +194,7 @@
     <None Include="Resources\Close_32.png" />
     <None Include="Resources\docum32.png" />
     <None Include="bin\Debug\recursos\contab32.png" />
+    <None Include="bin\Debug\recursos\ok.png" />
     <Content Include="leeme.txt" />
     <Content Include="Resources\fec_elect21.png" />
     <Content Include="Resources\logo_grael.png" />

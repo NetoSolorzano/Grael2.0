@@ -825,14 +825,12 @@ namespace Grael2
         }
         private void cont_masivos_Click(object sender, EventArgs e)                 // BOLETEO MASIVO
         {
-            /*
-            ingcargalm fic = new ingcargalm();
+            cmasivo fic = new cmasivo();
             fic.TopLevel = false;
             fic.Parent = this;
             pn_centro.Controls.Add(fic);
             fic.Show();
             fic.BringToFront();
-            */
         }
         private void alm_gestion_Click(object sender, EventArgs e)
         {

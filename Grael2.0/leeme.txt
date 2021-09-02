@@ -3,5 +3,5 @@ me quede en agregar los procedimientos y triggers a la base erp_grael para :
 - ingreso del comprobante ..................................................... OK 26/08/2021
 - anulacion del comprobante ................................................... OK 26/08/2021
 31/08/2021
-- Adecuacion de menu contabilidad para boleteo masivo ......................... 
-
+- Adecuacion de menu contabilidad para boleteo masivo ......................... ok 01/09/2021
+- desarrollo form boleto masivo ............................................... 

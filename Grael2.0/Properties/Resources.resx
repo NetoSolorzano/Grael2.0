@@ -121,6 +121,9 @@
   <data name="Close_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Close_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="contab32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\recursos\contab32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="service_manager" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\service_manager.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,7 +139,7 @@
   <data name="logo_fb" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo_fb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="contab32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bin\Debug\recursos\contab32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\recursos\ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
