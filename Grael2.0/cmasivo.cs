@@ -1191,7 +1191,7 @@ namespace Grael2
                 // valida pago y calcula
                 if (true)
                 {
-                    var aa = MessageBox.Show("Confirma que desea crear el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var aa = MessageBox.Show("Confirma que desea crear los documentos?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (aa == DialogResult.Yes)
                     {
                         if (true)  // lib.DirectoryVisible(rutatxt) == true
@@ -1599,7 +1599,7 @@ namespace Grael2
             {
                 if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == "1")
                 {
-                    dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                    //dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
                 }
                 else
                 {
