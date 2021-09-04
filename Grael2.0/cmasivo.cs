@@ -126,9 +126,10 @@ namespace Grael2
         string DB_CONN_STR = "server=" + login.serv + ";uid=" + login.usua + ";pwd=" + login.cont + ";database=" + login.data + ";";
         string db_conn_grael = "server=" + login.serv + ";uid=" + login.usua + ";pwd=" + login.cont + ";database=" + login.dataG + ";";
 
-        DataTable dttd0 = new DataTable();
-        DataTable dttd1 = new DataTable();
-        DataTable dtm = new DataTable();        // moneda
+        DataTable dttd0 = new DataTable();        // tipo doc remitente
+        DataTable dttd1 = new DataTable();        // locales
+        DataTable dtmon = new DataTable();        // moneda
+        DataTable dtdvt = new DataTable();        // tipo doc venta
         //DataTable dtp = new DataTable();        // plazo de credito 
         //DataTable tcfe = new DataTable();       // facturacion electronica - cabecera
         //DataTable tdfe = new DataTable();       // facturacion electronica -detalle
@@ -393,6 +394,40 @@ namespace Grael2
                         cmb_loca.ValueMember = "idcodice";
                     }
                 }
+                // datos para el combobox documento de venta
+                consu = "select distinct a.idcodice,a.descrizionerid,a.enlace1,a.codsunat,b.glosaser,b.serie " +
+                    "from desc_tdo a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and a.idcodice=@tipb";
+                using (MySqlCommand cdv = new MySqlCommand(consu, conn))
+                {
+                    cdv.Parameters.AddWithValue("@bloq", 1);
+                    cdv.Parameters.AddWithValue("@codv", "venta");
+                    cdv.Parameters.AddWithValue("@tipb", codbole);
+                    using (MySqlDataAdapter datv = new MySqlDataAdapter(cdv))
+                    {
+                        dtdvt.Clear();
+                        datv.Fill(dtdvt);
+                    }
+                }
+                //  datos para los combobox de tipo de documento
+                using (MySqlCommand cdu = new MySqlCommand("select idcodice,descrizionerid,marca1 as codigo,codsunat from desc_doc where numero=@bloq", conn))
+                {
+                    cdu.Parameters.AddWithValue("@bloq", 1);
+                    using (MySqlDataAdapter datd = new MySqlDataAdapter(cdu))
+                    {
+                        dttd0.Clear();
+                        datd.Fill(dttd0);
+                    }
+                }
+                // datos para el combo de moneda
+                using (MySqlCommand cmo = new MySqlCommand("select idcodice,descrizionerid,codsunat,deta1 from desc_mon where numero=@bloq", conn))
+                {
+                    cmo.Parameters.AddWithValue("@bloq", 1);
+                    using (MySqlDataAdapter dacu = new MySqlDataAdapter(cmo))
+                    {
+                        dtmon.Clear();
+                        dacu.Fill(dtmon);
+                    }
+                }
             }
         }
         private bool valiVars()                 // valida existencia de datos en variables del form
@@ -499,12 +534,13 @@ namespace Grael2
                         */
                         string consulta =
                             "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
-                            "concat(trim(b.nombre),' ',trim(b.nombre2)) as cliente,a.doctot as totalGR," +
-                            "a.id,a.docdes,a.moneda,a.destino,a.docremi,ifnull(e.serie, '002') as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta " +
+                            "concat(trim(b.nombre),' ',trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
+                            "a.destino,a.docremi,ifnull(e.serie, '002') as serie,concat(o.descrizionerid, ' - ',c.descrizionerid) as ruta,m.descrizionerid " +
                             "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
                             "left join desc_sds c on c.idcodice = a.destino " +
                             "left join desc_doc d on d.idcodice = a.docdes " +
                             "left join desc_sds o on o.idcodice = a.origen " +
+                            "left join desc_mon m on m.idcodice = a.moneda " +
                             "left join series e on e.sede = a.destino and e.tipdoc = @tdbo " +
                             "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
                             "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone" + parte;
@@ -538,7 +574,8 @@ namespace Grael2
                                         dr.GetString(10),
                                         dr.GetString(11),
                                         dr.GetString(12),
-                                        dr.GetString(13)
+                                        dr.GetString(13),
+                                        dr.GetString(14)
                                         );
 
                                     retorna = true;
@@ -602,23 +639,27 @@ namespace Grael2
             }
             conn.Close();
         }
-        private void grabfactelec()                         // graba en la tabla de fact. electrónicas
+        private void grabfactelec(int ind)                         // graba en la tabla de fact. electrónicas
         {                               // facturacion electrónica con OSE BIZLINKS 10-10-2018  / actualizacion 14/08/2021
-            string tipo = "";   // tx_dat_tdv.Text;
-            string serie = "";  // tx_serie.Text;
-            string corre = "0"; // + tx_numero.Text;
+            string tipo = codbole;   // tx_dat_tdv.Text;
+            string serie = dataGridView1.Rows[ind].Cells[15].Value.ToString();  // tx_serie.Text;
+            string corre = tx_numero.Text;
+            double ntot = double.Parse(dataGridView1.Rows[ind].Cells[9].Value.ToString());
+            double igv = 1.00 + (double.Parse(v_igv) / 100);
+            double subt = ntot / igv;   // 1.18
+            double migv = ntot - subt;
             // insertamos la cabecera en la tabla del temporal bizlinks
             SqlConnection conms = new SqlConnection(script);
             conms.Open();
             if (conms.State == ConnectionState.Open)
             {
-                string sernum = "cmb_tdv.Text.Substring(0,1)" + "tx_serie.Text" + "-" + corre;              // v serieNumero 
+                string sernum = dataGridView1.Rows[ind].Cells[8].Value.ToString();                        // v serieNumero 
                 string fecemi = tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) +
                     "-" + tx_fechope.Text.Substring(0, 2);                                                 // v 
-                DataRow[] row = dttd1.Select("idcodice='" + "tx_dat_tdv.Text" + "'");                     // tipo de documento venta
-                string tipdoc = row[0][3].ToString(); ;                                                 // v tipoDocumento
-                DataRow[] rowm = dtm.Select("idcodice='" + "tx_dat_mone.Text" + "'");                     // tipo de moneda
-                string tipmon = rowm[0][2].ToString().Trim();                                           // v tipoMoneda
+                DataRow[] row = dtdvt.Select("idcodice='" + codbole + "'");
+                string tipdoc = row[3].ToString();                                                 // v tipoDocumento
+                DataRow[] rowm = dtmon.Select("idcodice='" + MonDeft + "'");
+                string tipmon = row[2].ToString();                                                 // v tipoMoneda
                 string nudoem = Program.ruc;                                                            // v numeroDocumentoEmisor
                 string tidoem = "6";                                                                    // v tipoDocumentoEmisor
                 string nocoem = "-";                                                                    // v nombreComercialEmisor
@@ -632,32 +673,27 @@ namespace Grael2
                 string distemi = Program.distfis;                                                     // v distritoEmisor
                 string urbemis = "-";                                                                   // urbanizacion (parte de la direccion) del emisor
                 string pasiemi = "PE";                                                                  // v paisEmisor
-                DataRow[] rowc = dttd0.Select("idcodice='" + "tx_dat_tdRem.Text" + "'");
+                DataRow[] rowc = dttd0.Select("idcodice='" + dataGridView1.Rows[ind].Cells[11].Value.ToString() + "'");
                 string tidoad = rowc[0][3].ToString().Trim();                                           // v tipoDocumentoAdquiriente
-                string nudoad = "tx_numDocRem.Text";                                                      // v numeroDocumentoAdquiriente
-                string rasoad = "tx_nomRem.Text";                                                          // v razonSocialAdquiriente
-                string coradq = "tx_email.Text";                                                         // v correoAdquiriente
-                decimal totimp = 0; // Math.Round(decimal.Parse(tx_igv.Text), 2);                              // v totalImpuestos
-                decimal totigv = 0; // Math.Round(decimal.Parse(tx_igv.Text), 2);                              // v totalIgv
-                decimal totvta = 0; // Math.Round(decimal.Parse(tx_flete.Text), 2);                            // v totalVenta
-                decimal tovane = 0; // Math.Round(decimal.Parse(tx_subt.Text), 2);                            // v totalValorVentaNetoOpGravadas
+                string nudoad = dataGridView1.Rows[ind].Cells[5].Value.ToString();                       // v numeroDocumentoAdquiriente
+                string rasoad = dataGridView1.Rows[ind].Cells[6].Value.ToString();                       // v razonSocialAdquiriente
+                string coradq = correo_gen;                                                             // v correoAdquiriente
+                decimal totimp = Math.Round((decimal)migv, 2);                                            // v totalImpuestos
+                decimal totigv = Math.Round((decimal)migv, 2);                                            // v totalIgv
+                decimal totvta = Math.Round((decimal)ntot, 2);                                          // v totalVenta
+                decimal tovane = Math.Round((decimal)subt, 2);                                          // v totalValorVentaNetoOpGravadas
                 //string tovano = "0";                                                                    // totalValorVentaNetoOpNoGravada
                 //string tovaex = "0";                                                                    // totalValorVentaNetoOpExoneradas
                 //string tovagr = "0";                                                                    // totalValorVentaNetoOpGratuitas
                 // todas las guias, tanto del transportista como de el cliente
                 string gpgrael = "";
-                string gpadqui = dataGridView1.Rows[0].Cells[3].Value.ToString();                         // guias del adquiriente
-                for (int j = 1; j < dataGridView1.Rows.Count - 1; j++)
-                {
-                    //gpgrael = gpgrael + " - " + dataGridView1.Rows[j].Cells[5].Value.ToString();
-                    gpadqui = gpadqui + " - " + dataGridView1.Rows[j].Cells[3].Value.ToString();
-                }
+                string gpadqui = dataGridView1.Rows[ind].Cells[14].Value.ToString();                     // guias del adquiriente
                 string codaux40_1 = "9011";                                                             // v codigoAuxiliar40_1
                 string etiaux40_1 = "18%";                                                              // v textoAuxiliar40_1
                 string tipope = "0101"; // segun rudver, poner esto en una config                       // v tipoOperacion
                 string estreg = "A";                                                                    // bl_estadoRegistro
                 string coley1 = "1000";                                                                 // v codigoLeyenda_1
-                string teley1 = "SON: " + "tx_fletLetras.Text"; // nl.Convertir(tx_total.Text, true) + tx_dat_dmon.Text;         // v textoLeyenda_1
+                string teley1 = "SON: " + nl.Convertir(ntot.ToString(), true) + tx_dat_dmon.Text;         // v textoLeyenda_1
                 string tiref1 = "";     // detalle
                 string nudor1 = "";     // detalle
                 string tiref2 = "";     // detalle
@@ -1206,18 +1242,16 @@ namespace Grael2
                             {
                                 if (graba(i) == true)
                                 {
-                                    OSE_Fact_Elect();
-                                    grabfactelec();
-                                    if (true)       // factElec(nipfe, "txt", "alta", 0) == true
+                                    try
                                     {
-
+                                        OSE_Fact_Elect();
+                                        grabfactelec(i);
                                     }
-                                    else
+                                    catch(Exception ex)
                                     {
                                         MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
                                             "Se generó una anulación interna para el presente documento", "Error en proveedor de Fact.Electrónica");
                                         iserror = "si";
-                                        //anula("INT");
                                     }
                                 }
                                 else
@@ -1285,8 +1319,9 @@ namespace Grael2
                 }
                 // calculos 
                 Random rand = new Random();
-                double ntot = rand.Next(5,9); // valor entre 5 y 8
-                double subt = ntot / (1 + int.Parse(v_igv)/100);   // 1.18
+                int ntot = rand.Next(5,9); // valor entre 5 y 8
+                double igv = 1.00 + (double.Parse(v_igv) / 100);
+                double subt = ntot / igv;   // 1.18
                 double migv = ntot - subt;
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
                     "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
@@ -1351,79 +1386,68 @@ namespace Grael2
                     }
                 }
                 // detalle
-                if (dataGridView1.Rows.Count > 0)
+                string tcbul = "0";
+                string tdesc = "-";
+                string tunid = "-";
+                string condeta = "select codprd,descrip,unidad,sum(cantid) as cant from erp_grael.detagrem where idc=@idr group by idc";
+                using (MySqlCommand micon = new MySqlCommand(condeta, conn))
                 {
-                    int fila = 1;
-                    for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                    micon.Parameters.AddWithValue("@idr", dataGridView1.Rows[ind].Cells[10].Value.ToString());
+                    using (MySqlDataReader dr = micon.ExecuteReader())
                     {
-                        if (dataGridView1.Rows[i].Cells[0].Value.ToString().Trim() != "")
+                        if (dr.Read())
                         {
-                            // obtenemos el detalle de la guia
-                            string tcbul = "0";
-                            string tdesc = "-";
-                            string tunid = "-";
-                            string condeta = "select codprd,descrip,unidad,sum(cantid) as cant from erp_grael.detagrem where idc=@idr group by idc";
-                            using (MySqlCommand micon = new MySqlCommand(condeta, conn))
-                            {
-                                micon.Parameters.AddWithValue("@idr", dataGridView1.Rows[ind].Cells[10].Value.ToString());
-                                using (MySqlDataReader dr = micon.ExecuteReader())
-                                {
-                                    if (dr.Read())
-                                    {
-                                        tcbul = dr.GetString(3);
-                                        tdesc = (dr.GetString(0) + " " + dr.GetString(1)).Trim();
-                                        tunid = dr.GetString(2);
-                                    }
-                                }
-                            }
-
-                            string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda,valor,ruta," +
-                                "glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc,valorel) " +
-                                "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm,@pret,@ruta," +
-                                "@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr,@velfi)";
-                            using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
-                            {
-                                micon.Parameters.AddWithValue("@idr", tx_idr.Text);
-                                micon.Parameters.AddWithValue("@doc", codbole);
-                                micon.Parameters.AddWithValue("@svt", dataGridView1.Rows[ind].Cells[15].Value.ToString());
-                                micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
-                                micon.Parameters.AddWithValue("@sgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(0,3));
-                                micon.Parameters.AddWithValue("@cgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(4,7));
-                                micon.Parameters.AddWithValue("@codm", dataGridView1.Rows[ind].Cells[12].Value.ToString());
-                                micon.Parameters.AddWithValue("@pret", dataGridView1.Rows[ind].Cells[7].Value.ToString());  // flete de la gr
-                                micon.Parameters.AddWithValue("@ruta", dataGridView1.Rows[ind].Cells[16].Value.ToString());
-                                micon.Parameters.AddWithValue("@desc", tdesc);
-                                micon.Parameters.AddWithValue("@sta", codCanc); // estado;
-                                micon.Parameters.AddWithValue("@asd", asd);
-                                micon.Parameters.AddWithValue("@dre", dataGridView1.Rows[ind].Cells[14].Value.ToString());
-                                micon.Parameters.AddWithValue("@bult", tcbul + " " + tunid);
-                                micon.Parameters.AddWithValue("@mrd1", "0.00"); // (tx_dref1.Text == "") ? "0.00" : tx_dref1.Text
-                                micon.Parameters.AddWithValue("@mrd2", "0.00"); // (tx_dcar1.Text == "") ? "0.00" : tx_dcar1.Text
-                                micon.Parameters.AddWithValue("@mrd3", "0.00");   // (tx_dnom1.Text == "") ? "0.00" : tx_dnom1.Text
-                                micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
-                                micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
-                                micon.Parameters.AddWithValue("@totpgr", ntot.ToString("#0.##"));                    // total inc. igv
-                                micon.Parameters.AddWithValue("@velfi", ntot.ToString("#0.##"));  // valor fila fact electronica
-                                //micon.Parameters.AddWithValue("@fila", fila);
-                                /*
-                                micon.Parameters.AddWithValue("@unim", "");
-                                micon.Parameters.AddWithValue("@cmnn", dataGridView1.Rows[i].Cells[6].Value.ToString());
-                                micon.Parameters.AddWithValue("@tgrmn", dataGridView1.Rows[i].Cells[5].Value.ToString());
-                                micon.Parameters.AddWithValue("@pagaut", (rb_si.Checked == true) ? "S" : "N");
-                                */
-                                micon.ExecuteNonQuery();
-                                fila += 1;
-
-                                dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[14].Value.ToString() + "-" + tx_numero.Text;
-                                dataGridView1.Rows[ind].Cells[9].Value = ntot.ToString("#0.##");
-
-                                retorna = true;         // no hubo errores!
-                                //
-                                // OJO, las actualizaciones en las tablas magrem, manoen y mactacte, las hace el TRIGGER de la tabla detvtas
-                                // 
-                            }
+                            tcbul = dr.GetString(3);
+                            tdesc = (dr.GetString(0) + " " + dr.GetString(1)).Trim();
+                            tunid = dr.GetString(2);
                         }
                     }
+                }
+
+                string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda,valor,ruta," +
+                    "glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc,valorel) " +
+                    "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm,@pret,@ruta," +
+                    "@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr,@velfi)";
+                using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
+                {
+                    micon.Parameters.AddWithValue("@idr", tx_idr.Text);
+                    micon.Parameters.AddWithValue("@doc", codbole);
+                    micon.Parameters.AddWithValue("@svt", dataGridView1.Rows[ind].Cells[15].Value.ToString());
+                    micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
+                    micon.Parameters.AddWithValue("@sgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(0,3));
+                    micon.Parameters.AddWithValue("@cgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(4,7));
+                    micon.Parameters.AddWithValue("@codm", dataGridView1.Rows[ind].Cells[17].Value.ToString());   // dataGridView1.Rows[ind].Cells[12].Value.ToString()
+                    micon.Parameters.AddWithValue("@pret", dataGridView1.Rows[ind].Cells[7].Value.ToString());  // flete de la gr
+                    micon.Parameters.AddWithValue("@ruta", dataGridView1.Rows[ind].Cells[16].Value.ToString());
+                    micon.Parameters.AddWithValue("@desc", tdesc);
+                    micon.Parameters.AddWithValue("@sta", codCanc); // estado;
+                    micon.Parameters.AddWithValue("@asd", asd);
+                    micon.Parameters.AddWithValue("@dre", dataGridView1.Rows[ind].Cells[14].Value.ToString());
+                    micon.Parameters.AddWithValue("@bult", tcbul + " " + tunid);
+                    micon.Parameters.AddWithValue("@mrd1", "0.00"); // (tx_dref1.Text == "") ? "0.00" : tx_dref1.Text
+                    micon.Parameters.AddWithValue("@mrd2", "0.00"); // (tx_dcar1.Text == "") ? "0.00" : tx_dcar1.Text
+                    micon.Parameters.AddWithValue("@mrd3", "0.00");   // (tx_dnom1.Text == "") ? "0.00" : tx_dnom1.Text
+                    micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
+                    micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
+                    micon.Parameters.AddWithValue("@totpgr", ntot.ToString("#0.##"));                    // total inc. igv
+                    micon.Parameters.AddWithValue("@velfi", ntot.ToString("#0.##"));  // valor fila fact electronica
+                    //micon.Parameters.AddWithValue("@fila", fila);
+                    /*
+                    micon.Parameters.AddWithValue("@unim", "");
+                    micon.Parameters.AddWithValue("@cmnn", dataGridView1.Rows[i].Cells[6].Value.ToString());
+                    micon.Parameters.AddWithValue("@tgrmn", dataGridView1.Rows[i].Cells[5].Value.ToString());
+                    micon.Parameters.AddWithValue("@pagaut", (rb_si.Checked == true) ? "S" : "N");
+                    */
+                    micon.ExecuteNonQuery();
+                    //fila = 1;
+
+                    dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + tx_numero.Text;
+                    dataGridView1.Rows[ind].Cells[9].Value = ntot.ToString("#0.##");
+
+                    retorna = true;         // no hubo errores!
+                    //
+                    // OJO, las actualizaciones en las tablas magrem, manoen y mactacte, las hace el TRIGGER de la tabla detvtas
+                    // 
                 }
             }
             else

@@ -112,6 +112,7 @@
             this.doscrem = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.serlocdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ruta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nomon = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.pn_usloc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -449,7 +450,8 @@
             this.coddes,
             this.doscrem,
             this.serlocdes,
-            this.ruta});
+            this.ruta,
+            this.nomon});
             this.dataGridView1.Location = new System.Drawing.Point(6, 70);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(756, 407);
@@ -790,6 +792,7 @@
             this.id.HeaderText = "ID";
             this.id.Name = "id";
             this.id.ReadOnly = true;
+            this.id.Visible = false;
             this.id.Width = 40;
             // 
             // docdes
@@ -797,6 +800,7 @@
             this.docdes.FillWeight = 60F;
             this.docdes.HeaderText = "DOCDES";
             this.docdes.Name = "docdes";
+            this.docdes.Visible = false;
             this.docdes.Width = 60;
             // 
             // codmon
@@ -804,6 +808,7 @@
             this.codmon.FillWeight = 60F;
             this.codmon.HeaderText = "CODMON";
             this.codmon.Name = "codmon";
+            this.codmon.Visible = false;
             this.codmon.Width = 60;
             // 
             // coddes
@@ -812,6 +817,7 @@
             this.coddes.HeaderText = "CODDES";
             this.coddes.Name = "coddes";
             this.coddes.ReadOnly = true;
+            this.coddes.Visible = false;
             this.coddes.Width = 60;
             // 
             // doscrem
@@ -821,16 +827,25 @@
             this.doscrem.HeaderText = "DOCS.REM";
             this.doscrem.Name = "doscrem";
             this.doscrem.ReadOnly = true;
+            this.doscrem.Visible = false;
             // 
             // serlocdes
             // 
             this.serlocdes.HeaderText = "serlocdes";
             this.serlocdes.Name = "serlocdes";
+            this.serlocdes.Visible = false;
             // 
             // ruta
             // 
             this.ruta.HeaderText = "ruta";
             this.ruta.Name = "ruta";
+            this.ruta.Visible = false;
+            // 
+            // nomon
+            // 
+            this.nomon.HeaderText = "nomon";
+            this.nomon.Name = "nomon";
+            this.nomon.Visible = false;
             // 
             // cmasivo
             // 
@@ -963,5 +978,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn doscrem;
         private System.Windows.Forms.DataGridViewTextBoxColumn serlocdes;
         private System.Windows.Forms.DataGridViewTextBoxColumn ruta;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nomon;
     }
 }
