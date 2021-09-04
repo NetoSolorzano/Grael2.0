@@ -93,6 +93,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.tx_numero = new System.Windows.Forms.TextBox();
+            this.tx_tfil = new Grael2.NumericTextBox();
             this.marca = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.sede = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -102,12 +104,14 @@
             this.cliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.docvta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.valcomp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.docdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.codmon = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.coddes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.doscrem = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tx_tfil = new Grael2.NumericTextBox();
+            this.serlocdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ruta = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.pn_usloc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -438,11 +442,14 @@
             this.cliente,
             this.total,
             this.docvta,
+            this.valcomp,
             this.id,
             this.docdes,
             this.codmon,
             this.coddes,
-            this.doscrem});
+            this.doscrem,
+            this.serlocdes,
+            this.ruta});
             this.dataGridView1.Location = new System.Drawing.Point(6, 70);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(756, 407);
@@ -517,6 +524,7 @@
             this.tx_dat_loca.Name = "tx_dat_loca";
             this.tx_dat_loca.Size = new System.Drawing.Size(50, 18);
             this.tx_dat_loca.TabIndex = 431;
+            this.tx_dat_loca.Visible = false;
             // 
             // tx_idr
             // 
@@ -525,6 +533,7 @@
             this.tx_idr.ReadOnly = true;
             this.tx_idr.Size = new System.Drawing.Size(50, 20);
             this.tx_idr.TabIndex = 432;
+            this.tx_idr.Visible = false;
             // 
             // cmb_loca
             // 
@@ -668,6 +677,26 @@
             this.groupBox8.TabIndex = 113;
             this.groupBox8.TabStop = false;
             // 
+            // tx_numero
+            // 
+            this.tx_numero.Location = new System.Drawing.Point(231, 41);
+            this.tx_numero.Name = "tx_numero";
+            this.tx_numero.ReadOnly = true;
+            this.tx_numero.Size = new System.Drawing.Size(50, 20);
+            this.tx_numero.TabIndex = 444;
+            this.tx_numero.Visible = false;
+            // 
+            // tx_tfil
+            // 
+            this.tx_tfil.AllowSpace = false;
+            this.tx_tfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_tfil.Location = new System.Drawing.Point(377, 483);
+            this.tx_tfil.Name = "tx_tfil";
+            this.tx_tfil.ReadOnly = true;
+            this.tx_tfil.Size = new System.Drawing.Size(37, 20);
+            this.tx_tfil.TabIndex = 347;
+            this.tx_tfil.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // marca
             // 
             this.marca.FillWeight = 20F;
@@ -737,7 +766,7 @@
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.total.DefaultCellStyle = dataGridViewCellStyle7;
             this.total.FillWeight = 90F;
-            this.total.HeaderText = "TOTAL S/";
+            this.total.HeaderText = "FLETE S/";
             this.total.Name = "total";
             this.total.Width = 90;
             // 
@@ -747,6 +776,11 @@
             this.docvta.HeaderText = "DOC.VTA.";
             this.docvta.Name = "docvta";
             this.docvta.Width = 90;
+            // 
+            // valcomp
+            // 
+            this.valcomp.HeaderText = "VALOR";
+            this.valcomp.Name = "valcomp";
             // 
             // id
             // 
@@ -788,16 +822,15 @@
             this.doscrem.Name = "doscrem";
             this.doscrem.ReadOnly = true;
             // 
-            // tx_tfil
+            // serlocdes
             // 
-            this.tx_tfil.AllowSpace = false;
-            this.tx_tfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfil.Location = new System.Drawing.Point(377, 483);
-            this.tx_tfil.Name = "tx_tfil";
-            this.tx_tfil.ReadOnly = true;
-            this.tx_tfil.Size = new System.Drawing.Size(37, 20);
-            this.tx_tfil.TabIndex = 347;
-            this.tx_tfil.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.serlocdes.HeaderText = "serlocdes";
+            this.serlocdes.Name = "serlocdes";
+            // 
+            // ruta
+            // 
+            this.ruta.HeaderText = "ruta";
+            this.ruta.Name = "ruta";
             // 
             // cmasivo
             // 
@@ -806,6 +839,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(769, 576);
+            this.Controls.Add(this.tx_numero);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox7);
@@ -911,6 +945,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.TextBox tx_numero;
         private System.Windows.Forms.DataGridViewCheckBoxColumn marca;
         private System.Windows.Forms.DataGridViewTextBoxColumn sede;
         private System.Windows.Forms.DataGridViewTextBoxColumn fecha;
@@ -920,10 +955,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cliente;
         private System.Windows.Forms.DataGridViewTextBoxColumn total;
         private System.Windows.Forms.DataGridViewTextBoxColumn docvta;
+        private System.Windows.Forms.DataGridViewTextBoxColumn valcomp;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn docdes;
         private System.Windows.Forms.DataGridViewTextBoxColumn codmon;
         private System.Windows.Forms.DataGridViewTextBoxColumn coddes;
         private System.Windows.Forms.DataGridViewTextBoxColumn doscrem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn serlocdes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ruta;
     }
 }

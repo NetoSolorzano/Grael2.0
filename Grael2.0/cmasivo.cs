@@ -497,13 +497,15 @@ namespace Grael2
                             "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
                             "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone)x order by x.sede,x.fechope";
                         */
-                        string consulta = 
-                            "select c.descrizionerid as sede,a.fechope,concat(a.sergre, '-', a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
-                            "concat(trim(b.nombre), ' ', trim(b.nombre2)) as cliente,a.doctot as totalGR," +
-                            "a.id,a.docdes,a.moneda,a.destino,a.docremi " +
+                        string consulta =
+                            "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
+                            "concat(trim(b.nombre),' ',trim(b.nombre2)) as cliente,a.doctot as totalGR," +
+                            "a.id,a.docdes,a.moneda,a.destino,a.docremi,ifnull(e.serie, '002') as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta " +
                             "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
                             "left join desc_sds c on c.idcodice = a.destino " +
                             "left join desc_doc d on d.idcodice = a.docdes " +
+                            "left join desc_sds o on o.idcodice = a.origen " +
+                            "left join series e on e.sede = a.destino and e.tipdoc = @tdbo " +
                             "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
                             "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone" + parte;
                         using (MySqlCommand micon = new MySqlCommand(consulta, conn))
@@ -513,6 +515,7 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@canu", codAnul);
                             micon.Parameters.AddWithValue("@cdes", vtc_ruc);    // documentos distintos a RUC
                             micon.Parameters.AddWithValue("@mone", MonDeft);    // moneda solo soles
+                            micon.Parameters.AddWithValue("@tdbo", "BV");
                             if (parte != "") micon.Parameters.AddWithValue("@dest", tx_dat_loca.Text);
                             using (MySqlDataReader dr = micon.ExecuteReader())
                             {
@@ -528,11 +531,14 @@ namespace Grael2
                                         dr.GetString(5),
                                         dr.GetString(6),
                                         "",
+                                        "", 
                                         dr.GetString(7),
                                         dr.GetString(8),
                                         dr.GetString(9),
                                         dr.GetString(10),
-                                        dr.GetString(11)
+                                        dr.GetString(11),
+                                        dr.GetString(12),
+                                        dr.GetString(13)
                                         );
 
                                     retorna = true;
@@ -1150,16 +1156,17 @@ namespace Grael2
         #region boton_form GRABA EDITA ANULA
         private void bt_agr_Click(object sender, EventArgs e)
         {
-            // fecha final sea > fecha inicial
-            if (dtp_ini.Value > dtp_fin.Value)
-            {
-                MessageBox.Show("La fecha inicial debe ser menor","Error en fechas",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                dtp_ini.Focus();
-                return;
-            }
-            
             if (Tx_modo.Text == "NUEVO")
             {
+                // fecha final sea > fecha inicial
+                if (dtp_ini.Value > dtp_fin.Value)
+                {
+                    MessageBox.Show("La fecha inicial debe ser menor", "Error en fechas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dtp_ini.Focus();
+                    return;
+                }
+                dataGridView1.Rows.Clear();
+                grilla();
                 if (validGR() == false)
                 {
                     return;
@@ -1174,7 +1181,6 @@ namespace Grael2
                     cmb_loca.Focus();
                     return;
                 }
-                grilla();
                 dataGridView1.Focus();
             }
         }
@@ -1194,47 +1200,32 @@ namespace Grael2
                     var aa = MessageBox.Show("Confirma que desea crear los documentos?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (aa == DialogResult.Yes)
                     {
-                        if (true)  // lib.DirectoryVisible(rutatxt) == true
+                        for (int i=0; i<dataGridView1.Rows.Count - 1; i++)
                         {
-                            if (graba() == true)
+                            if (dataGridView1.Rows[i].Cells[0].Value.ToString() == "1")
                             {
-                                OSE_Fact_Elect();
-                                grabfactelec();
-                                if (true)       // factElec(nipfe, "txt", "alta", 0) == true
+                                if (graba(i) == true)
                                 {
-                                    /* actualizamos la tabla seguimiento de usuarios
-                                    string resulta = lib.ult_mov(nomform, nomtab, asd);
-                                    if (resulta != "OK")
+                                    OSE_Fact_Elect();
+                                    grabfactelec();
+                                    if (true)       // factElec(nipfe, "txt", "alta", 0) == true
                                     {
-                                        MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                                     }
-                                    */
-                                    var bb = MessageBox.Show("Desea imprimir el documento?" + Environment.NewLine +
-                                        "El formato actual es " + vi_formato, "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                                    if (bb == DialogResult.Yes)
+                                    else
                                     {
-                                        Bt_print.PerformClick();
+                                        MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
+                                            "Se generó una anulación interna para el presente documento", "Error en proveedor de Fact.Electrónica");
+                                        iserror = "si";
+                                        //anula("INT");
                                     }
                                 }
                                 else
                                 {
-                                    MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
-                                        "Se generó una anulación interna para el presente documento", "Error en proveedor de Fact.Electrónica");
+                                    MessageBox.Show("No se puede grabar el documento de venta electrónico", "Error en conexión");
                                     iserror = "si";
-                                    //anula("INT");
                                 }
                             }
-                            else
-                            {
-                                MessageBox.Show("No se puede grabar el documento de venta electrónico", "Error en conexión");
-                                iserror = "si";
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("No existe ruta o no es valida para" + Environment.NewLine +
-                                        "generar la anulación electrónica", "Ruta para Fact.Electrónica", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                            iserror = "si";
                         }
                     }
                     else
@@ -1258,16 +1249,17 @@ namespace Grael2
             }
             if (iserror == "no")
             {
+                /*
                 string resulta = lib.ult_mov(nomform, nomtab, asd);
                 if (resulta != "OK")                                        // actualizamos la tabla usuarios
                 {
                     MessageBox.Show(resulta, "Error en actualización de tabla usuarios", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                // debe limpiar los campos y actualizar la grilla
+                */
             }
-            initIngreso();          // limpiamos todo para volver a empesar
+            //initIngreso();          // limpiamos todo para volver a empesar
         }
-        private bool graba()
+        private bool graba(int ind)
         {
             bool retorna = false;
             MySqlConnection conn = new MySqlConnection(db_conn_grael);   // DB_CONN_STR
@@ -1278,19 +1270,24 @@ namespace Grael2
                 using (MySqlCommand micon = new MySqlCommand(todo, conn))
                 {
                     micon.CommandType = CommandType.StoredProcedure;
-                    micon.Parameters.AddWithValue("td", "cmb_tdv.Text.Trim()");  // descrizionerid .. FT, BV
-                    micon.Parameters.AddWithValue("ser", "tx_serie.Text");
+                    micon.Parameters.AddWithValue("td", "BV");
+                    micon.Parameters.AddWithValue("ser", dataGridView1.Rows[ind].Cells[15].Value.ToString()); // serie del local de destino
                     using (MySqlDataReader dr0 = micon.ExecuteReader())
                     {
                         if (dr0.Read())
                         {
                             if (dr0[0] != null && dr0.GetString(0) != "")
                             {
-                                //tx_numero.text = lib.Right("0000000" + dr0.GetString(0), 7);
+                                tx_numero.Text = lib.Right("0000000" + dr0.GetString(0), 7);
                             }
                         }
                     }
                 }
+                // calculos 
+                Random rand = new Random();
+                double ntot = rand.Next(5,9); // valor entre 5 y 8
+                double subt = ntot / (1 + int.Parse(v_igv)/100);   // 1.18
+                double migv = ntot - subt;
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
                     "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
                     "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild," +
@@ -1303,34 +1300,34 @@ namespace Grael2
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
                 {
                     micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
-                    micon.Parameters.AddWithValue("@tcoper", "tx_tipcam.Text");                   // TIPO DE CAMBIO
-                    micon.Parameters.AddWithValue("@ctdvta", "tx_dat_tdv.Text");
-                    micon.Parameters.AddWithValue("@serdv", "tx_serie.Text");
-                    micon.Parameters.AddWithValue("@numdv", "tx_numero.Text");
-                    micon.Parameters.AddWithValue("@tdcrem", "tx_dat_tdRem.Text");
-                    micon.Parameters.AddWithValue("@ndcrem", "tx_numDocRem.Text");
-                    micon.Parameters.AddWithValue("@dircre", "tx_dirRem.Text");
-                    micon.Parameters.AddWithValue("@nomrem", "tx_nomRem.Text");
-                    micon.Parameters.AddWithValue("@obsprg", "tx_obser1.Text");
-                    micon.Parameters.AddWithValue("@monppr", "tx_dat_mone.Text");
-                    micon.Parameters.AddWithValue("@aig", "0");  // aumenta igv ??, aca no hay esa opcion
-                    micon.Parameters.AddWithValue("@subpgr", "tx_subt.Text");                     // sub total
-                    micon.Parameters.AddWithValue("@igvpgr", "tx_igv.Text");                      // igv
-                    micon.Parameters.AddWithValue("@totpgr", "tx_flete.Text");                    // total inc. igv
-                    micon.Parameters.AddWithValue("@estpgr", codCanc); // estado
+                    micon.Parameters.AddWithValue("@tcoper", 0);                   // TIPO DE CAMBIO
+                    micon.Parameters.AddWithValue("@ctdvta", codbole);
+                    micon.Parameters.AddWithValue("@serdv", dataGridView1.Rows[ind].Cells[15].Value.ToString());
+                    micon.Parameters.AddWithValue("@numdv", tx_numero.Text);
+                    micon.Parameters.AddWithValue("@tdcrem", dataGridView1.Rows[ind].Cells[11].Value.ToString());
+                    micon.Parameters.AddWithValue("@ndcrem", dataGridView1.Rows[ind].Cells[5].Value.ToString());
+                    micon.Parameters.AddWithValue("@dircre", "-");
+                    micon.Parameters.AddWithValue("@nomrem", dataGridView1.Rows[ind].Cells[6].Value.ToString());
+                    micon.Parameters.AddWithValue("@obsprg", "masivo");
+                    micon.Parameters.AddWithValue("@monppr", dataGridView1.Rows[ind].Cells[12].Value.ToString());
+                    micon.Parameters.AddWithValue("@aig", "0");             // aumenta igv ??, aca no hay esa opcion
+                    micon.Parameters.AddWithValue("@subpgr", subt.ToString("#0.##"));                     // sub total
+                    micon.Parameters.AddWithValue("@igvpgr", migv.ToString("#0.##"));                      // igv
+                    micon.Parameters.AddWithValue("@totpgr", ntot.ToString("#0.##"));                    // total inc. igv
+                    micon.Parameters.AddWithValue("@estpgr", codCanc);      // estado
                     micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@asd", asd);
-                    micon.Parameters.AddWithValue("@ldcpgr", Grael2.Program.almuser);         // local origen
+                    micon.Parameters.AddWithValue("@ldcpgr", dataGridView1.Rows[ind].Cells[13].Value.ToString());         // local origen
                     micon.Parameters.AddWithValue("@tcdvta", "2");          // destinatario
-                    micon.Parameters.AddWithValue("@distcl", "tx_distRtt.Text");
-                    micon.Parameters.AddWithValue("@provcl", "tx_provRtt.Text");
-                    micon.Parameters.AddWithValue("@dptocl", "tx_dptoRtt.Text");
+                    micon.Parameters.AddWithValue("@distcl", "-");
+                    micon.Parameters.AddWithValue("@provcl", "-");
+                    micon.Parameters.AddWithValue("@dptocl", "-");
                     micon.Parameters.AddWithValue("@salxpa", "0");
-                    micon.Parameters.AddWithValue("@cdr", "9");  // cdr en la base actual tiene valor 9
-                    micon.Parameters.AddWithValue("@mtdvta", "cmb_tdv.Text.Substring(0,1)");
-                    micon.Parameters.AddWithValue("@mailcl", "tx_email.Text");
-                    micon.Parameters.AddWithValue("@ubicre", "tx_ubigRtt.Text");
-                    micon.Parameters.AddWithValue("@canfil", tx_tfil.Text);
+                    micon.Parameters.AddWithValue("@cdr", "9");             // cdr en la base actual tiene valor 9
+                    micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
+                    micon.Parameters.AddWithValue("@mailcl", correo_gen);         // "tx_email.Text"
+                    micon.Parameters.AddWithValue("@ubicre", "");
+                    micon.Parameters.AddWithValue("@canfil", 1);            // cant filas de detalle, como son boletas masivas les ponemos 1 a todos
                     micon.Parameters.AddWithValue("@pr01", "0");
                     micon.Parameters.AddWithValue("@pr02", "0");
                     micon.Parameters.AddWithValue("@pr03", "0");
@@ -1361,32 +1358,52 @@ namespace Grael2
                     {
                         if (dataGridView1.Rows[i].Cells[0].Value.ToString().Trim() != "")
                         {
-                            string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda," +
-                        "valor,ruta,glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc) " +
-                        "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm," +
-                        "@pret,@ruta,@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr)";
+                            // obtenemos el detalle de la guia
+                            string tcbul = "0";
+                            string tdesc = "-";
+                            string tunid = "-";
+                            string condeta = "select codprd,descrip,unidad,sum(cantid) as cant from erp_grael.detagrem where idc=@idr group by idc";
+                            using (MySqlCommand micon = new MySqlCommand(condeta, conn))
+                            {
+                                micon.Parameters.AddWithValue("@idr", dataGridView1.Rows[ind].Cells[10].Value.ToString());
+                                using (MySqlDataReader dr = micon.ExecuteReader())
+                                {
+                                    if (dr.Read())
+                                    {
+                                        tcbul = dr.GetString(3);
+                                        tdesc = (dr.GetString(0) + " " + dr.GetString(1)).Trim();
+                                        tunid = dr.GetString(2);
+                                    }
+                                }
+                            }
+
+                            string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda,valor,ruta," +
+                                "glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc,valorel) " +
+                                "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm,@pret,@ruta," +
+                                "@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr,@velfi)";
                             using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
                             {
                                 micon.Parameters.AddWithValue("@idr", tx_idr.Text);
-                                micon.Parameters.AddWithValue("@doc", "tx_dat_tdv.Text");
-                                micon.Parameters.AddWithValue("@svt", "tx_serie.Text");
-                                micon.Parameters.AddWithValue("@cvt", "tx_numero.Text");
-                                micon.Parameters.AddWithValue("@sgui", dataGridView1.Rows[i].Cells[0].Value.ToString().Trim().Substring(0,3));
-                                micon.Parameters.AddWithValue("@cgui", dataGridView1.Rows[i].Cells[0].Value.ToString().Trim().Substring(4,7));
-                                micon.Parameters.AddWithValue("@codm", dataGridView1.Rows[i].Cells[3].Value.ToString());
-                                micon.Parameters.AddWithValue("@pret", dataGridView1.Rows[i].Cells[4].Value.ToString());
-                                micon.Parameters.AddWithValue("@ruta", dataGridView1.Rows[i].Cells[10].Value.ToString());
-                                micon.Parameters.AddWithValue("@desc", vint_gg + " " + dataGridView1.Rows[i].Cells[1].Value.ToString());
+                                micon.Parameters.AddWithValue("@doc", codbole);
+                                micon.Parameters.AddWithValue("@svt", dataGridView1.Rows[ind].Cells[15].Value.ToString());
+                                micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
+                                micon.Parameters.AddWithValue("@sgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(0,3));
+                                micon.Parameters.AddWithValue("@cgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(4,7));
+                                micon.Parameters.AddWithValue("@codm", dataGridView1.Rows[ind].Cells[12].Value.ToString());
+                                micon.Parameters.AddWithValue("@pret", dataGridView1.Rows[ind].Cells[7].Value.ToString());  // flete de la gr
+                                micon.Parameters.AddWithValue("@ruta", dataGridView1.Rows[ind].Cells[16].Value.ToString());
+                                micon.Parameters.AddWithValue("@desc", tdesc);
                                 micon.Parameters.AddWithValue("@sta", codCanc); // estado;
                                 micon.Parameters.AddWithValue("@asd", asd);
-                                micon.Parameters.AddWithValue("@dre", dataGridView1.Rows[i].Cells[8].Value.ToString());
-                                micon.Parameters.AddWithValue("@bult", dataGridView1.Rows[i].Cells[2].Value.ToString() + " " + dataGridView1.Rows[i].Cells[12].Value.ToString());
+                                micon.Parameters.AddWithValue("@dre", dataGridView1.Rows[ind].Cells[14].Value.ToString());
+                                micon.Parameters.AddWithValue("@bult", tcbul + " " + tunid);
                                 micon.Parameters.AddWithValue("@mrd1", "0.00"); // (tx_dref1.Text == "") ? "0.00" : tx_dref1.Text
                                 micon.Parameters.AddWithValue("@mrd2", "0.00"); // (tx_dcar1.Text == "") ? "0.00" : tx_dcar1.Text
                                 micon.Parameters.AddWithValue("@mrd3", "0.00");   // (tx_dnom1.Text == "") ? "0.00" : tx_dnom1.Text
-                                micon.Parameters.AddWithValue("@mtdvta", "cmb_tdv.Text.Substring(0, 1)");
+                                micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
                                 micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
-                                micon.Parameters.AddWithValue("@totpgr", "tx_flete.Text");                    // total inc. igv
+                                micon.Parameters.AddWithValue("@totpgr", ntot.ToString("#0.##"));                    // total inc. igv
+                                micon.Parameters.AddWithValue("@velfi", ntot.ToString("#0.##"));  // valor fila fact electronica
                                 //micon.Parameters.AddWithValue("@fila", fila);
                                 /*
                                 micon.Parameters.AddWithValue("@unim", "");
@@ -1396,6 +1413,10 @@ namespace Grael2
                                 */
                                 micon.ExecuteNonQuery();
                                 fila += 1;
+
+                                dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[14].Value.ToString() + "-" + tx_numero.Text;
+                                dataGridView1.Rows[ind].Cells[9].Value = ntot.ToString("#0.##");
+
                                 retorna = true;         // no hubo errores!
                                 //
                                 // OJO, las actualizaciones en las tablas magrem, manoen y mactacte, las hace el TRIGGER de la tabla detvtas
@@ -1595,18 +1616,20 @@ namespace Grael2
         }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            /*if (e.ColumnIndex == 0)
             {
                 if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == "1")
                 {
                     //dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                    
                 }
                 else
                 {
                     dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
                 }
-            }
+            }*/
         }
         #endregion
+
     }
 }
