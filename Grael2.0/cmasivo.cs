@@ -693,7 +693,7 @@ namespace Grael2
                 string tipope = "0101"; // segun rudver, poner esto en una config                       // v tipoOperacion
                 string estreg = "A";                                                                    // bl_estadoRegistro
                 string coley1 = "1000";                                                                 // v codigoLeyenda_1
-                string teley1 = "SON: " + nl.Convertir(ntot.ToString(), true) + tx_dat_dmon.Text;         // v textoLeyenda_1
+                string teley1 = "SON: " + nl.Convertir(ntot.ToString(), true) + row[3].ToString();         // v textoLeyenda_1
                 string tiref1 = "";     // detalle
                 string nudor1 = "";     // detalle
                 string tiref2 = "";     // detalle
