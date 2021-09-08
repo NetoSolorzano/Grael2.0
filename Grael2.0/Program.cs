@@ -29,7 +29,8 @@ namespace Grael2
         public static string colstr = "";       // strip color
         public static string colpnc = "";       // panel cabecera color
         // datos del cliente implementado
-        public static string cliente = "";      // cliente del sistema
+        public static string cliente = "";      // razon social
+        public static string nomclie = "";      // nombre comercial cliente
         public static string ruc = "";          // ruc del cliente
         public static string dirfisc = "";      // direccion fiscal del cliente
         public static string ubidirfis = "";    // ubigeo de la direccion fiscal

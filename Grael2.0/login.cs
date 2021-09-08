@@ -297,7 +297,8 @@ namespace Grael2
             MySqlConnection cn = new MySqlConnection(DB_CONN_STR);
             if (lib.procConn(cn) == true)
             {
-                string consulta = "SELECT a.param,a.value,a.used,b.cliente,b.ruc,b.igv,b.direcc,b.distrit,b.provin,b.depart,b.ubigeo,b.ctadetra,b.valdetra,b.detra,b.coddetra,b.email,b.telef1 " +
+                string consulta = "SELECT a.param,a.value,a.used,b.razonsocial,b.ruc,b.igv,b.direcc,b.distrit,b.provin,b.depart,b.ubigeo," +
+                    "b.ctadetra,b.valdetra,b.detra,b.coddetra,b.email,b.telef1,b.cliente " +
                     "from confmod a INNER JOIN baseconf b";
                 MySqlCommand micon = new MySqlCommand(consulta, cn);
                 MySqlDataReader dr = micon.ExecuteReader();
@@ -328,6 +329,7 @@ namespace Grael2
                         Program.cliente = dr.GetString(3);
                         Grael2.Program.ruc = dr.GetString(4);
                         Grael2.Program.cliente = dr.GetString(3);
+                        Grael2.Program.nomclie = dr.GetString(17);
                         Grael2.Program.dirfisc = dr.GetString(6).Trim() + " - " + dr.GetString(7).Trim() + " - " + dr.GetString(8).Trim() + " - " + dr.GetString(9).Trim();      // direccion fiscal del cliente
                         Grael2.Program.ubidirfis = dr.GetString(10);    // ubigeo dir fiscal
                         Grael2.Program.distfis = dr.GetString(7).Trim();

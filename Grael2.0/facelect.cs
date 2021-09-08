@@ -1512,7 +1512,7 @@ namespace Grael2
                 insertcab = insertcab + ")";
                 // primero insertamos el detalle, luego la cabecera
                 // *****************************   detalle   *****************************
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))     // ***********    operacion con detraccion    ************
+                if ((double.Parse(tx_flete.Text) > double.Parse(Program.valdetra)) && tx_dat_tdv.Text == codfact)     // ***********    operacion con detraccion    ************
                 {
                     for (int q = 0; q < dataGridView1.Rows.Count - 1; q++)
                     {
@@ -1976,11 +1976,11 @@ namespace Grael2
                     }
                 }
                 else
-                {   // boleta
-                    if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
-                    {
-                        insadd = insadd + "('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD),";
-                    }
+                {   // boleta .. No detraccion en Boletas, Richard 07/09/2021
+                    //if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                    //{
+                    //    insadd = insadd + "('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD),";
+                    //}
                     insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
                             "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
                             "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
@@ -2931,11 +2931,11 @@ namespace Grael2
                 return;
             }
         }
-        private int anula(string tipo)
+        private int anula(string tipo)  // SOLO DEBEN TENER PERMISO LOS USUARIOS DE CONTABILIDAD
         {
             int ctanul = 0;
-            // en el caso de documentos de venta HAY 1: ANULACION FISICA ... 
-            // tambien podría haber ANULACION interna con la serie ANU1 .... 
+            // en el caso de documentos de venta HAY 1: ANULACION FISICA 
+            // tambien podría haber ANULACION interna con la serie ANU1 .... NO, NO DEBE HABER PORQUE EL CORRELATIVO QUEDARA MAL, HABRA HUECOS EN EL REG. DE VENTAS 
             // Anulacion fisica se "anula" el numero del documento en sistema y en fisico se tacha y en prov. fact.electronica se da baja de numeracion
             // se borran todos los enlaces mediante triggers en la B.D.
             if (tipo == "FIS")
@@ -2982,6 +2982,7 @@ namespace Grael2
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
+                        /*
                         string canul = "update madocvtas set servta=@sain,status=@estser,observ=@obse,usera=@asd,fecha=now() " +
                             "where id=@idr";
                         using (MySqlCommand micon = new MySqlCommand(canul, conn))
@@ -2993,7 +2994,7 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@asd", asd);
                             micon.ExecuteNonQuery();
                         }
-
+                        */
                         // falta actualizar detavtas y con su TRIGGER actualizar mactacte,magrem y manoen
                         /*
                         string updser = "update series set actual=actual-1 where tipdoc=@tipd AND serie=@serd";
@@ -3094,9 +3095,8 @@ namespace Grael2
             {
                 // en el caso de las pre guias el numero es el mismo que el ID del registro
                 tx_numero.Text = lib.Right("0000000" + tx_numero.Text, 7);
-                //tx_idr.Text = tx_numero.Text;
-                jalaoc("sernum");
                 dataGridView1.Rows.Clear();
+                jalaoc("sernum");
                 jaladet(tx_idr.Text);
             }
         }
@@ -3395,15 +3395,18 @@ namespace Grael2
             {
                 if (chk_consol.Checked == false)
                 {
-                    if (int.Parse(tx_tfil.Text) > 1)
+                    if (tx_tfil.Text.Trim() != "")
                     {
-                        var aa = MessageBox.Show("Desea pasar a modo simple?" + Environment.NewLine +
-                            "Perdera las guías registradas", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (aa == DialogResult.Yes)
+                        if (int.Parse(tx_tfil.Text) > 1)
                         {
-                            initIngreso();
-                            tx_serGR.Focus();
-                            // modo simple, maximo 3 guias
+                            var aa = MessageBox.Show("Desea pasar a modo simple?" + Environment.NewLine +
+                                "Perdera las guías registradas", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (aa == DialogResult.Yes)
+                            {
+                                initIngreso();
+                                tx_serGR.Focus();
+                                // modo simple, maximo 3 guias
+                            }
                         }
                     }
                 }
@@ -3874,7 +3877,7 @@ namespace Grael2
         {
             {
                 // DATOS PARA EL TICKET
-                string nomclie = Program.cliente;
+                string nomclie = Program.nomclie;
                 string rasclie = Program.cliente;
                 string rucclie = Program.ruc;
                 string dirclie = Program.dirfisc;
@@ -3971,7 +3974,21 @@ namespace Grael2
                     if (tx_nomRem.Text.Trim().Length > 39) posi = posi + alfi + alfi;
                     else posi = posi + alfi;
                     puntoF = new PointF(coli, posi);
-                    e.Graphics.DrawString("RUC", lt_med, Brushes.Black, puntoF, StringFormat.GenericTypographic);    // nombre del cliente
+                    if (tx_dat_tdv.Text == codfact)
+                    {
+                        e.Graphics.DrawString("RUC", lt_med, Brushes.Black, puntoF, StringFormat.GenericTypographic);    // nombre del cliente
+                    }
+                    else
+                    {
+                        if (tx_dat_tdRem.Text == vtc_dni)
+                        {
+                            e.Graphics.DrawString("DNI", lt_med, Brushes.Black, puntoF, StringFormat.GenericTypographic);    // nombre del cliente
+                        }
+                        else
+                        {
+                            e.Graphics.DrawString("OTROS", lt_med, Brushes.Black, puntoF, StringFormat.GenericTypographic);    // nombre del cliente
+                        }
+                    }
                     puntoF = new PointF(coli + 65, posi);
                     e.Graphics.DrawString(":", lt_med, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                     puntoF = new PointF(coli + 70, posi);
@@ -4099,9 +4116,9 @@ namespace Grael2
                     e.Graphics.DrawString(monlet, lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
                     if (monlet.Length <= 30) posi = posi + alfi;
                     else posi = posi + alfi + alfi;
-                    if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))                // leyenda de detracción
+                    if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)                // leyenda de detracción
                     {
-                        siz = new SizeF(CentimeterToPixel(anchTik), 15 * 3);
+                        siz = new SizeF(CentimeterToPixel(anchTik), 15 * 3);        // detraccion solo facturas .. Richard 07/09/2021
                         puntoF = new PointF(coli, posi);
                         recto = new RectangleF(puntoF, siz);
                         e.Graphics.DrawString(leydet1.Trim() + " " + Program.ctadetra.Trim(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);

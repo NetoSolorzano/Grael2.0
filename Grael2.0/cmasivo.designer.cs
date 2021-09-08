@@ -70,6 +70,24 @@
             this.tx_nomuser = new System.Windows.Forms.TextBox();
             this.tx_user = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.marca = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.sede = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.fecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.guia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ndoc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.docvta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.valcomp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.docdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.codmon = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.coddes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.doscrem = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.serlocdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ruta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nomon = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -94,25 +112,9 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.tx_numero = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tx_flete = new Grael2.NumericTextBox();
             this.tx_tfil = new Grael2.NumericTextBox();
-            this.marca = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.sede = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.fecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.guia = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ndoc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.total = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.docvta = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.valcomp = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.docdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.codmon = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.coddes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.doscrem = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.serlocdes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ruta = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nomon = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.pn_usloc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -125,9 +127,11 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.toolStrip1.AutoSize = false;
             this.toolStrip1.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator2,
@@ -154,7 +158,7 @@
             this.toolStripSeparator9,
             this.Bt_fin,
             this.toolStripSeparator11});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 541);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 526);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(769, 35);
             this.toolStrip1.TabIndex = 33;
@@ -390,7 +394,7 @@
             this.pn_usloc.Controls.Add(this.tx_locuser);
             this.pn_usloc.Controls.Add(this.tx_nomuser);
             this.pn_usloc.Controls.Add(this.tx_user);
-            this.pn_usloc.Location = new System.Drawing.Point(0, 509);
+            this.pn_usloc.Location = new System.Drawing.Point(0, 494);
             this.pn_usloc.Name = "pn_usloc";
             this.pn_usloc.Size = new System.Drawing.Size(769, 30);
             this.pn_usloc.TabIndex = 275;
@@ -432,6 +436,9 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.marca,
@@ -454,16 +461,168 @@
             this.nomon});
             this.dataGridView1.Location = new System.Drawing.Point(6, 70);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(756, 407);
+            this.dataGridView1.Size = new System.Drawing.Size(756, 392);
             this.dataGridView1.TabIndex = 21;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
+            this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
+            // 
+            // marca
+            // 
+            this.marca.FillWeight = 20F;
+            this.marca.HeaderText = " ";
+            this.marca.Name = "marca";
+            this.marca.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.marca.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.marca.Width = 20;
+            // 
+            // sede
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.sede.DefaultCellStyle = dataGridViewCellStyle1;
+            this.sede.FillWeight = 60F;
+            this.sede.HeaderText = "SEDE";
+            this.sede.Name = "sede";
+            this.sede.Width = 60;
+            // 
+            // fecha
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.fecha.DefaultCellStyle = dataGridViewCellStyle2;
+            this.fecha.FillWeight = 80F;
+            this.fecha.HeaderText = "FECHA";
+            this.fecha.Name = "fecha";
+            this.fecha.Width = 80;
+            // 
+            // guia
+            // 
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.guia.DefaultCellStyle = dataGridViewCellStyle3;
+            this.guia.FillWeight = 80F;
+            this.guia.HeaderText = "GUIA";
+            this.guia.Name = "guia";
+            this.guia.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.guia.Width = 80;
+            // 
+            // doc
+            // 
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.doc.DefaultCellStyle = dataGridViewCellStyle4;
+            this.doc.FillWeight = 40F;
+            this.doc.HeaderText = "DOC";
+            this.doc.Name = "doc";
+            this.doc.Width = 40;
+            // 
+            // ndoc
+            // 
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.ndoc.DefaultCellStyle = dataGridViewCellStyle5;
+            this.ndoc.FillWeight = 80F;
+            this.ndoc.HeaderText = "N.DOC";
+            this.ndoc.Name = "ndoc";
+            this.ndoc.Width = 80;
+            // 
+            // cliente
+            // 
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.cliente.DefaultCellStyle = dataGridViewCellStyle6;
+            this.cliente.FillWeight = 150F;
+            this.cliente.HeaderText = "CLIENTE";
+            this.cliente.Name = "cliente";
+            this.cliente.Width = 150;
+            // 
+            // total
+            // 
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.total.DefaultCellStyle = dataGridViewCellStyle7;
+            this.total.FillWeight = 90F;
+            this.total.HeaderText = "FLETE S/";
+            this.total.Name = "total";
+            this.total.Width = 90;
+            // 
+            // docvta
+            // 
+            this.docvta.FillWeight = 90F;
+            this.docvta.HeaderText = "DOC.VTA.";
+            this.docvta.Name = "docvta";
+            this.docvta.Width = 90;
+            // 
+            // valcomp
+            // 
+            this.valcomp.HeaderText = "VALOR";
+            this.valcomp.Name = "valcomp";
+            // 
+            // id
+            // 
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.id.DefaultCellStyle = dataGridViewCellStyle8;
+            this.id.FillWeight = 40F;
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Visible = false;
+            this.id.Width = 40;
+            // 
+            // docdes
+            // 
+            this.docdes.FillWeight = 60F;
+            this.docdes.HeaderText = "DOCDES";
+            this.docdes.Name = "docdes";
+            this.docdes.Visible = false;
+            this.docdes.Width = 60;
+            // 
+            // codmon
+            // 
+            this.codmon.FillWeight = 60F;
+            this.codmon.HeaderText = "CODMON";
+            this.codmon.Name = "codmon";
+            this.codmon.Visible = false;
+            this.codmon.Width = 60;
+            // 
+            // coddes
+            // 
+            this.coddes.FillWeight = 60F;
+            this.coddes.HeaderText = "CODDES";
+            this.coddes.Name = "coddes";
+            this.coddes.ReadOnly = true;
+            this.coddes.Visible = false;
+            this.coddes.Width = 60;
+            // 
+            // doscrem
+            // 
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.doscrem.DefaultCellStyle = dataGridViewCellStyle9;
+            this.doscrem.HeaderText = "DOCS.REM";
+            this.doscrem.Name = "doscrem";
+            this.doscrem.ReadOnly = true;
+            this.doscrem.Visible = false;
+            // 
+            // serlocdes
+            // 
+            this.serlocdes.HeaderText = "serlocdes";
+            this.serlocdes.Name = "serlocdes";
+            this.serlocdes.Visible = false;
+            // 
+            // ruta
+            // 
+            this.ruta.HeaderText = "ruta";
+            this.ruta.Name = "ruta";
+            this.ruta.Visible = false;
+            // 
+            // nomon
+            // 
+            this.nomon.HeaderText = "nomon";
+            this.nomon.Name = "nomon";
+            this.nomon.Visible = false;
             // 
             // groupBox17
             // 
+            this.groupBox17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox17.BackColor = System.Drawing.Color.White;
             this.groupBox17.Controls.Add(this.groupBox18);
-            this.groupBox17.Location = new System.Drawing.Point(231, 502);
+            this.groupBox17.Location = new System.Drawing.Point(231, 487);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(358, 1);
             this.groupBox17.TabIndex = 330;
@@ -479,9 +638,10 @@
             // 
             // label28
             // 
+            this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label28.AutoSize = true;
             this.label28.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label28.Location = new System.Drawing.Point(321, 487);
+            this.label28.Location = new System.Drawing.Point(234, 472);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(55, 13);
             this.label28.TabIndex = 344;
@@ -688,164 +848,41 @@
             this.tx_numero.TabIndex = 444;
             this.tx_numero.Visible = false;
             // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label5.Location = new System.Drawing.Point(441, 472);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(72, 13);
+            this.label5.TabIndex = 445;
+            this.label5.Text = "Total Flete S/";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tx_flete
+            // 
+            this.tx_flete.AllowSpace = false;
+            this.tx_flete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tx_flete.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_flete.Location = new System.Drawing.Point(515, 468);
+            this.tx_flete.Name = "tx_flete";
+            this.tx_flete.ReadOnly = true;
+            this.tx_flete.Size = new System.Drawing.Size(75, 20);
+            this.tx_flete.TabIndex = 446;
+            this.tx_flete.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // tx_tfil
             // 
             this.tx_tfil.AllowSpace = false;
+            this.tx_tfil.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tx_tfil.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfil.Location = new System.Drawing.Point(377, 483);
+            this.tx_tfil.Location = new System.Drawing.Point(290, 468);
             this.tx_tfil.Name = "tx_tfil";
             this.tx_tfil.ReadOnly = true;
-            this.tx_tfil.Size = new System.Drawing.Size(37, 20);
+            this.tx_tfil.Size = new System.Drawing.Size(42, 20);
             this.tx_tfil.TabIndex = 347;
             this.tx_tfil.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // marca
-            // 
-            this.marca.FillWeight = 20F;
-            this.marca.HeaderText = " ";
-            this.marca.Name = "marca";
-            this.marca.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.marca.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.marca.Width = 20;
-            // 
-            // sede
-            // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.sede.DefaultCellStyle = dataGridViewCellStyle1;
-            this.sede.FillWeight = 60F;
-            this.sede.HeaderText = "SEDE";
-            this.sede.Name = "sede";
-            this.sede.Width = 60;
-            // 
-            // fecha
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.fecha.DefaultCellStyle = dataGridViewCellStyle2;
-            this.fecha.FillWeight = 80F;
-            this.fecha.HeaderText = "FECHA";
-            this.fecha.Name = "fecha";
-            this.fecha.Width = 80;
-            // 
-            // guia
-            // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.guia.DefaultCellStyle = dataGridViewCellStyle3;
-            this.guia.FillWeight = 80F;
-            this.guia.HeaderText = "GUIA";
-            this.guia.Name = "guia";
-            this.guia.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.guia.Width = 80;
-            // 
-            // doc
-            // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.doc.DefaultCellStyle = dataGridViewCellStyle4;
-            this.doc.FillWeight = 40F;
-            this.doc.HeaderText = "DOC";
-            this.doc.Name = "doc";
-            this.doc.Width = 40;
-            // 
-            // ndoc
-            // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.ndoc.DefaultCellStyle = dataGridViewCellStyle5;
-            this.ndoc.FillWeight = 80F;
-            this.ndoc.HeaderText = "N.DOC";
-            this.ndoc.Name = "ndoc";
-            this.ndoc.Width = 80;
-            // 
-            // cliente
-            // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.cliente.DefaultCellStyle = dataGridViewCellStyle6;
-            this.cliente.FillWeight = 150F;
-            this.cliente.HeaderText = "CLIENTE";
-            this.cliente.Name = "cliente";
-            this.cliente.Width = 150;
-            // 
-            // total
-            // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.total.DefaultCellStyle = dataGridViewCellStyle7;
-            this.total.FillWeight = 90F;
-            this.total.HeaderText = "FLETE S/";
-            this.total.Name = "total";
-            this.total.Width = 90;
-            // 
-            // docvta
-            // 
-            this.docvta.FillWeight = 90F;
-            this.docvta.HeaderText = "DOC.VTA.";
-            this.docvta.Name = "docvta";
-            this.docvta.Width = 90;
-            // 
-            // valcomp
-            // 
-            this.valcomp.HeaderText = "VALOR";
-            this.valcomp.Name = "valcomp";
-            // 
-            // id
-            // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.id.DefaultCellStyle = dataGridViewCellStyle8;
-            this.id.FillWeight = 40F;
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Visible = false;
-            this.id.Width = 40;
-            // 
-            // docdes
-            // 
-            this.docdes.FillWeight = 60F;
-            this.docdes.HeaderText = "DOCDES";
-            this.docdes.Name = "docdes";
-            this.docdes.Visible = false;
-            this.docdes.Width = 60;
-            // 
-            // codmon
-            // 
-            this.codmon.FillWeight = 60F;
-            this.codmon.HeaderText = "CODMON";
-            this.codmon.Name = "codmon";
-            this.codmon.Visible = false;
-            this.codmon.Width = 60;
-            // 
-            // coddes
-            // 
-            this.coddes.FillWeight = 60F;
-            this.coddes.HeaderText = "CODDES";
-            this.coddes.Name = "coddes";
-            this.coddes.ReadOnly = true;
-            this.coddes.Visible = false;
-            this.coddes.Width = 60;
-            // 
-            // doscrem
-            // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.doscrem.DefaultCellStyle = dataGridViewCellStyle9;
-            this.doscrem.HeaderText = "DOCS.REM";
-            this.doscrem.Name = "doscrem";
-            this.doscrem.ReadOnly = true;
-            this.doscrem.Visible = false;
-            // 
-            // serlocdes
-            // 
-            this.serlocdes.HeaderText = "serlocdes";
-            this.serlocdes.Name = "serlocdes";
-            this.serlocdes.Visible = false;
-            // 
-            // ruta
-            // 
-            this.ruta.HeaderText = "ruta";
-            this.ruta.Name = "ruta";
-            this.ruta.Visible = false;
-            // 
-            // nomon
-            // 
-            this.nomon.HeaderText = "nomon";
-            this.nomon.Name = "nomon";
-            this.nomon.Visible = false;
             // 
             // cmasivo
             // 
@@ -853,7 +890,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.ClientSize = new System.Drawing.Size(769, 576);
+            this.ClientSize = new System.Drawing.Size(769, 561);
+            this.Controls.Add(this.groupBox17);
+            this.Controls.Add(this.tx_flete);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.tx_numero);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
@@ -870,7 +910,6 @@
             this.Controls.Add(this.tx_idr);
             this.Controls.Add(this.tx_dat_loca);
             this.Controls.Add(this.bt_agr);
-            this.Controls.Add(this.groupBox17);
             this.Controls.Add(this.tx_tfil);
             this.Controls.Add(this.label28);
             this.Controls.Add(this.dataGridView1);
@@ -878,11 +917,12 @@
             this.Controls.Add(this.pn_usloc);
             this.Controls.Add(this.toolStrip1);
             this.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(885, 800);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(785, 0);
             this.Name = "cmasivo";
             this.Text = "Generación masiva de comprobantes";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
@@ -979,5 +1019,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn serlocdes;
         private System.Windows.Forms.DataGridViewTextBoxColumn ruta;
         private System.Windows.Forms.DataGridViewTextBoxColumn nomon;
+        private NumericTextBox tx_flete;
+        private System.Windows.Forms.Label label5;
     }
 }

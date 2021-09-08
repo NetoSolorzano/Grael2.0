@@ -134,6 +134,9 @@ namespace Grael2
         //DataTable tcfe = new DataTable();       // facturacion electronica - cabecera
         //DataTable tdfe = new DataTable();       // facturacion electronica -detalle
         public string script = "";              // script de conexion a Bizlinks
+        string tcbul = "0";                     // total bultos             -|
+        string tdesc = "-";                     // descripcion de la carga   |-> datos de linea de detalle de cada fila
+        string tunid = "-";                     // unidad de medida         -|
         NumLetra nl = new NumLetra();
         public cmasivo()
         {
@@ -590,12 +593,20 @@ namespace Grael2
         }
         private void totalizaG()                            // calcula totales de la grilla
         {
-            int totfil = 0;
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            int totfil = 0, tfsele = 0;
+            double totfle = 0;
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
             {
-                    totfil += 1;
+                totfil += 1;
+                //MessageBox.Show(dataGridView1.Rows[i].Cells[0].Value.ToString(),"fila: " + i.ToString());
+                if (dataGridView1.Rows[i].Cells[0].Value.ToString() == "1" || dataGridView1.Rows[i].Cells[0].Value.ToString() == "True")
+                {
+                    totfle += double.Parse(dataGridView1.Rows[i].Cells[7].Value.ToString());
+                    tfsele += 1;
+                }
             }
             tx_tfil.Text = totfil.ToString();
+            tx_flete.Text = totfle.ToString("#0.00");
         }
 
         #region facturacion electronica
@@ -643,7 +654,7 @@ namespace Grael2
         {                               // facturacion electrónica con OSE BIZLINKS 10-10-2018  / actualizacion 14/08/2021
             string tipo = codbole;   // tx_dat_tdv.Text;
             string serie = dataGridView1.Rows[ind].Cells[15].Value.ToString();  // tx_serie.Text;
-            string corre = tx_numero.Text;
+            string corre = "0" + tx_numero.Text;
             double ntot = double.Parse(dataGridView1.Rows[ind].Cells[9].Value.ToString());
             double igv = 1.00 + (double.Parse(v_igv) / 100);
             double subt = ntot / igv;   // 1.18
@@ -657,10 +668,10 @@ namespace Grael2
                 string fecemi = tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) +
                     "-" + tx_fechope.Text.Substring(0, 2);                                                 // v 
                 DataRow[] row = dtdvt.Select("idcodice='" + codbole + "'");
-                string tipdoc = row[3].ToString();                                                 // v tipoDocumento
+                string tipdoc = row[0][3].ToString();                                                 // v tipoDocumento
                 glosser = row[0][4].ToString();
                 DataRow[] rowm = dtmon.Select("idcodice='" + MonDeft + "'");
-                string tipmon = row[2].ToString();                                                 // v tipoMoneda
+                string tipmon = rowm[0][2].ToString();                                                 // v tipoMoneda
                 string nudoem = Program.ruc;                                                            // v numeroDocumentoEmisor
                 string tidoem = "6";                                                                    // v tipoDocumentoEmisor
                 string nocoem = "-";                                                                    // v nombreComercialEmisor
@@ -733,13 +744,13 @@ namespace Grael2
                 double totdet = 0;
                 string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
                 // codleyt                                                                  // codigoLeyenda_2
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))   // double.Parse(tx_flete.Text) > double.Parse(Program.valdetra)
+                if (ntot > double.Parse(Program.valdetra))   // double.Parse(tx_flete.Text) > double.Parse(Program.valdetra)
                 {
                     // ctadetra;                                                            // numeroCtaBancoNacion
                     // valdetra;                                                            // monto a partir del cual tiene detraccion la operacion  
                     // coddetra;                                                            // codigoDetraccion
                     // pordetra;                                                            // porcentajeDetraccion
-                    totdet = Math.Round(double.Parse("tx_flete.Text") * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
+                    totdet = Math.Round(ntot * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
                     insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2";
                 }
                 insertcab = insertcab + ") " +
@@ -751,36 +762,35 @@ namespace Grael2
                     "@totigv,@totvta,@tipope,@tovane,@totvta";  // ,@tiref1,@nudor1
                 //if (!string.IsNullOrEmpty(nudor2) && !string.IsNullOrWhiteSpace(nudor2)) insertcab = insertcab + ",@tiref2,@nudor2";
                 //if (!string.IsNullOrEmpty(nudor3) && !string.IsNullOrWhiteSpace(nudor3)) insertcab = insertcab + ",@tiref3,@nudor3";
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                if (ntot > double.Parse(Program.valdetra))
                 {
                     insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@leydet";
                 }
                 insertcab = insertcab + ")";
                 // primero insertamos el detalle, luego la cabecera
                 // *****************************   detalle   *****************************
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))     // ***********    operacion con detraccion    ************
+                if (ntot > double.Parse(Program.valdetra) && false == true)     // ***********    operacion con detraccion    ************
                 {
-                    for (int q = 0; q < dataGridView1.Rows.Count - 1; q++)
+                    // Richard, dice que boletas no tienen detraccion ... 07/09/2021
                     {
-                        glosser2 = dataGridView1.Rows[q].Cells[10].Value.ToString();
-                        string nuori1 = (q + 1).ToString();                                                       // numeroOrdenItem
+                        glosser2 = dataGridView1.Rows[ind].Cells[16].Value.ToString();    // ruta
+                        string nuori1 = "1";                                                                   // numeroOrdenItem
                         string codprd1 = "-";                                                                   // codigoProducto
                         string coprsu1 = "78101802";                                                            // codigoProductoSunat
-                        string descr1 = glosser + " " + glosser2 + " " +
-                            vint_gg + " " + dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                // descripcion
+                        string descr1 = glosser + " " + glosser2 + " " + tdesc;                                 // descripcion
                         decimal canti1 = Math.Round(decimal.Parse("1"), 2);
                         string unime1 = "ZZ";                                                                   // unidadMedida
                         decimal psi1, igv1;                                                                     // calculos de precios x item sin y con impuestos
                         double inuns1 = 0;                                                                      // importeUnitarioSinImpuesto
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out psi1))
+                        if (decimal.TryParse(dataGridView1.Rows[ind].Cells[9].Value.ToString(), out psi1))
                         {
                             inuns1 = Math.Round(((double)psi1 / ((double)decimal.Parse(v_igv) / 100 + 1)), 2);   // importeUnitarioSinImpuesto
                         }
                         else { inuns1 = 0; }                                                                    // importeUnitarioSinImpuesto
-                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[q].Cells["valor"].Value.ToString()), 2); // importeUnitarioConImpuesto
+                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[ind].Cells[9].Value.ToString()), 2); // importeUnitarioConImpuesto
                         string coimu1 = "01";                                                                   // codigoImporteUnitarioConImpues
                         string imtoi1 = "";
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out igv1))
+                        if (decimal.TryParse(dataGridView1.Rows[ind].Cells[9].Value.ToString(), out igv1))
                         {
                             imtoi1 = Math.Round(((double)igv1 - ((double)igv1 / ((double)decimal.Parse(v_igv) / 100 + 1))), 2).ToString();
                         }
@@ -790,8 +800,8 @@ namespace Grael2
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
                         double intos1 = inuns1;                                                                 // importeTotalSinImpuesto
-                        gpadqui = dataGridView1.Rows[q].Cells[8].Value.ToString().Trim();
-                        tiref1 = "9840";   // G.R. remitente                                                // codigoAuxiliar500_1
+                        gpadqui = dataGridView1.Rows[ind].Cells[14].Value.ToString().Trim();
+                        tiref1 = "9840";   // G.R. remitente                                                    // codigoAuxiliar500_1
                         nudor1 = gpadqui;
                         /*
                         if (gpadqui.Length > 1 && gpadqui.Length < 500)
@@ -819,7 +829,7 @@ namespace Grael2
                             }
                         }
                         */
-                        gpgrael = dataGridView1.Rows[q].Cells[0].Value.ToString();            // guias de grael 
+                        gpgrael = dataGridView1.Rows[ind].Cells[3].Value.ToString();            // guias de grael 
                         Ctiref1 = "4067";       // guia transportista a nivel de item                         // codigoAuxiliar40_1
                         Cnudor1 = gpgrael;
                         /*
@@ -937,26 +947,26 @@ namespace Grael2
                 }
                 else
                 {              //  ********************   sin detraccion   ************************** 
-                    for (int q = 0; q < dataGridView1.Rows.Count - 1; q++)
+                    //for (int q = 0; q < dataGridView1.Rows.Count - 1; q++)
                     {
-                        glosser2 = dataGridView1.Rows[q].Cells[10].Value.ToString();
-                        string nuori1 = (q + 1).ToString();                                                       // numeroOrdenItem
+                        glosser2 = dataGridView1.Rows[ind].Cells[16].Value.ToString();
+                        string nuori1 = "1";                                                                   // numeroOrdenItem
                         string codprd1 = "-";                                                                   // codigoProducto
                         string coprsu1 = "78101802";                                                            // codigoProductoSunat
-                        string descr1 = dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                // descripcion
+                        string descr1 = glosser + " " + glosser2 + " " + tdesc;                                // descripcion
                         decimal canti1 = Math.Round(decimal.Parse("1"), 2);
                         string unime1 = "ZZ";                                                                   // unidadMedida
                         decimal psi1, igv1;                                                                     // calculos de precios x item sin y con impuestos
                         double inuns1 = 0;                                                                      // importeUnitarioSinImpuesto
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out psi1))
+                        if (decimal.TryParse(dataGridView1.Rows[ind].Cells[9].Value.ToString(), out psi1))
                         {
                             inuns1 = Math.Round(((double)psi1 / ((double)decimal.Parse(v_igv) / 100 + 1)), 2);   // importeUnitarioSinImpuesto
                         }
                         else { inuns1 = 0; }                                                                    // importeUnitarioSinImpuesto
-                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[q].Cells["valor"].Value.ToString()), 2); // importeUnitarioConImpuesto
+                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[ind].Cells[9].Value.ToString()), 2); // importeUnitarioConImpuesto
                         string coimu1 = "01";                                                                   // codigoImporteUnitarioConImpues
                         string imtoi1 = "";
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out igv1))
+                        if (decimal.TryParse(dataGridView1.Rows[ind].Cells[9].Value.ToString(), out igv1))
                         {
                             imtoi1 = Math.Round(((double)igv1 - ((double)igv1 / ((double)decimal.Parse(v_igv) / 100 + 1))), 2).ToString();
                         }
@@ -966,7 +976,7 @@ namespace Grael2
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
                         double intos1 = inuns1;                                                                 // importeTotalSinImpuesto
-                        gpadqui = dataGridView1.Rows[q].Cells["guiasclte"].Value.ToString().Trim();
+                        gpadqui = dataGridView1.Rows[ind].Cells[14].Value.ToString().Trim();
                         tiref1 = "9840";   // G.R. remitente                                                // codigoAuxiliar500_1
                         nudor1 = gpadqui;
                         /*
@@ -998,7 +1008,7 @@ namespace Grael2
                         Ctiref1 = "8054";     // G.R. transportista de grael                                  // codigoAuxiliar500_1    ... 06/07/2019
                         Cnudor1 = gpgrael;                                                                    // agregado 06/07/2019
                         */
-                        gpgrael = dataGridView1.Rows[q].Cells[0].Value.ToString().Trim();
+                        gpgrael = dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim();
                         Ctiref1 = "4067";     // G.R. transportista de grael                                  // codigoAuxiliar40_1 
                         Cnudor1 = gpgrael;
                         string ubiPtoOri = "";              // ubigeoPtoOrigen
@@ -1160,30 +1170,30 @@ namespace Grael2
                 //DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
                 //string fecpag = fecpd.AddDays(int.Parse(tx_dat_dpla.Text)).ToString("dd'/'MM'/'yyyy");
                 string insadd = "insert into SPE_EINVOICEHEADER_ADD (" +
-                        "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values ";
-                    {   // boleta
-                        if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
-                        {
-                            insadd = insadd + "('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD),";
-                        }
-                        insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
-                                "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
-                                "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
-                                "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
-                                "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)";
-                        SqlCommand insertadd = new SqlCommand(insadd, conms);
-                        insertadd.Parameters.AddWithValue("@nudoem", nudoem);
-                        insertadd.Parameters.AddWithValue("@sernum", sernum);
-                        insertadd.Parameters.AddWithValue("@tipdoc", tipdoc);
-                        insertadd.Parameters.AddWithValue("@tidoem", tidoem);
-                        insertadd.Parameters.AddWithValue("@diradq", diradq);
-                        insertadd.Parameters.AddWithValue("@ubiadq", ubiadq);
-                        insertadd.Parameters.AddWithValue("@proadq", proadq);
-                        insertadd.Parameters.AddWithValue("@depadq", depadq);
-                        insertadd.Parameters.AddWithValue("@disadq", disadq);
-                        insertadd.Parameters.AddWithValue("@paiadq", paiadq);
-                        insertadd.ExecuteNonQuery();
-                    }
+                "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values ";
+                // boleta .... no va detraccion en boletas 07/09/2021 Richard
+                //if (ntot > double.Parse(Program.valdetra))
+                //{
+                //    insadd = insadd + "('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD),";
+                //}
+                insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
+                        "('provinciaAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@proadq)," +
+                        "('departamentoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@depadq)," +
+                        "('distritoAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@disadq)," +
+                        "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)";
+                SqlCommand insertadd = new SqlCommand(insadd, conms);
+                insertadd.Parameters.AddWithValue("@nudoem", nudoem);
+                insertadd.Parameters.AddWithValue("@sernum", sernum);
+                insertadd.Parameters.AddWithValue("@tipdoc", tipdoc);
+                insertadd.Parameters.AddWithValue("@tidoem", tidoem);
+                insertadd.Parameters.AddWithValue("@diradq", diradq);
+                //insertadd.Parameters.AddWithValue("@ubiadq", ubiadq);
+                insertadd.Parameters.AddWithValue("@proadq", proadq);
+                insertadd.Parameters.AddWithValue("@depadq", depadq);
+                insertadd.Parameters.AddWithValue("@disadq", disadq);
+                insertadd.Parameters.AddWithValue("@paiadq", paiadq);
+                insertadd.Parameters.AddWithValue("@fpagoD", "009");
+                insertadd.ExecuteNonQuery();
             }
             else
             {
@@ -1256,7 +1266,16 @@ namespace Grael2
         private void button1_Click(object sender, EventArgs e)
         {
             #region validaciones
-
+            totalizaG();
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[8].Value.ToString().Trim() != "")
+                {
+                    MessageBox.Show("Debe cerrar y volver a abrir el formulario");
+                    this.Close();
+                    return;
+                }
+            }
             #endregion
             // grabamos, actualizamos, etc
             string modo = Tx_modo.Text;
@@ -1271,21 +1290,22 @@ namespace Grael2
                     {
                         for (int i=0; i<dataGridView1.Rows.Count - 1; i++)
                         {
-                            if (dataGridView1.Rows[i].Cells[0].Value.ToString() == "1")
+                            if (dataGridView1.Rows[i].Cells[0].Value.ToString() == "1" || dataGridView1.Rows[i].Cells[0].Value.ToString() == "True")
                             {
                                 if (graba(i) == true)
                                 {
-                                    try
-                                    {
+                                    //try
+                                    //{
                                         OSE_Fact_Elect();
                                         grabfactelec(i);
-                                    }
-                                    catch(Exception ex)
-                                    {
-                                        MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
-                                            "Se generó una anulación interna para el presente documento", "Error en proveedor de Fact.Electrónica");
-                                        iserror = "si";
-                                    }
+                                    //}
+                                    //catch(Exception ex)
+                                    //{
+                                    //    MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
+                                    //        "Se debe generar una anulación interna para el presente documento" + Environment.NewLine +
+                                    //        ex.Message, "Error en proveedor de Fact.Electrónica");
+                                    //    iserror = "si";
+                                    //}
                                 }
                                 else
                                 {
@@ -1419,9 +1439,10 @@ namespace Grael2
                     }
                 }
                 // detalle
-                string tcbul = "0";
-                string tdesc = "-";
-                string tunid = "-";
+                tcbul = "0";
+                tdesc = "-";
+                tunid = "-";
+
                 string condeta = "select codprd,descrip,unidad,sum(cantid) as cant from erp_grael.detagrem where idc=@idr group by idc";
                 using (MySqlCommand micon = new MySqlCommand(condeta, conn))
                 {
@@ -1474,7 +1495,7 @@ namespace Grael2
                     micon.ExecuteNonQuery();
                     //fila = 1;
 
-                    dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + tx_numero.Text;
+                    dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + "0" + tx_numero.Text;
                     dataGridView1.Rows[ind].Cells[9].Value = ntot.ToString("#0.##");
 
                     retorna = true;         // no hubo errores!
@@ -1685,8 +1706,26 @@ namespace Grael2
                     dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
                 }
             }*/
+            //totalizaG();
         }
+
         #endregion
 
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
+        private void dataGridView1_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            //MessageBox.Show("validated");
+            totalizaG();
+        }
+
+        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            //MessageBox.Show("validating");
+            //totalizaG();
+        }
     }
 }
