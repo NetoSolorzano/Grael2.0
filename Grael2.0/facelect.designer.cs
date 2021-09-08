@@ -1357,7 +1357,6 @@
             this.cmb_mon.Name = "cmb_mon";
             this.cmb_mon.Size = new System.Drawing.Size(40, 21);
             this.cmb_mon.TabIndex = 22;
-            this.cmb_mon.SelectedIndexChanged += new System.EventHandler(this.cmb_mon_SelectedIndexChanged);
             this.cmb_mon.SelectionChangeCommitted += new System.EventHandler(this.cmb_mon_SelectionChangeCommitted);
             // 
             // tx_flete

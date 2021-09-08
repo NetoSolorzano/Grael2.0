@@ -744,7 +744,7 @@ namespace Grael2
                 double totdet = 0;
                 string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
                 // codleyt                                                                  // codigoLeyenda_2
-                if (ntot > double.Parse(Program.valdetra))   // double.Parse(tx_flete.Text) > double.Parse(Program.valdetra)
+                if (false)   // ntot > double.Parse(Program.valdetra)   .. no entramos aca porque no hay detrac en boletas
                 {
                     // ctadetra;                                                            // numeroCtaBancoNacion
                     // valdetra;                                                            // monto a partir del cual tiene detraccion la operacion  
@@ -762,7 +762,7 @@ namespace Grael2
                     "@totigv,@totvta,@tipope,@tovane,@totvta";  // ,@tiref1,@nudor1
                 //if (!string.IsNullOrEmpty(nudor2) && !string.IsNullOrWhiteSpace(nudor2)) insertcab = insertcab + ",@tiref2,@nudor2";
                 //if (!string.IsNullOrEmpty(nudor3) && !string.IsNullOrWhiteSpace(nudor3)) insertcab = insertcab + ",@tiref3,@nudor3";
-                if (ntot > double.Parse(Program.valdetra))
+                if (false)  // ntot > double.Parse(Program.valdetra) .. no entramos aca porque detrac no van en boletas
                 {
                     insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@leydet";
                 }

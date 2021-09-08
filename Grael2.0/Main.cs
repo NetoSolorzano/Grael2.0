@@ -447,7 +447,7 @@ namespace Grael2
             ffe1.TopLevel = false;
             ffe1.Parent = this;
             ffe1.Top = pn_phor.Top + pn_phor.Height + 1;
-            ffe1.Left = pn_pver.Left + pn_pver.Width + 1;
+            ffe1.Left = pn_pver.Left + pn_pver.Width - 100;       // pn_pver.Left + pn_pver.Width + 1;
             pn_centro.Controls.Add(ffe1);
             ffe1.Show();
             ffe1.BringToFront();

@@ -1485,7 +1485,7 @@ namespace Grael2
                 double totdet = 0;
                 string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
                 // codleyt                                                                  // codigoLeyenda_2
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                 {
                     // ctadetra;                                                            // numeroCtaBancoNacion
                     // valdetra;                                                            // monto a partir del cual tiene detraccion la operacion  
@@ -1505,7 +1505,7 @@ namespace Grael2
                 if (!string.IsNullOrEmpty(nudor2) && !string.IsNullOrWhiteSpace(nudor2)) insertcab = insertcab + ",@tiref2,@nudor2";
                 if (!string.IsNullOrEmpty(nudor3) && !string.IsNullOrWhiteSpace(nudor3)) insertcab = insertcab + ",@tiref3,@nudor3";
                 */
-                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                 {
                     insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@leydet";
                 }
@@ -3660,39 +3660,6 @@ namespace Grael2
                 }
             }
         }
-        private void cmb_mon_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*if (Tx_modo.Text == "NUEVO" && tx_totcant.Text != "")    //  || Tx_modo.Text == "EDITAR"
-            {   // lo de totcant es para accionar solo cuando el detalle de la GR se haya cargado
-                if (cmb_mon.SelectedIndex > -1)
-                {
-                    tx_dat_mone.Text = cmb_mon.SelectedValue.ToString();
-                    DataRow[] row = dtm.Select("idcodice='"+ tx_dat_mone.Text+"'");
-                    tx_dat_monsunat.Text = row[0][2].ToString();
-                    tipcambio(tx_dat_mone.Text);
-                    if (tx_flete.Text != "" && tx_flete.Text != "0.00") calculos(decimal.Parse(tx_flete.Text));
-                    if (rb_no.Checked == true) rb_no_Click(null,null);
-                    if (rb_si.Checked == true) rb_si_Click(null, null);
-                    if (tx_dat_mone.Text != MonDeft)
-                    {
-                        tx_flete.ReadOnly = false;
-                        tx_flete.Focus();
-                    }
-                    else
-                    {
-                        if (decimal.Parse(tx_dat_saldoGR.Text) <= 0)
-                        {
-                            if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
-                            else tx_flete.ReadOnly = true;
-                        }
-                        else
-                        {
-                            tx_flete.ReadOnly = true;
-                        }
-                    }
-                }
-            } */
-        }
         private void cmb_tdv_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_tdv.SelectedIndex > -1)
@@ -3718,6 +3685,7 @@ namespace Grael2
                     DataRow[] row = dtm.Select("idcodice='" + tx_dat_mone.Text + "'");
                     tx_dat_monsunat.Text = row[0][2].ToString();
                     tipcambio(tx_dat_mone.Text);
+                    // hasta aca
                     if (tx_flete.Text != "" && tx_flete.Text != "0.00") calculos(decimal.Parse(tx_flete.Text));
                     if (rb_no.Checked == true) rb_no_Click(null, null);
                     if (rb_si.Checked == true) rb_si_Click(null, null);
@@ -4032,14 +4000,27 @@ namespace Grael2
                             else e.Graphics.DrawString(dataGridView1.Rows[l].Cells[0].Value.ToString() + " " + dataGridView1.Rows[l].Cells[1].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                             posi = posi + alfi;
                             puntoF = new PointF(coli, posi);
-                            e.Graphics.DrawString("Según doc.cliente: " + dataGridView1.Rows[l].Cells[8].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
-                            posi = posi + alfi;
+                            if (dataGridView1.Rows[l].Cells[8].Value.ToString().Trim().Length > 30)
+                            {
+                                e.Graphics.DrawString("Según doc.cliente: ", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                                int alrect = (dataGridView1.Rows[l].Cells[8].Value.ToString().Trim().Length / 30) + 1;
+                                siz = new SizeF(180, 15 * alrect);
+                                puntoF = new PointF(coli + 100.0F, posi);
+                                recto = new RectangleF(puntoF, siz);
+                                e.Graphics.DrawString(dataGridView1.Rows[l].Cells[8].Value.ToString(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
+                                posi = posi + alfi * alrect;
+                            }
+                            else
+                            {
+                                e.Graphics.DrawString("Según doc.cliente: " + dataGridView1.Rows[l].Cells[8].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                                posi = posi + alfi;
+                            }
                         }
                     }
                     // pie del documento ;
                     if (tx_dat_tdv.Text != codfact)
                     {
-                        //SizeF siz = new SizeF(70, 15);
+                        siz = new SizeF(70, 15);
                         posi = posi + alfi;
                         puntoF = new PointF(coli, posi);
                         e.Graphics.DrawString("OP. GRAVADA", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
@@ -4068,12 +4049,13 @@ namespace Grael2
                         puntoF = new PointF(coli, posi);
                         e.Graphics.DrawString("IMPORTE TOTAL " + cmb_mon.Text, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                         puntoF = new PointF(coli + 190, posi);
+                        siz = new SizeF(70, 15);
                         recto = new RectangleF(puntoF, siz);
                         e.Graphics.DrawString(tx_flete.Text, lt_peq, Brushes.Black, recto, alder);
                     }
                     if (tx_dat_tdv.Text == codfact)
                     {
-                        //SizeF siz = new SizeF(70, 15);
+                        siz = new SizeF(70, 15);
                         //StringFormat alder = new StringFormat(StringFormatFlags.DirectionRightToLeft);
                         posi = posi + alfi;
                         puntoF = new PointF(coli, posi);
@@ -4103,6 +4085,7 @@ namespace Grael2
                         puntoF = new PointF(coli, posi);
                         e.Graphics.DrawString("IMPORTE TOTAL " + cmb_mon.Text, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                         puntoF = new PointF(coli + 190, posi);
+                        siz = new SizeF(70, 15);
                         recto = new RectangleF(puntoF, siz);
                         e.Graphics.DrawString(tx_flete.Text, lt_peq, Brushes.Black, recto, alder);
                     }

@@ -50,7 +50,7 @@ namespace Grael2
                     xnum = row[0].ItemArray[2].ToString();
                     c = row[0].ItemArray[1].ToString();
                 }
-                //
+                /*
                 string consulta = "select fechope,mext1,mext2,mext3,mext4 from tipcamref where fechope=@fec";
                 using (MySqlCommand micon = new MySqlCommand(consulta, conn))
                 {
@@ -71,14 +71,16 @@ namespace Grael2
                         }
                     }
                 }
+                */
             }
-            if (tx_tipcam.Text.Trim() == "" || xnum == "" || c == "" || tx_tipcam.Text.Substring(0,1) == "0")
+            if (xnum == "" || c == "")
             {
-                MessageBox.Show("Falta información en tabla de tipos de cambio" + Environment.NewLine + 
-                    "o falta configurar tabla de monedas", "No se puede continuar",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Falta información en tabla monedas" + Environment.NewLine + 
+                    "o falta configurar tipos de moneda", "No se puede continuar",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 ReturnValue1 = "0";
                 this.Close();
             }
+            /*
             else
             {
                 // calculamos el valor cambiado
@@ -92,7 +94,10 @@ namespace Grael2
                     tx_newVal.ReadOnly = true;
                     tx_newVal.Text = Math.Round(decimal.Parse(para1) / decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
                 }
-            }
+            } */
+            tx_fecha.Text = para3.Substring(0, 10);
+            tx_codmon.Text = c;
+            tx_tipcam.Focus();
         }
         private void vtipcam_KeyDown(object sender, KeyEventArgs e)
         {
@@ -107,22 +112,24 @@ namespace Grael2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ReturnValue1 = tx_newVal.Text;                                                          // valor cambiado a la moneda deseada
-            if (para1 == "" || para1 == "0")
+            if (tx_tipcam.Text.Trim() != "")
             {
-                if (tx_newVal.Text.Trim() == "")
+                ReturnValue1 = tx_newVal.Text;                                                          // valor cambiado a la moneda deseada
+                if (para1 == "" || para1 == "0")
                 {
-                    ReturnValue2 = "0.000";
+                    if (tx_newVal.Text.Trim() == "")
+                    {
+                        ReturnValue2 = "0.000";
+                    }
+                    else
+                    {
+                        ReturnValue2 = Math.Round(decimal.Parse(tx_newVal.Text) * decimal.Parse(tx_tipcam.Text), 3).ToString();      // valor en moneda local
+                    }
                 }
-                else
-                {
-                    ReturnValue2 = Math.Round(decimal.Parse(tx_newVal.Text) * decimal.Parse(tx_tipcam.Text), 3).ToString();      // valor en moneda local
-                }
+                else ReturnValue2 = para1;
+                ReturnValue3 = tx_tipcam.Text;                                                          // tipo de cambio de la operacion
+                this.Close();
             }
-            else ReturnValue2 = para1;
-            ReturnValue3 = tx_tipcam.Text;                                                          // tipo de cambio de la operacion
-            //
-            this.Close();
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -134,7 +141,15 @@ namespace Grael2
 
         private void tx_tipcam_Leave(object sender, EventArgs e)
         {
-            if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) / decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+            string mondef = dt.Rows[0].ItemArray[0].ToString();
+            if (para2 == mondef)    // cambio a soles
+            {
+                if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) * decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+            }
+            else
+            {
+                if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) / decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+            }
         }
 
         private void tx_newVal_Leave(object sender, EventArgs e)
