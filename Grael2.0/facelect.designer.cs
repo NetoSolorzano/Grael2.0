@@ -198,13 +198,14 @@
             this.tx_dat_porcDscto = new System.Windows.Forms.TextBox();
             this.tx_dat_nombd = new System.Windows.Forms.TextBox();
             this.chk_consol = new System.Windows.Forms.CheckBox();
+            this.tx_dat_loca = new System.Windows.Forms.TextBox();
             this.tx_valdscto = new Grael2.NumericTextBox();
             this.tx_idcaja = new Grael2.NumericTextBox();
             this.tx_numGR = new Grael2.NumericTextBox();
             this.tx_serGR = new Grael2.NumericTextBox();
             this.tx_tfil = new Grael2.NumericTextBox();
             this.tx_totcant = new Grael2.NumericTextBox();
-            this.tx_dat_loca = new System.Windows.Forms.TextBox();
+            this.tx_dat_diasp = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -1086,9 +1087,9 @@
             // 
             this.tx_dat_dpla.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_dpla.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_dpla.Location = new System.Drawing.Point(44, 162);
+            this.tx_dat_dpla.Location = new System.Drawing.Point(13, 162);
             this.tx_dat_dpla.Name = "tx_dat_dpla";
-            this.tx_dat_dpla.Size = new System.Drawing.Size(21, 18);
+            this.tx_dat_dpla.Size = new System.Drawing.Size(51, 18);
             this.tx_dat_dpla.TabIndex = 417;
             this.tx_dat_dpla.Visible = false;
             // 
@@ -1096,9 +1097,9 @@
             // 
             this.tx_dat_plazo.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_plazo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_plazo.Location = new System.Drawing.Point(108, 13);
+            this.tx_dat_plazo.Location = new System.Drawing.Point(93, 13);
             this.tx_dat_plazo.Name = "tx_dat_plazo";
-            this.tx_dat_plazo.Size = new System.Drawing.Size(42, 18);
+            this.tx_dat_plazo.Size = new System.Drawing.Size(57, 18);
             this.tx_dat_plazo.TabIndex = 416;
             this.tx_dat_plazo.Visible = false;
             // 
@@ -1928,6 +1929,16 @@
             this.chk_consol.UseVisualStyleBackColor = true;
             this.chk_consol.CheckStateChanged += new System.EventHandler(this.chk_consol_CheckStateChanged);
             // 
+            // tx_dat_loca
+            // 
+            this.tx_dat_loca.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_dat_loca.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_dat_loca.Location = new System.Drawing.Point(210, 22);
+            this.tx_dat_loca.Name = "tx_dat_loca";
+            this.tx_dat_loca.Size = new System.Drawing.Size(50, 18);
+            this.tx_dat_loca.TabIndex = 431;
+            this.tx_dat_loca.Visible = false;
+            // 
             // tx_valdscto
             // 
             this.tx_valdscto.AllowSpace = false;
@@ -1992,15 +2003,15 @@
             this.tx_totcant.TabIndex = 25;
             this.tx_totcant.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tx_dat_loca
+            // tx_dat_diasp
             // 
-            this.tx_dat_loca.BackColor = System.Drawing.SystemColors.Window;
-            this.tx_dat_loca.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_loca.Location = new System.Drawing.Point(210, 22);
-            this.tx_dat_loca.Name = "tx_dat_loca";
-            this.tx_dat_loca.Size = new System.Drawing.Size(50, 18);
-            this.tx_dat_loca.TabIndex = 431;
-            this.tx_dat_loca.Visible = false;
+            this.tx_dat_diasp.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_dat_diasp.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_dat_diasp.Location = new System.Drawing.Point(693, 335);
+            this.tx_dat_diasp.Name = "tx_dat_diasp";
+            this.tx_dat_diasp.Size = new System.Drawing.Size(20, 18);
+            this.tx_dat_diasp.TabIndex = 432;
+            this.tx_dat_diasp.Visible = false;
             // 
             // facelect
             // 
@@ -2009,6 +2020,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(769, 576);
+            this.Controls.Add(this.tx_dat_diasp);
             this.Controls.Add(this.tx_dat_loca);
             this.Controls.Add(this.chk_consol);
             this.Controls.Add(this.groupBox3);
@@ -2309,5 +2321,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn unidad;
         private System.Windows.Forms.CheckBox chk_consol;
         private System.Windows.Forms.TextBox tx_dat_loca;
+        private System.Windows.Forms.TextBox tx_dat_diasp;
     }
 }

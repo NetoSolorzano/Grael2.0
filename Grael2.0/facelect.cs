@@ -60,7 +60,7 @@ namespace Grael2
         //string v_cid = "";              // codigo interno de tipo de documento
         string v_fra2 = "";             // frase que va en obs de cobranza cuando se cancela desde el doc.vta.
         string v_sanu = "";             // serie anulacion interna ANU
-        string v_mpag = "";             // medio de pago automatico x defecto para las cobranzas
+        string v_mpag = "";             // medio de pago credito
         string v_codcob = "";           // codigo del documento cobranza
         string v_CR_gr_ind = "";        // nombre del formato FT/BV en CR
         string v_mfildet = "";          // maximo numero de filas en el detalle, coord. con el formato ..... 4 filas detalle máximo
@@ -79,6 +79,7 @@ namespace Grael2
         int v_cdpa = 0;                 // cantidad de días despues de emitida la fact. en que un usuario normal puede anular
         string vint_gg = "";            // glosa del detalle inicial de la guía "sin verificar contenido"
         decimal limbolsd = 0;           // limite en soles para boletas sin direccion
+        string mpdef = "";              // medio de pago por defecto, efectivo
         //
         string leyg_sg = "";            // leyenda para la guia de la fact
         string rutatxt = "";            // ruta de los txt para la fact. electronica
@@ -135,6 +136,7 @@ namespace Grael2
         DataTable dtp = new DataTable();        // plazo de credito 
         DataTable tcfe = new DataTable();       // facturacion electronica - cabecera
         DataTable tdfe = new DataTable();       // facturacion electronica -detalle
+        DataTable mpa = new DataTable();        // pago mpa - contado efectivo, credito
         public string script = "";              // script de conexion a Bizlinks
         NumLetra nl = new NumLetra();
         string[] datcltsR = { "", "", "", "", "", "", "", "", "", "" };
@@ -295,6 +297,7 @@ namespace Grael2
             rb_no.Enabled = false;
             rb_si.Enabled = false;
             //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
+            tx_dat_plazo.Text = mpdef;
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
         {
@@ -363,7 +366,7 @@ namespace Grael2
                         {
                             if (row["param"].ToString() == "frase2") v_fra2 = row["valor"].ToString().Trim();               // frase cuando se cancela el doc.vta.
                             if (row["param"].ToString() == "serieAnu") v_sanu = row["valor"].ToString().Trim();               // serie anulacion interna
-                            if (row["param"].ToString() == "mpagdef") v_mpag = row["valor"].ToString().Trim();               // medio de pago x defecto para cobranzas
+                            if (row["param"].ToString() == "mpacre") v_mpag = row["valor"].ToString().Trim();               // medio de pago credito
                             if (row["param"].ToString() == "factura") codfact = row["valor"].ToString().Trim();               // codigo doc.venta factura
                             if (row["param"].ToString() == "boleta") codbole = row["valor"].ToString().Trim();               // codigo doc.venta boleta
                             if (row["param"].ToString() == "plazocred") codppc = row["valor"].ToString().Trim();               // codigo plazo de pago x defecto para fact. a CREDITO
@@ -474,8 +477,8 @@ namespace Grael2
                     */
                     string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
                         "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
-                        "'' as tipoclt,'' as m1clien,'' as tippago,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
-                        "0 as porcendscto,a.dscto,a.docvta " +
+                        "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
+                        "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred " +
                         "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
                         "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
                         "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " 
@@ -546,13 +549,32 @@ namespace Grael2
                             tx_estado.Text = dr.GetString("nomest");   // lib.nomstat(tx_dat_estad.Text);
                             if (dr.GetString("userm") == "") tx_digit.Text = lib.nomuser(dr.GetString("userc"));
                             else tx_digit.Text = lib.nomuser(dr.GetString("userm"));
-                            if (decimal.Parse(tx_salxcob.Text) == decimal.Parse(tx_flete.Text)) rb_no.Checked = true;
-                            else rb_si.Checked = true;
+                            if (dr.GetString("tippago") == "")
+                            {
+                                // es anterior al tiempo que se ponía contado o credito
+                            }
+                            else
+                            {
+                                tx_dat_plazo.Text = dr.GetString("tippago");
+                                if (dr.GetString("tippago") != mpdef)
+                                {
+                                    rb_no.Checked = true;
+                                    //rb_no.PerformClick();
+                                    tx_dat_dpla.Text = dr.GetString("plazocred");
+                                    cmb_plazoc.SelectedValue = tx_dat_dpla.Text;
+                                }
+                                else
+                                {
+                                    rb_si.Checked = true;
+                                    //rb_si.PerformClick();
+                                }
+                            }
                             // campos de carga unica
                             //tx_dat_upd.Text = dr.GetString("ubipdest");
                             //tx_dat_upo.Text = dr.GetString("ubiporig");
                             tx_valdscto.Text = dr.GetString("dscto");
                             tx_dat_porcDscto.Text = dr.GetString("porcendscto");
+
                         }
                         else
                         {
@@ -715,6 +737,17 @@ namespace Grael2
                         cmb_plazoc.DataSource = dtp;
                         cmb_plazoc.DisplayMember = "descrizionerid";
                         cmb_plazoc.ValueMember = "idcodice";
+                    }
+                }
+                // DATOS DE PAGO - MPA
+                using (MySqlCommand qmpa = new MySqlCommand("select idcodice,descrizionerid from desc_mpa where numero=@bloq", conn))
+                {
+                    qmpa.Parameters.AddWithValue("@bloq", 1);
+                    using (MySqlDataAdapter dapla = new MySqlDataAdapter(qmpa))
+                    {
+                        mpa.Clear();
+                        dapla.Fill(mpa);
+                        mpdef = mpa.Rows[0].ItemArray[0].ToString();    // primera fila siempre x defecto
                     }
                 }
                 /*      / jalamos la caja
@@ -1914,8 +1947,12 @@ namespace Grael2
                 string disadq = (tx_distRtt.Text.Trim() == "") ? "-" : tx_distRtt.Text.Trim();
                 string paiadq = "PE";
                 string formpa = (rb_si.Checked == true) ? "0" : "1";
-                DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
-                string fecpag = fecpd.AddDays(int.Parse(tx_dat_dpla.Text)).ToString("yyyy'-'MM'-'dd");  // ToString("dd'/'MM'/'yyyy")
+                string fecpag = "";
+                if (rb_no.Checked == true)
+                {
+                    DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
+                    fecpag = fecpd.AddDays(int.Parse(tx_dat_diasp.Text)).ToString("yyyy'-'MM'-'dd");  // ToString("dd'/'MM'/'yyyy")
+                }
                 string insadd = "insert into SPE_EINVOICEHEADER_ADD (" +
                         "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values ";
                 if (tx_dat_tdv.Text == codfact)    // esto aplica solo para facturas
@@ -2719,14 +2756,13 @@ namespace Grael2
                 */
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
                     "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
-                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild," +
+                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred," +
                     "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                     "values (" +
                     "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
                     "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now()," +
-                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil," +
+                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc," +
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
-
                 //                    "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                 //                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
@@ -2760,6 +2796,8 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@mailcl", tx_email.Text);
                     micon.Parameters.AddWithValue("@ubicre", tx_ubigRtt.Text);
                     micon.Parameters.AddWithValue("@canfil", tx_tfil.Text);
+                    micon.Parameters.AddWithValue("@tippa", tx_dat_plazo.Text);
+                    micon.Parameters.AddWithValue("@plzoc", tx_dat_dpla.Text);
                     micon.Parameters.AddWithValue("@pr01", "0");
                     micon.Parameters.AddWithValue("@pr02", "0");
                     micon.Parameters.AddWithValue("@pr03", "0");
@@ -3351,6 +3389,7 @@ namespace Grael2
         }
         private void rb_no_Click(object sender, EventArgs e)
         {
+            tx_dat_plazo.Text = v_mpag;
             double once = 0;
             for (int i = 0; i<dataGridView1.Rows.Count - 1; i++)
             {
@@ -3362,7 +3401,9 @@ namespace Grael2
             tx_salxcob.BackColor = Color.Red;
             cmb_plazoc.Enabled = true;
             cmb_plazoc.SelectedValue = codppc;
-            tx_dat_plazo.Text = codppc;
+            
+            DataRow[] dias = dtp.Select("idcodice='" + codppc + "'");
+            tx_dat_diasp.Text = dias[0][3].ToString();
         }
         private void chk_sinco_CheckedChanged(object sender, EventArgs e)
         {
@@ -3713,17 +3754,21 @@ namespace Grael2
         {
             if (cmb_plazoc.SelectedIndex > -1)
             {
-                tx_dat_plazo.Text = cmb_plazoc.SelectedValue.ToString();
-                DataRow[] dias = dtp.Select("idcodice='" + tx_dat_plazo.Text + "'");
-                foreach (DataRow row in dias)
+                //tx_dat_plazo.Text = cmb_plazoc.SelectedValue.ToString();  
+                //foreach (DataRow row in dias)
                 {
-                    tx_dat_dpla.Text = row[3].ToString();
+                    tx_dat_dpla.Text = dtp.Rows[cmb_plazoc.SelectedIndex].ItemArray[0].ToString();
+                    tx_dat_diasp.Text = dtp.Rows[cmb_plazoc.SelectedIndex].ItemArray[3].ToString();
+                    //tx_dat_dpla.Text = cmb_plazoc.SelectedValue.ToString();
+                    //DataRow[] dias = dtp.Select("idcodice='" + tx_dat_dpla.Text + "'");
+                    //tx_dat_diasp.Text  = dias[0][3].ToString();
                 }
             }
             else
             {
-                tx_dat_plazo.Text = "";
+                //tx_dat_plazo.Text = "";
                 tx_dat_dpla.Text = "";
+                tx_dat_diasp.Text = "";
             }
         }
         #endregion comboboxes
@@ -3980,9 +4025,21 @@ namespace Grael2
                     e.Graphics.DrawString(" ", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                     posi = posi + alfi;
                     // **************** detalle del documento ****************//
+                    puntoF = new PointF(coli, posi);
+                    e.Graphics.DrawString("--------------------------------------------------------------------------", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                    posi = posi + alfi;
                     StringFormat alder = new StringFormat(StringFormatFlags.DirectionRightToLeft);
                     SizeF siz = new SizeF(70, 15);
                     RectangleF recto = new RectangleF(puntoF, siz);
+                    puntoF = new PointF(coli, posi);
+                    e.Graphics.DrawString("Descripción", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                    posi = posi + alfi;
+                    puntoF = new PointF(coli, posi);
+                    e.Graphics.DrawString("Cantidad                    Precio                          Importe", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                    posi = posi + alfi;
+                    puntoF = new PointF(coli, posi);
+                    e.Graphics.DrawString("--------------------------------------------------------------------------", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                    posi = posi + alfi;
                     for (int l = 0; l < dataGridView1.Rows.Count - 1; l++)
                     {
                         if (!string.IsNullOrEmpty(dataGridView1.Rows[l].Cells[0].Value.ToString()))
@@ -4015,8 +4072,20 @@ namespace Grael2
                                 e.Graphics.DrawString("Según doc.cliente: " + dataGridView1.Rows[l].Cells[8].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                                 posi = posi + alfi;
                             }
+                            puntoF = new PointF(coli, posi);
+                            e.Graphics.DrawString("  1", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                            puntoF = new PointF(coli + 90.0F, posi);
+                            e.Graphics.DrawString(dataGridView1.Rows[l].Cells[3].Value.ToString() + " " + dataGridView1.Rows[l].Cells[4].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                            siz = new SizeF(70, 15);
+                            puntoF = new PointF(coli + 190, posi);
+                            recto = new RectangleF(puntoF, siz);
+                            e.Graphics.DrawString(dataGridView1.Rows[l].Cells[3].Value.ToString() + " " + dataGridView1.Rows[l].Cells[4].Value.ToString(), lt_peq, Brushes.Black, recto, alder);
+                            posi = posi + alfi;
                         }
                     }
+                    puntoF = new PointF(coli, posi);
+                    e.Graphics.DrawString("--------------------------------------------------------------------------", lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+
                     // pie del documento ;
                     if (tx_dat_tdv.Text != codfact)
                     {
@@ -4099,13 +4168,33 @@ namespace Grael2
                     e.Graphics.DrawString(monlet, lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
                     if (monlet.Length <= 30) posi = posi + alfi;
                     else posi = posi + alfi + alfi;
-                    if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)                // leyenda de detracción
+                    if (tx_dat_tdv.Text == codfact)                //  && 
                     {
-                        siz = new SizeF(CentimeterToPixel(anchTik), 15 * 3);        // detraccion solo facturas .. Richard 07/09/2021
-                        puntoF = new PointF(coli, posi);
-                        recto = new RectangleF(puntoF, siz);
-                        e.Graphics.DrawString(leydet1.Trim() + " " + Program.ctadetra.Trim(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
-                        posi = posi + alfi * 3;
+                        if (rb_si.Checked == true)
+                        {
+                            puntoF = new PointF(coli, posi);
+                            e.Graphics.DrawString("* * * PAGO EN EFECTIVO " + tx_flete.Text, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                        }
+                        else
+                        {
+                            puntoF = new PointF(coli, posi);
+                            DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
+                            string fecpag = fecpd.AddDays(int.Parse(tx_dat_diasp.Text)).ToString("dd'/'MM'/'yyyy");  // ToString("yyyy'-'MM'-'dd")
+                            e.Graphics.DrawString("* * * AL CREDITO " + tx_flete.Text + " 1 CUOTA - VCMTO: " + fecpag, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                        }
+                        if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                        {
+                            posi = posi + alfi * 1.5F;
+                            siz = new SizeF(CentimeterToPixel(anchTik), 15 * 3);        // detraccion solo facturas .. Richard 07/09/2021
+                            puntoF = new PointF(coli, posi);
+                            recto = new RectangleF(puntoF, siz);
+                            e.Graphics.DrawString(leydet1.Trim() + " " + Program.ctadetra.Trim(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
+                            posi = posi + alfi * 3;
+                        }
+                        else
+                        {
+                            posi = posi + alfi;
+                        }
                     }
                     puntoF = new PointF(coli, posi);
                     string repre = "Representación impresa de la";
