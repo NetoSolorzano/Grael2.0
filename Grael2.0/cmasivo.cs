@@ -60,7 +60,7 @@ namespace Grael2
         //string v_cid = "";              // codigo interno de tipo de documento
         string v_fra2 = "";             // frase que va en obs de cobranza cuando se cancela desde el doc.vta.
         string v_sanu = "";             // serie anulacion interna ANU
-        string v_mpag = "";             // medio de pago automatico x defecto para las cobranzas
+        string v_mpag = "";             // medio de pago automatico x defecto CONTADO
         string v_codcob = "";           // codigo del documento cobranza
         string v_CR_gr_ind = "";        // nombre del formato FT/BV en CR
         string v_mfildet = "";          // maximo numero de filas en el detalle, coord. con el formato ..... 4 filas detalle máximo
@@ -277,7 +277,7 @@ namespace Grael2
                         {
                             if (row["param"].ToString() == "frase2") v_fra2 = row["valor"].ToString().Trim();               // frase cuando se cancela el doc.vta.
                             if (row["param"].ToString() == "serieAnu") v_sanu = row["valor"].ToString().Trim();               // serie anulacion interna
-                            if (row["param"].ToString() == "mpagdef") v_mpag = row["valor"].ToString().Trim();               // medio de pago x defecto para cobranzas
+                            if (row["param"].ToString() == "mpacon") v_mpag = row["valor"].ToString().Trim();               // medio de pago x defecto CONTADO
                             if (row["param"].ToString() == "factura") codfact = row["valor"].ToString().Trim();               // codigo doc.venta factura
                             if (row["param"].ToString() == "boleta") codbole = row["valor"].ToString().Trim();               // codigo doc.venta boleta
                             if (row["param"].ToString() == "plazocred") codppc = row["valor"].ToString().Trim();               // codigo plazo de pago x defecto para fact. a CREDITO
@@ -1377,12 +1377,12 @@ namespace Grael2
                 double subt = ntot / igv;   // 1.18
                 double migv = ntot - subt;
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
-                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
+                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc,tippago," +
                     "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild," +
                     "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                     "values (" +
                     "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
-                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now()," +
+                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now(),@tipap," +
                     "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil," +
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
@@ -1405,6 +1405,7 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@estpgr", codCanc);      // estado
                     micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@asd", asd);
+                    micon.Parameters.AddWithValue("@tipap", v_mpag);
                     micon.Parameters.AddWithValue("@ldcpgr", dataGridView1.Rows[ind].Cells[13].Value.ToString());         // local origen
                     micon.Parameters.AddWithValue("@tcdvta", "2");          // destinatario
                     micon.Parameters.AddWithValue("@distcl", "-");

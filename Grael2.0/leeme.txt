@@ -9,4 +9,6 @@ me quede en agregar los procedimientos y triggers a la base erp_grael para :
   a nivel de detalle, ya no usamos a nvel de cabecera ......................... ok 06/09/2021
 - Adecuacion de form vtipcam .................................................. ok 08/09/2021
 - form facelect, adecuacion ticket yobana/richard ............................. ok 09/09/2021
-
+- form cmasivo, tipopago contado porque todas son boletas ya pagadas .......... ok 14/09/2021
+- form facelect, cuando no tiene tipopago no debe marcar ninguno .............. ok 15/09/2021
+- form facelect, codigo para dinamizar si quieren plazo pago autom o no .......     (si es credito, se autoselecciona ó el operador debe hacerlo)

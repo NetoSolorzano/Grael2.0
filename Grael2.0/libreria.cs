@@ -1773,7 +1773,7 @@ namespace Grael2
         public string[] datossn(string vista, string docu, string numero)   // retorna datos del socio, (nombre,direc, etc)
         {
             string[] retorna = new string[] { "", "", "", "", "", "", "", "" };
-            MySqlConnection conn = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conn = new MySqlConnection(DB_CONN_STR);  // 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
