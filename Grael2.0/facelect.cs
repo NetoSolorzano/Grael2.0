@@ -85,6 +85,7 @@ namespace Grael2
         string texpag2 = "";            // texto para las cuotas
         string texpag3 = "";            // texto para la fecha vencimiento
         string glocopa = "";            // glosa de condicion de pago
+        string ppauto = "SI";           // SI o NO, si el comprobante es credito, el plazo de pago es automatico?
         //
         string leyg_sg = "";            // leyenda para la guia de la fact
         string rutatxt = "";            // ruta de los txt para la fact. electronica
@@ -375,6 +376,7 @@ namespace Grael2
                             if (row["param"].ToString() == "factura") codfact = row["valor"].ToString().Trim();               // codigo doc.venta factura
                             if (row["param"].ToString() == "boleta") codbole = row["valor"].ToString().Trim();               // codigo doc.venta boleta
                             if (row["param"].ToString() == "plazocred") codppc = row["valor"].ToString().Trim();               // codigo plazo de pago x defecto para fact. a CREDITO
+                            if (row["param"].ToString() == "autPago") ppauto = row["valor"].ToString().Trim();               // SI o NO, seleccion plazo automatico o no
                             if (row["param"].ToString() == "usercar_unic") codsuser_cu = row["valor"].ToString().Trim();       // usuarios autorizados a crear Ft de cargas unicas
                             if (row["param"].ToString() == "diasanul") v_cdpa = int.Parse(row["valor"].ToString());            // cant dias en que usuario normal puede anular 
                             if (row["param"].ToString() == "useranul") codusanu = row["valor"].ToString();                      // usuarios autorizados a anular fuera de plazo 
@@ -3422,7 +3424,7 @@ namespace Grael2
             tx_pagado.Text = "0.00";
             tx_salxcob.Text = once.ToString("#0.00"); // tx_flete.Text;
             tx_salxcob.BackColor = Color.Red;
-            if (true)           // automatico o no?
+            if (ppauto == "SI")           // automatico o no?
             {
                 cmb_plazoc.Enabled = true;
                 cmb_plazoc.SelectedValue = codppc;

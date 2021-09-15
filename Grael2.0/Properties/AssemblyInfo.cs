@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SOLORSOFT")]
 [assembly: AssemblyProduct("Grael2.0")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Derechos reservados a Expreso Grael SAC")]
 [assembly: AssemblyTrademark("SolorSoft.com")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión
 // utilizando el carácter "*", como se muestra a continuación:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2021.9.15")]
-[assembly: AssemblyFileVersion("1.2021.9.15")]
+[assembly: AssemblyVersion("2.2021.9.15")]
+[assembly: AssemblyFileVersion("2.2021.9.15")]
