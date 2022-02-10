@@ -56,6 +56,12 @@
             this.tabgrilla = new System.Windows.Forms.TabPage();
             this.advancedDataGridView1 = new ADGV.AdvancedDataGridView();
             this.tabreg = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -78,24 +84,18 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabgrilla.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.advancedDataGridView1)).BeginInit();
             this.tabreg.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox11.SuspendLayout();
-            this.groupBox9.SuspendLayout();
-            this.groupBox13.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -330,7 +330,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabgrilla);
             this.tabControl1.Controls.Add(this.tabreg);
@@ -353,7 +354,8 @@
             // 
             // advancedDataGridView1
             // 
-            this.advancedDataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.advancedDataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.advancedDataGridView1.AutoGenerateContextFilters = true;
             this.advancedDataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -398,6 +400,62 @@
             this.tabreg.TabIndex = 1;
             this.tabreg.Text = "Registro";
             this.tabreg.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(82, 115);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.TabIndex = 195;
+            this.label3.Text = "Valor";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.BackColor = System.Drawing.Color.White;
+            this.groupBox9.Controls.Add(this.groupBox10);
+            this.groupBox9.Location = new System.Drawing.Point(81, 129);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(265, 1);
+            this.groupBox9.TabIndex = 194;
+            this.groupBox9.TabStop = false;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Location = new System.Drawing.Point(0, -26);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(164, 1);
+            this.groupBox10.TabIndex = 113;
+            this.groupBox10.TabStop = false;
+            // 
+            // textBox4
+            // 
+            this.textBox4.BackColor = System.Drawing.SystemColors.Window;
+            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox4.Location = new System.Drawing.Point(167, 112);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(241, 18);
+            this.textBox4.TabIndex = 193;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.BackColor = System.Drawing.Color.White;
+            this.groupBox13.Controls.Add(this.groupBox14);
+            this.groupBox13.Location = new System.Drawing.Point(81, 129);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(232, 1);
+            this.groupBox13.TabIndex = 192;
+            this.groupBox13.TabStop = false;
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Location = new System.Drawing.Point(0, -26);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(164, 1);
+            this.groupBox14.TabIndex = 113;
+            this.groupBox14.TabStop = false;
             // 
             // label4
             // 
@@ -609,62 +667,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(82, 115);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 13);
-            this.label3.TabIndex = 195;
-            this.label3.Text = "Valor";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // groupBox9
-            // 
-            this.groupBox9.BackColor = System.Drawing.Color.White;
-            this.groupBox9.Controls.Add(this.groupBox10);
-            this.groupBox9.Location = new System.Drawing.Point(81, 129);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(265, 1);
-            this.groupBox9.TabIndex = 194;
-            this.groupBox9.TabStop = false;
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Location = new System.Drawing.Point(0, -26);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(164, 1);
-            this.groupBox10.TabIndex = 113;
-            this.groupBox10.TabStop = false;
-            // 
-            // textBox4
-            // 
-            this.textBox4.BackColor = System.Drawing.SystemColors.Window;
-            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox4.Location = new System.Drawing.Point(167, 112);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(241, 18);
-            this.textBox4.TabIndex = 193;
-            // 
-            // groupBox13
-            // 
-            this.groupBox13.BackColor = System.Drawing.Color.White;
-            this.groupBox13.Controls.Add(this.groupBox14);
-            this.groupBox13.Location = new System.Drawing.Point(81, 129);
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(232, 1);
-            this.groupBox13.TabIndex = 192;
-            this.groupBox13.TabStop = false;
-            // 
-            // groupBox14
-            // 
-            this.groupBox14.Location = new System.Drawing.Point(0, -26);
-            this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(164, 1);
-            this.groupBox14.TabIndex = 113;
-            this.groupBox14.TabStop = false;
-            // 
             // enlaces
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -675,7 +677,6 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.toolStrip1);
             this.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -692,13 +693,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.advancedDataGridView1)).EndInit();
             this.tabreg.ResumeLayout(false);
             this.tabreg.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox13.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox13.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
