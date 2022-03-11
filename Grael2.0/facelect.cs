@@ -63,7 +63,8 @@ namespace Grael2
         string v_mpag = "";             // medio de pago credito
         string v_codcob = "";           // codigo del documento cobranza
         string v_CR_gr_ind = "";        // nombre del formato FT/BV en CR
-        string v_mfildet = "";          // maximo numero de filas en el detalle, coord. con el formato ..... 4 filas detalle máximo
+        string v_mfildet = "";          // maximo numero de filas en el detalle, coord. con el formato ..... facturas corporativos max 99 o mas filas
+        string v_mfdetn = "";           // maximo numero de filas en el detalle de facturas normales
         string vint_A0 = "";            // variable codigo anulacion interna por BD
         string v_codidv = "";           // variable codifo interno de documento de venta en vista TDV
         string codfact = "";            // idcodice de factura
@@ -191,6 +192,7 @@ namespace Grael2
         }
         private void init()
         {
+            this.Width = 785;
             this.BackColor = Color.FromName(colback);
             toolStrip1.BackColor = Color.FromName(colstrp);
             dataGridView1.DefaultCellStyle.BackColor = Color.FromName(colgrid);
@@ -297,6 +299,7 @@ namespace Grael2
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
             //pan_pago.Enabled = false;
+            rb_fnor.Checked = true;
             inivarGR();
             rb_no.Checked = false;
             rb_si.Checked = false;
@@ -377,18 +380,19 @@ namespace Grael2
                             if (row["param"].ToString() == "boleta") codbole = row["valor"].ToString().Trim();               // codigo doc.venta boleta
                             if (row["param"].ToString() == "plazocred") codppc = row["valor"].ToString().Trim();               // codigo plazo de pago x defecto para fact. a CREDITO
                             if (row["param"].ToString() == "autPago") ppauto = row["valor"].ToString().Trim();               // SI o NO, seleccion plazo automatico o no
-                            if (row["param"].ToString() == "usercar_unic") codsuser_cu = row["valor"].ToString().Trim();       // usuarios autorizados a crear Ft de cargas unicas
-                            if (row["param"].ToString() == "diasanul") v_cdpa = int.Parse(row["valor"].ToString());            // cant dias en que usuario normal puede anular 
-                            if (row["param"].ToString() == "useranul") codusanu = row["valor"].ToString();                      // usuarios autorizados a anular fuera de plazo 
+                            if (row["param"].ToString() == "usercar_unic") codsuser_cu = row["valor"].ToString().Trim();    // usuarios autorizados a crear Ft de cargas unicas
+                            if (row["param"].ToString() == "diasanul") v_cdpa = int.Parse(row["valor"].ToString());         // cant dias en que usuario normal puede anular 
+                            if (row["param"].ToString() == "useranul") codusanu = row["valor"].ToString();                  // usuarios autorizados a anular fuera de plazo 
                             if (row["param"].ToString() == "userdscto") cusdscto = row["valor"].ToString();                 // usuarios que pueden hacer descuentos
                             if (row["param"].ToString() == "cltesBol") tdocsBol = row["valor"].ToString();                  // tipos de documento de clientes para boletas
                             if (row["param"].ToString() == "cltesFac") tdocsFac = row["valor"].ToString();                  // tipo de documentos para facturas
-                            if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());                  // limite soles para boletas sin direccion
+                            if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());   // limite soles para boletas sin direccion
                         }
                         if (row["campo"].ToString() == "impresion")
                         {
                             if (row["param"].ToString() == "formato") vi_formato = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "filasDet") v_mfildet = row["valor"].ToString().Trim();       // maxima cant de filas de detalle
+                            if (row["param"].ToString() == "filasDet") v_mfildet = row["valor"].ToString().Trim();       // maxima cant de filas de detalle en fact consolidadas
+                            if (row["param"].ToString() == "mfdetn") v_mfdetn = row["valor"].ToString().Trim();          // maxima cant de filas de detalle en fact normales
                             if (row["param"].ToString() == "copias") vi_copias = row["valor"].ToString().Trim();
                             if (row["param"].ToString() == "impTK") v_impTK = row["valor"].ToString().Trim();
                             if (row["param"].ToString() == "nomfor_cr") v_CR_gr_ind = row["valor"].ToString().Trim();
@@ -1060,6 +1064,11 @@ namespace Grael2
                                         datcargu[12] = dr.GetString("fechplani");    // fecha inicio traslado
                                         //
                                         tx_dat_saldoGR.Text = dr.GetString("saldo");
+                                        // pasamos los datos al panel de cargas única si: es factura especial
+                                        if (rb_fesp.Checked == true)
+                                        {
+                                            datPanelCargasU();   
+                                        }
                                         retorna = true;
                                     }
                                 }
@@ -1069,6 +1078,17 @@ namespace Grael2
                 }
             }
             return retorna;
+        }
+        private void datPanelCargasU()
+        {
+            tx_e_placa.Text = datguias[11];
+            tx_e_aut.Text = datguias[13];
+            tx_e_ruct.Text = datcargu[10];
+            tx_e_ntrans.Text = datcargu[11];
+            tx_e_ftras.Text = datcargu[12];
+            //tx_e_dnicho.Text = 
+            tx_e_dirpar.Text = datcargu[0] + datcargu[1] + " - " + datcargu[2] + " - " + datcargu[3];
+            tx_e_dirlle.Text = datcargu[5] + datcargu[6] + " - " + datcargu[7] + " - " + datcargu[8];
         }
         private void tipcambio(string codmod)               // funcion para calculos con el tipo de cambio
         {
@@ -2151,6 +2171,7 @@ namespace Grael2
         private void limpiar()
         {
             lp.limpiar(this);
+            lp.limpiapanel(panel2);
         }
         private void limpia_chk()    
         {
@@ -2194,7 +2215,7 @@ namespace Grael2
                     tx_numGR.Focus();
                     return;
                 }
-                if (chk_consol.Checked == false && dataGridView1.Rows.Count > 3)
+                if (chk_consol.Checked == false && dataGridView1.Rows.Count > int.Parse(v_mfdetn))
                 {
                     MessageBox.Show("Limite máximo de guías alcanzado!", "Atención - modo simple", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     tx_numGR.Text = "";
@@ -3484,6 +3505,29 @@ namespace Grael2
                 }
             }
         }
+        private void rb_fesp_CheckedChanged(object sender, EventArgs e)                 // habilita campos para facturas especiales de cargas unicas
+        {
+            if (rb_fesp.Checked == true)
+            {
+                this.Width = 1020;
+                panel2.Visible = true;
+                panel2.Width = 240;
+                panel2.BackColor = Color.FloralWhite;
+                // SI ES NUEVO y ya esta "jalada" la guía => pasamos los datos del camión al panel de cargas únicas
+                if (Tx_modo.Text == "NUEVO" && dataGridView1.Rows.Count > 1) datPanelCargasU();
+            }
+        }
+        private void rb_fnor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_fnor.Checked == true)
+            {
+                this.Width = 785;
+                toolStrip1.Width = 769;
+                pn_usloc.Width = 769;
+                panel2.Visible = false;
+            }
+
+        }
         #endregion
 
         #region botones_de_comando
@@ -3570,6 +3614,8 @@ namespace Grael2
             initIngreso();
             tx_numero.ReadOnly = true;
             cmb_tdv_SelectedIndexChanged(null, null);
+            if (codsuser_cu.Contains(asd)) rb_fesp.Enabled = true;
+            else rb_fesp.Enabled = false;
             tx_serGR.Focus();
         }
         private void Bt_edit_Click(object sender, EventArgs e)
