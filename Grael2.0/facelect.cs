@@ -2482,12 +2482,66 @@ namespace Grael2
                         return;
                     }
                 }
+                // validaciones si el comprobante es "especial"
+                if (rb_fesp.Checked == true)
+                {
+                    if (tx_e_aut.Text.Trim() == "")
+                    {
+                        MessageBox.Show("","",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_cant.Text == "" || tx_e_cant.Text == "0")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_dirlle.Text.Trim() == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_dirpar.Text.Trim() == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_dnicho.Text.Trim() == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_ftras.Text == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_ntrans.Text == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_placa.Text.Trim() == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_prec.Text == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_ruct.Text.Trim() == "")
+                    {
+                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
                 if (tx_idr.Text.Trim() == "")
                 {
                     var aa = MessageBox.Show("Confirma que desea crear el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (aa == DialogResult.Yes)
                     {
-                        if (true)  // lib.DirectoryVisible(rutatxt) == true
+                        if (true)  // confirmas que se pueda abrir conexión con la base bizlinks
                         {
                             if (graba() == true)
                             {
@@ -2909,20 +2963,10 @@ namespace Grael2
                     {
                         if (dataGridView1.Rows[i].Cells[0].Value.ToString().Trim() != "")
                         {
-                            /*
-                             * string inserd2 = "update detfactu set " +
-                                "codgror=@guia,cantbul=@bult,unimedp=@unim,descpro=@desc,pesogro=@peso,codmogr=@codm,totalgr=@pret,codMN=@cmnn," +
-                                "totalgrMN=@tgrmn,pagauto=@pagaut " +
-                                "where idc=@idr and filadet=@fila";
-                            
-                            string inserd2 = "update detavtas set " +
-                                "sergr=@sgui,corgr=@cgui,moneda=@codm,valor=@pret,ruta=@ruta,glosa=@desc,docremi=@dsus,bultos=@bult,valorel=@pret " +
-                                "where idc=@idr and filadet=@fila";
-                            */
                             string inserd2 = "insert into detavtas (idc,docvta,servta,corvta,sergr,corgr,moneda," +
-                        "valor,ruta,glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc) " +
-                        "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm," +
-                        "@pret,@ruta,@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr)";
+                                "valor,ruta,glosa,status,userc,fechc,docremi,bultos,monrefd1,monrefd2,monrefd3,mfe,fecdoc,totaldoc) " +
+                                "values (@idr,@doc,@svt,@cvt,@sgui,@cgui,@codm," +
+                                "@pret,@ruta,@desc,@sta,@asd,now(),@dre,@bult,@mrd1,@mrd2,@mrd3,@mtdvta,@fechop,@totpgr)";
                             using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
                             {
                                 micon.Parameters.AddWithValue("@idr", tx_idr.Text);
@@ -2955,10 +2999,8 @@ namespace Grael2
                                 micon.ExecuteNonQuery();
                                 fila += 1;
                                 retorna = true;         // no hubo errores!
-                                //
-                                // OJO, las actualizaciones en las tablas magrem, manoen y mactacte, las hace el TRIGGER de la tabla detvtas
-                                // 
                             }
+                            // actualizaciones de magrem, manoen y mactacte LOS HACE EL TRIGGER DETAVTAS 
                         }
                     }
                 }
