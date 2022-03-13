@@ -210,6 +210,10 @@
             this.tx_totcant = new Grael2.NumericTextBox();
             this.tx_dat_diasp = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.tx_e_dirlle = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.tx_e_dirpar = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
             this.tx_e_dnicho = new System.Windows.Forms.TextBox();
             this.tx_e_ftras = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
@@ -231,10 +235,9 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.tx_e_dirpar = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.tx_e_dirlle = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
+            this.tx_e_nfv = new System.Windows.Forms.TextBox();
+            this.tx_e_ubiori = new System.Windows.Forms.TextBox();
+            this.tx_e_ubides = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -2086,6 +2089,9 @@
             // panel2
             // 
             this.panel2.AutoScroll = true;
+            this.panel2.Controls.Add(this.tx_e_ubides);
+            this.panel2.Controls.Add(this.tx_e_ubiori);
+            this.panel2.Controls.Add(this.tx_e_nfv);
             this.panel2.Controls.Add(this.tx_e_dirlle);
             this.panel2.Controls.Add(this.label34);
             this.panel2.Controls.Add(this.tx_e_dirpar);
@@ -2115,6 +2121,48 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(232, 571);
             this.panel2.TabIndex = 433;
+            // 
+            // tx_e_dirlle
+            // 
+            this.tx_e_dirlle.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_e_dirlle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_e_dirlle.Location = new System.Drawing.Point(4, 558);
+            this.tx_e_dirlle.MaxLength = 0;
+            this.tx_e_dirlle.Multiline = true;
+            this.tx_e_dirlle.Name = "tx_e_dirlle";
+            this.tx_e_dirlle.Size = new System.Drawing.Size(214, 46);
+            this.tx_e_dirlle.TabIndex = 39;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.ForeColor = System.Drawing.Color.Black;
+            this.label34.Location = new System.Drawing.Point(2, 544);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(89, 13);
+            this.label34.TabIndex = 38;
+            this.label34.Text = "Dirección llegada";
+            // 
+            // tx_e_dirpar
+            // 
+            this.tx_e_dirpar.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_e_dirpar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_e_dirpar.Location = new System.Drawing.Point(4, 497);
+            this.tx_e_dirpar.MaxLength = 0;
+            this.tx_e_dirpar.Multiline = true;
+            this.tx_e_dirpar.Name = "tx_e_dirpar";
+            this.tx_e_dirpar.Size = new System.Drawing.Size(214, 46);
+            this.tx_e_dirpar.TabIndex = 37;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.ForeColor = System.Drawing.Color.Black;
+            this.label33.Location = new System.Drawing.Point(4, 483);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(87, 13);
+            this.label33.TabIndex = 36;
+            this.label33.Text = "Dirección partida";
             // 
             // tx_e_dnicho
             // 
@@ -2323,47 +2371,35 @@
             this.label20.TabIndex = 0;
             this.label20.Text = "GLOSA ALTERNATIVA";
             // 
-            // tx_e_dirpar
+            // tx_e_nfv
             // 
-            this.tx_e_dirpar.BackColor = System.Drawing.SystemColors.Window;
-            this.tx_e_dirpar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_e_dirpar.Location = new System.Drawing.Point(4, 497);
-            this.tx_e_dirpar.MaxLength = 0;
-            this.tx_e_dirpar.Multiline = true;
-            this.tx_e_dirpar.Name = "tx_e_dirpar";
-            this.tx_e_dirpar.Size = new System.Drawing.Size(214, 46);
-            this.tx_e_dirpar.TabIndex = 37;
+            this.tx_e_nfv.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_e_nfv.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_e_nfv.Location = new System.Drawing.Point(160, 363);
+            this.tx_e_nfv.Name = "tx_e_nfv";
+            this.tx_e_nfv.Size = new System.Drawing.Size(32, 18);
+            this.tx_e_nfv.TabIndex = 320;
+            this.tx_e_nfv.Visible = false;
             // 
-            // label33
+            // tx_e_ubiori
             // 
-            this.label33.AutoSize = true;
-            this.label33.ForeColor = System.Drawing.Color.Black;
-            this.label33.Location = new System.Drawing.Point(4, 483);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(87, 13);
-            this.label33.TabIndex = 36;
-            this.label33.Text = "Dirección partida";
+            this.tx_e_ubiori.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_e_ubiori.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_e_ubiori.Location = new System.Drawing.Point(160, 479);
+            this.tx_e_ubiori.Name = "tx_e_ubiori";
+            this.tx_e_ubiori.Size = new System.Drawing.Size(51, 18);
+            this.tx_e_ubiori.TabIndex = 321;
+            this.tx_e_ubiori.Visible = false;
             // 
-            // tx_e_dirlle
+            // tx_e_ubides
             // 
-            this.tx_e_dirlle.BackColor = System.Drawing.SystemColors.Window;
-            this.tx_e_dirlle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_e_dirlle.Location = new System.Drawing.Point(4, 558);
-            this.tx_e_dirlle.MaxLength = 0;
-            this.tx_e_dirlle.Multiline = true;
-            this.tx_e_dirlle.Name = "tx_e_dirlle";
-            this.tx_e_dirlle.Size = new System.Drawing.Size(214, 46);
-            this.tx_e_dirlle.TabIndex = 39;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.ForeColor = System.Drawing.Color.Black;
-            this.label34.Location = new System.Drawing.Point(2, 544);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(89, 13);
-            this.label34.TabIndex = 38;
-            this.label34.Text = "Dirección llegada";
+            this.tx_e_ubides.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_e_ubides.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_e_ubides.Location = new System.Drawing.Point(160, 541);
+            this.tx_e_ubides.Name = "tx_e_ubides";
+            this.tx_e_ubides.Size = new System.Drawing.Size(51, 18);
+            this.tx_e_ubides.TabIndex = 322;
+            this.tx_e_ubides.Visible = false;
             // 
             // facelect
             // 
@@ -2705,5 +2741,8 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.TextBox tx_e_dirpar;
         private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox tx_e_ubides;
+        private System.Windows.Forms.TextBox tx_e_ubiori;
+        private System.Windows.Forms.TextBox tx_e_nfv;
     }
 }

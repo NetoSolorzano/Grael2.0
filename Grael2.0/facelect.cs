@@ -2487,52 +2487,62 @@ namespace Grael2
                 {
                     if (tx_e_aut.Text.Trim() == "")
                     {
-                        MessageBox.Show("","",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta Autorización de circulación","Config. Fact. Especial",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        tx_e_aut.Focus();
                         return;
                     }
                     if (tx_e_cant.Text == "" || tx_e_cant.Text == "0")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta cantidad en toneladas", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_cant.Focus();
                         return;
                     }
                     if (tx_e_dirlle.Text.Trim() == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta dirección de llegada", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_dirlle.Focus();
                         return;
                     }
                     if (tx_e_dirpar.Text.Trim() == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta dirección de partida", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_dirpar.Focus();
                         return;
                     }
                     if (tx_e_dnicho.Text.Trim() == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta el DNI del chofer", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_dnicho.Focus();
                         return;
                     }
                     if (tx_e_ftras.Text == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta la fecha inicial del traslado", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_ftras.Focus();
                         return;
                     }
                     if (tx_e_ntrans.Text == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta el nombre del transportista", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_ntrans.Focus();
                         return;
                     }
                     if (tx_e_placa.Text.Trim() == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta la placa del vehículo", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_placa.Focus();
                         return;
                     }
                     if (tx_e_prec.Text == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta el precio por tonelada", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_prec.Focus();
                         return;
                     }
                     if (tx_e_ruct.Text.Trim() == "")
                     {
-                        MessageBox.Show("", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Falta el ruc del transportista", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_ruct.Focus();
                         return;
                     }
                 }
@@ -2953,6 +2963,53 @@ namespace Grael2
                         {
                             tx_idr.Text = dr.GetString(0);
                         }
+                    }
+                }
+                // si es factura especial graba en la tb adicionales
+                if (rb_fesp.Checked == true)
+                {
+                    if (tx_idr.Text.Trim() == "")
+                    {
+                        MessageBox.Show("No existe idr, el registro en adifactu no tendrá enlace" + Environment.NewLine + 
+                            "Notifique al área de sistemas inmediatamente","Error!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    }
+                    string insesp = "insert into adifactu (idc,tipoAd,placa,placa2,confv,autoriz,cargaEf,cargaUt,rucTrans,nomTrans,fecIniTras," +
+                                    "dirPartida,ubiPartida,dirDestin,ubiDestin,dniChof,brevete,valRefViaje,valRefVehic,valRefTon,precioTN," +
+	                                "pesoTN,glosa1,glosa2,glosa3,detMon1,detMon2,detMon3) " +
+                                    "values (@idc,@tipo,@pla1,@pla2,@conf,@auto,@carE,@carU,@rucT,@nomT,@fecI," +
+                                    "@dirP,@ubiP,@dirD,@ubiD,@dniC,@brev,@vaRV,@vaVe,@valR,@prec," +
+                                    "@peTN,@glo1,@glo2,@glo3,@deM1,@deM2,@deM3)";
+                    using (MySqlCommand micon = new MySqlCommand(insesp, conn))
+                    {
+                        micon.Parameters.AddWithValue("@idc", tx_idr.Text);             // id de la cabecera de factura
+                        micon.Parameters.AddWithValue("@tipo", 1);                      // 1=carga unica
+                        micon.Parameters.AddWithValue("@pla1", tx_e_placa.Text);        // placa del camion
+                        micon.Parameters.AddWithValue("@pla2", "");                     // placa de la carreta
+                        micon.Parameters.AddWithValue("@conf", tx_e_nfv.Text);          // configuración vehicular
+                        micon.Parameters.AddWithValue("@auto", tx_e_aut.Text);          // autorizacion circulación
+                        micon.Parameters.AddWithValue("@carE", 0);                      // carga efectiva
+                        micon.Parameters.AddWithValue("@carU", 0);                      // carga util
+                        micon.Parameters.AddWithValue("@rucT", tx_e_ruct.Text);         // ruc del transportista
+                        micon.Parameters.AddWithValue("@nomT", tx_e_ntrans.Text);       // nombre razon social
+                        micon.Parameters.AddWithValue("@fecI", tx_e_ftras.Text);        // fecha traslado inicial
+                        micon.Parameters.AddWithValue("@dirP", tx_e_dirpar.Text);       // direccion partida
+                        micon.Parameters.AddWithValue("@ubiP", tx_e_ubiori.Text);       // ubigeo origen
+                        micon.Parameters.AddWithValue("@dirD", tx_e_dirlle.Text);       // dirección de llegada
+                        micon.Parameters.AddWithValue("@ubiD", tx_e_ubides.Text);       // ubigeo destino
+                        micon.Parameters.AddWithValue("@dniC", tx_e_dnicho.Text);       // dni chofer
+                        micon.Parameters.AddWithValue("@brev", "");                     // brevete chofer
+                        micon.Parameters.AddWithValue("@vaRV", 0);                      // valor referencial del viaje
+                        micon.Parameters.AddWithValue("@vaVe", 0);                      // valor referencial del vehículo
+                        micon.Parameters.AddWithValue("@valR", 0);                      // valor referencial en T.M.
+                        micon.Parameters.AddWithValue("@prec", tx_e_prec.Text);         // precio por tonelada
+                        micon.Parameters.AddWithValue("@peTN", tx_e_cant.Text);         // peso en toneladas
+                        micon.Parameters.AddWithValue("@glo1", tx_e_glos1.Text);        // glosa 1
+                        micon.Parameters.AddWithValue("@glo2", tx_e_glos2.Text);        // glosa 2
+                        micon.Parameters.AddWithValue("@glo3", tx_e_glos3.Text);        // glosa 3
+                        micon.Parameters.AddWithValue("@deM1", 0);                      // monto referencial del servicio de transp
+                        micon.Parameters.AddWithValue("@deM2", 0);                      // monto referencial de la carga efectiva
+                        micon.Parameters.AddWithValue("@deM3", 0);                      // monto referencial de la carga nominal
+                        micon.ExecuteNonQuery();
                     }
                 }
                 // detalle
