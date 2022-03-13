@@ -228,13 +228,13 @@ namespace Grael2
             tx_distRtt.AutoCompleteSource = AutoCompleteSource.CustomSource;  // distritos
             tx_distRtt.AutoCompleteCustomSource = distritos;                  // distritos
             // longitudes maximas de campos
-            tx_serie.MaxLength = 3;         // serie doc vta
-            tx_numero.MaxLength = 7;        // numero doc vta
-            tx_serGR.MaxLength = 3;         // serie guia
-            tx_numGR.MaxLength = 7;         // numero guia
-            tx_numDocRem.MaxLength = 11;    // ruc o dni cliente
+            tx_serie.MaxLength = 3;             // serie doc vta
+            tx_numero.MaxLength = 7;            // numero doc vta
+            tx_serGR.MaxLength = 3;             // serie guia
+            tx_numGR.MaxLength = 7;             // numero guia
+            tx_numDocRem.MaxLength = 11;        // ruc o dni cliente
             tx_dirRem.MaxLength = 100;
-            tx_nomRem.MaxLength = 100;           // nombre remitente
+            tx_nomRem.MaxLength = 100;          // nombre remitente
             tx_distRtt.MaxLength = 25;
             tx_provRtt.MaxLength = 25;
             tx_dptoRtt.MaxLength = 25;
@@ -242,6 +242,18 @@ namespace Grael2
             tx_telc1.MaxLength = 12;
             tx_telc2.MaxLength = 12;
             tx_fletLetras.MaxLength = 249;
+            //
+            tx_e_aut.MaxLength = 15;
+            tx_e_dirlle.MaxLength = 150;
+            tx_e_dirpar.MaxLength = 150;
+            tx_e_dnicho.MaxLength = 8;
+            tx_e_glos1.MaxLength = 245;
+            tx_e_glos2.MaxLength = 245;
+            tx_e_glos3.MaxLength = 245;
+            tx_e_nfv.MaxLength = 10;
+            tx_e_ntrans.MaxLength = 150;
+            tx_e_placa.MaxLength = 10;
+            tx_e_ruct.MaxLength = 11;
             // grilla
             dataGridView1.ReadOnly = true;
             dataGridView1.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -484,20 +496,24 @@ namespace Grael2
                 if (conn.State == ConnectionState.Open)
                 {
                     /*
-                    string consulta = "select a.id,a.fechope,a.martdve,a.tipdvta,a.serdvta,a.numdvta,a.ticltgr,a.tidoclt,a.nudoclt,a.nombclt,a.direclt,a.dptoclt,a.provclt,a.distclt,a.ubigclt,a.corrclt,a.teleclt," +
-                        "a.locorig,a.dirorig,a.ubiorig,a.obsdvta,a.canfidt,a.canbudt,a.mondvta,a.tcadvta,a.subtota,a.igvtota,a.porcigv,a.totdvta,a.totpags,a.saldvta,a.estdvta,a.frase01,a.impreso," +
-                        "a.tipoclt,a.m1clien,a.tippago,a.ferecep,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id,'') as cobra,a.idcaja," +
-                        "a.cargaunica,a.placa,a.confveh,a.autoriz,a.detPeso,a.detputil,a.detMon1,a.detMon2,a.detMon3,a.dirporig,a.ubiporig,a.dirpdest,a.ubipdest,a.porcendscto,a.valordscto " +
-                        "from cabfactu a left join desc_est b on b.idcodice=a.estdvta " +
-                        "left join cabcobran c on c.tipdoco=a.tipdvta and c.serdoco=a.serdvta and c.numdoco=a.numdvta and c.estdcob<>@coda "
-                    */
-                    string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
+                        string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
                         "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
                         "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
                         "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred " +
                         "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
                         "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
                         "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " 
+ *                  */
+                    string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
+                        "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
+                        "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
+                        "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred," +
+                        "f.tipoAd,f.placa,f.placa2,f.confv,f.autoriz,f.cargaEf,f.cargaUt,f.rucTrans,f.nomTrans,f.fecIniTras,f.dirPartida,f.ubiPartida,f.dirDestin,f.ubiDestin," +
+                        "f.dniChof,f.brevete,f.valRefViaje,f.valRefVehic,f.valRefTon,f.precioTN,f.pesoTN,f.glosa1,f.glosa2,f.glosa3,f.detMon1,f.detMon2,f.detMon3 " +
+                        "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
+                        "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
+                        "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " +
+                        "LEFT JOIN adifactu f ON f.idc=a.id " 
                         + parte;
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
                     //micon.Parameters.AddWithValue("@tdep", vtc_ruc);
@@ -591,7 +607,26 @@ namespace Grael2
                             //tx_dat_upo.Text = dr.GetString("ubiporig");
                             tx_valdscto.Text = dr.GetString("dscto");
                             tx_dat_porcDscto.Text = dr.GetString("porcendscto");
-
+                            if (dr["tipoAd"].ToString() != "")   // dr["tipoAd"] != null || int.Parse(dr["tipoAd"].ToString()) == 0
+                            {
+                                // placa2,cargaEf,cargaUt,brevete,valRefViaje,valRefVehic,valRefTon,detMon1,detMon2,detMon3
+                                tx_e_aut.Text = dr.GetString("autoriz");
+                                tx_e_cant.Text = dr.GetString("pesoTN");
+                                tx_e_dirlle.Text = dr.GetString("dirDestin");
+                                tx_e_dirpar.Text = dr.GetString("dirPartida");
+                                tx_e_dnicho.Text = dr.GetString("dniChof");
+                                tx_e_ftras.Text = dr.GetString("fecIniTras");
+                                tx_e_glos1.Text = dr.GetString("glosa1");
+                                tx_e_glos2.Text = dr.GetString("glosa2");
+                                tx_e_glos3.Text = dr.GetString("glosa3");
+                                tx_e_nfv.Text = dr.GetString("confv");
+                                tx_e_ntrans.Text = dr.GetString("nomTrans");
+                                tx_e_placa.Text = dr.GetString("placa");
+                                tx_e_prec.Text = dr.GetString("precioTN");
+                                tx_e_ruct.Text = dr.GetString("rucTrans");
+                                tx_e_ubides.Text = dr.GetString("ubiDestin");
+                                tx_e_ubiori.Text = dr.GetString("ubiPartida");
+                            }
                         }
                         else
                         {
@@ -2158,10 +2193,12 @@ namespace Grael2
         private void sololee()
         {
             lp.sololee(this);
+            lp.sololeePanel(panel2);
         }
         private void escribe()
         {
             lp.escribe(this);
+            lp.escribePanel(panel2);
             tx_nomRem.ReadOnly = true;
             //tx_dirRem.ReadOnly = true;
             //tx_dptoRtt.ReadOnly = true;

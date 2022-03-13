@@ -45,9 +45,77 @@ namespace Grael2
                 }
             }
         }
+        public void sololeePanel(Panel pan)
+        {
+            foreach (Control oControls in pan.Controls)
+            {
+                if (oControls is TextBox)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is ComboBox)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is RadioButton)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is DateTimePicker)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is MaskedTextBox)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is GroupBox)
+                {
+                    oControls.Enabled = false;
+                }
+                if (oControls is CheckBox)
+                {
+                    oControls.Enabled = false;
+                }
+            }
+        }
         public void escribe(Form efrm)
         {
             foreach (Control oControls in efrm.Controls)
+            {
+                if (oControls is TextBox)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is ComboBox)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is RadioButton)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is DateTimePicker)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is MaskedTextBox)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is GroupBox)
+                {
+                    oControls.Enabled = true;
+                }
+                if (oControls is CheckBox)
+                {
+                    oControls.Enabled = true;
+                }
+            }
+        }
+        public void escribePanel(Panel pan)
+        {
+            foreach (Control oControls in pan.Controls)
             {
                 if (oControls is TextBox)
                 {
