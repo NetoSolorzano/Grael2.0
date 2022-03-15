@@ -92,7 +92,7 @@ namespace Grael2
                         {
                             if (dr.GetString(0) == "0")
                             {
-                                Grael2.Program.vg_user = Tx_user.Text;
+                                Grael2.Program.vg_user = Tx_user.Text.ToUpper();
                                 Grael2.Program.vg_nuse = dr.GetString(2);
                                 Grael2.Program.almuser = dr.GetString(1);
                                 Grael2.Program.vg_uuse = dr.GetString(4);

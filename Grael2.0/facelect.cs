@@ -303,22 +303,25 @@ namespace Grael2
             if (Tx_modo.Text == "NUEVO")
             {
                 tx_tfil.Text = "0";
-                //rb_si.Enabled = true;
+                rb_si.Enabled = true;
                 rb_no.Enabled = true;
                 if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
                 else tx_flete.ReadOnly = true;
+                rb_no.PerformClick();
             }
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
             //pan_pago.Enabled = false;
             rb_fnor.Checked = true;
             inivarGR();
+            /*
             rb_no.Checked = false;
             rb_si.Checked = false;
             rb_no.Enabled = false;
             rb_si.Enabled = false;
+            */
             //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
-            tx_dat_plazo.Text = mpdef;
+            //tx_dat_plazo.Text = mpdef;
         }
         private void jalainfo()                 // obtiene datos de imagenes y variables
         {
@@ -480,6 +483,7 @@ namespace Grael2
         }
         private void jalaoc(string campo)        // jala doc venta
         {
+            rb_fnor.Checked = true;
             //try
             {
                 string parte = "";
@@ -607,8 +611,9 @@ namespace Grael2
                             //tx_dat_upo.Text = dr.GetString("ubiporig");
                             tx_valdscto.Text = dr.GetString("dscto");
                             tx_dat_porcDscto.Text = dr.GetString("porcendscto");
-                            if (dr["tipoAd"].ToString() != "")   // dr["tipoAd"] != null || int.Parse(dr["tipoAd"].ToString()) == 0
+                            if (dr["tipoAd"].ToString() != "")   // campos de factura especial
                             {
+                                rb_fesp.Checked = true;
                                 // placa2,cargaEf,cargaUt,brevete,valRefViaje,valRefVehic,valRefTon,detMon1,detMon2,detMon3
                                 tx_e_aut.Text = dr.GetString("autoriz");
                                 tx_e_cant.Text = dr.GetString("pesoTN");
@@ -801,6 +806,9 @@ namespace Grael2
                         mpa.Clear();
                         dapla.Fill(mpa);
                         mpdef = mpa.Rows[0].ItemArray[0].ToString();    // primera fila siempre x defecto
+                        cmb_tipop.DataSource = mpa;
+                        cmb_tipop.DisplayMember = "descrizionerid";
+                        cmb_tipop.ValueMember = "idcodice";
                     }
                 }
                 /*      / jalamos la caja
@@ -2307,6 +2315,7 @@ namespace Grael2
                 }
                 else
                 {
+                    // DE MOMENTO NO USAMOS ESTA PARTE PORQUE NO GENERAMOS COBRANZAS AUTOMATICAS DESDE ESTE FORM ... 15/03/2022
                     if (rb_si.Checked == true && double.Parse(datguias[16].ToString()) > 0)
                     {
                         MessageBox.Show("Las Guías deben ser todas con o sin saldo","Error en ingreso",MessageBoxButtons.OK,MessageBoxIcon.Error);
@@ -2380,6 +2389,7 @@ namespace Grael2
                 tx_flete_Leave(null, null);
                 //rb_si.Checked = false;
                 //rb_no.Checked = false;   // true
+                rb_no.PerformClick();
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -3520,6 +3530,20 @@ namespace Grael2
         }
         private void rb_si_Click(object sender, EventArgs e)
         {
+            cmb_tipop.Enabled = true;
+            //
+            tx_pagado.Text = "0.00";
+            double once = 0;
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[11].Value.ToString())) dataGridView1.Rows[i].Cells[11].Value = "0";
+                once = once + double.Parse(dataGridView1.Rows[i].Cells[11].Value.ToString());
+            }
+            tx_salxcob.Text = once.ToString("#0.00"); // tx_flete.Text;
+            tx_salxcob.BackColor = Color.Red;
+            //
+            cmb_plazoc.SelectedIndex = -1;
+            cmb_plazoc.Enabled = false;
             /*
             if (tx_idcaja.Text != "")
             {
@@ -3571,7 +3595,11 @@ namespace Grael2
         }
         private void rb_no_Click(object sender, EventArgs e)
         {
+            cmb_tipop.SelectedIndex = -1;
+            cmb_tipop.Enabled = false;
+            cmb_plazoc.Enabled = true;
             tx_dat_plazo.Text = v_mpag;
+            //
             double once = 0;
             for (int i = 0; i<dataGridView1.Rows.Count - 1; i++)
             {
@@ -3581,6 +3609,7 @@ namespace Grael2
             tx_pagado.Text = "0.00";
             tx_salxcob.Text = once.ToString("#0.00"); // tx_flete.Text;
             tx_salxcob.BackColor = Color.Red;
+            //
             if (ppauto == "SI")           // automatico o no?
             {
                 cmb_plazoc.Enabled = true;
@@ -3979,6 +4008,18 @@ namespace Grael2
                 //tx_dat_plazo.Text = "";
                 tx_dat_dpla.Text = "";
                 tx_dat_diasp.Text = "";
+            }
+        }
+        private void cmb_tipop_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmb_tipop.SelectedIndex > -1)
+            {
+                tx_dat_tipag.Text = mpa.Rows[cmb_tipop.SelectedIndex].ItemArray[0].ToString();
+
+            }
+            else
+            {
+                tx_dat_tipag.Text = "";
             }
         }
         #endregion comboboxes
@@ -4520,5 +4561,6 @@ namespace Grael2
         {
             totalizaG();
         }
+
     }
 }
