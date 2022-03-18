@@ -77,11 +77,12 @@ namespace Grael2
                 {
                     //validamos que el usuario y passw son los correctos
                     string query = "select a.bloqueado,a.local,a.nombre,concat(trim(b.deta1),' - ',b.deta2,' - ',b.deta3,' - ',b.deta4) AS direcc,b.ubiDir," +
-                        "b.descrizione,a.tipuser,a.nivel,b.codsunat,'' " +
+                        "b.descrizione,a.tipuser,a.nivel,b.codsunat,ifnull(c.fecha,'') " +
                         "from usuarios a " +
                         "LEFT JOIN desc_sds b ON b.idcodice=a.local " +
+                        "left join erp_grael.macajas c on c.local=a.local and c.fechter is null " +
                         "where a.nom_user=@usuario and a.pwd_user=@contra";
-                    //  ifnull(c.fechope,'')                       "left join cabccaja c on c.loccaja=a.local and c.fechcie is null " +
+                    //                         
                     MySqlCommand mycomand = new MySqlCommand(query, cn);
                     mycomand.Parameters.AddWithValue("@usuario", Tx_user.Text);
                     mycomand.Parameters.AddWithValue("@contra", contra);
@@ -116,7 +117,7 @@ namespace Grael2
                                     Grael2.Program.vg_ipwan = "";
                                 }
                                 // nos vamos al form principal
-                                Program.vg_user = this.Tx_user.Text;
+                                Program.vg_user = this.Tx_user.Text.ToUpper();
                                 Main tMain = new Main();
                                 tMain.Show();
                                 this.Hide();

@@ -2361,7 +2361,7 @@ namespace Grael2
             }
             return retorna;
         }
-        public string fechaServ(string forma)                                           // retorna fecha del servidor FORMATO AAAA-MM-DD
+        public string fechaServ(string forma)                               // retorna fecha del servidor FORMATO AAAA-MM-DD
         {
             string retorna = "";
             string consulta = "";

@@ -15,3 +15,4 @@ me quede en agregar los procedimientos y triggers a la base erp_grael para :
 - form enlaces, mejorar el form, que sea ampliable ............................ ok 09/02/2022
 - form publico, pasar a 36000 el tiempo limite del cache manager .............. ok 09/02/2022
 - form facelect, agregar elementos de cargas especiales o únicas .............. 
+Se "achicó" los forms y textos a Arial 7 en su mayoría ........................ ok 16/03/2022

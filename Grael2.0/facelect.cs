@@ -192,7 +192,7 @@ namespace Grael2
         }
         private void init()
         {
-            this.Width = 785;
+            this.Width = 683;
             this.BackColor = Color.FromName(colback);
             toolStrip1.BackColor = Color.FromName(colstrp);
             dataGridView1.DefaultCellStyle.BackColor = Color.FromName(colgrid);
@@ -289,7 +289,7 @@ namespace Grael2
             tx_fletLetras.ReadOnly = true;
             if (Tx_modo.Text == "NUEVO" && v_estcaj == codAbie)      // caja esta abierta?
             {
-                /* if (fshoy != Grael2.Program.vg_fcaj)  // fecha de la caja vs fecha de hoy
+                if (fshoy != Grael2.Program.vg_fcaj)  // fecha de la caja vs fecha de hoy
                 {
                     MessageBox.Show("Las fechas no coinciden" + Environment.NewLine +
                         "Fecha de caja vs Fecha actual", "Caja fuera de fecha", MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -298,7 +298,7 @@ namespace Grael2
                 else
                 {
                     tx_idcaja.Text = v_idcaj;
-                } */
+                }
             }
             if (Tx_modo.Text == "NUEVO")
             {
@@ -811,20 +811,31 @@ namespace Grael2
                         cmb_tipop.ValueMember = "idcodice";
                     }
                 }
-                /*      / jalamos la caja
-                using (MySqlCommand micon = new MySqlCommand("select id,fechope,statusc from cabccaja where loccaja=@luc order by id desc limit 1", conn))
+                // jalamos la caja
+                using (MySqlConnection cong = new MySqlConnection(db_conn_grael))
                 {
-                    micon.Parameters.AddWithValue("@luc", v_clu);
-                    using (MySqlDataReader dr = micon.ExecuteReader())
+                    cong.Open();
+                    if (cong.State == ConnectionState.Open)
                     {
-                        if (dr.Read())
-                        {
-                            v_estcaj = dr.GetString("statusc");
-                            v_idcaj = dr.GetString("id");
+                        using (MySqlCommand micon = new MySqlCommand("select id,fecha,status from macajas where local=@luc order by id desc limit 1", cong))
+                        {   // "select id,fechope,statusc from cabccaja where loccaja=@luc order by id desc limit 1"
+                            micon.Parameters.AddWithValue("@luc", v_clu);
+                            using (MySqlDataReader dr = micon.ExecuteReader())
+                            {
+                                if (dr.Read())
+                                {
+                                    v_estcaj = dr.GetString("status");
+                                    v_idcaj = dr.GetString("id");
+                                }
+                            }
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("No hay conexión a la base de Grael 1.0","Error!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        Application.Exit();
+                    }
                 }
-                */
             }
         }
         private bool valiVars()                 // valida existencia de datos en variables del form
@@ -2126,7 +2137,7 @@ namespace Grael2
         #endregion
 
         #region autocompletados
-        private void autodepa()                 // se jala en el load
+        private void autodepa()                             // se jala en el load
         {
             if (dataUbig == null)
             {
@@ -2202,12 +2213,18 @@ namespace Grael2
         {
             lp.sololee(this);
             lp.sololeePanel(panel2);
+            lp.sololeePanel(panel1);
+            rb_fesp.Enabled = false;
+            rb_fnor.Enabled = false;
         }
         private void escribe()
         {
             lp.escribe(this);
             lp.escribePanel(panel2);
+            lp.escribePanel(panel1);
             tx_nomRem.ReadOnly = true;
+            rb_fnor.Enabled = true;
+            rb_fesp.Enabled = true;
             //tx_dirRem.ReadOnly = true;
             //tx_dptoRtt.ReadOnly = true;
             //tx_provRtt.ReadOnly = true;
@@ -2908,12 +2925,12 @@ namespace Grael2
                 */
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
                     "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
-                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred," +
+                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred,pagauto," +
                     "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                     "values (" +
                     "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
                     "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now()," +
-                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc," +
+                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc,@pagau," +
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 //                    "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                 //                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
@@ -2950,6 +2967,7 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@canfil", tx_tfil.Text);
                     micon.Parameters.AddWithValue("@tippa", tx_dat_plazo.Text);
                     micon.Parameters.AddWithValue("@plzoc", tx_dat_dpla.Text);
+                    micon.Parameters.AddWithValue("@pagau", (rb_si.Checked == true)? "S" : "N");    // cobranza automatica en efectivo
                     micon.Parameters.AddWithValue("@pr01", "0");
                     micon.Parameters.AddWithValue("@pr02", "0");
                     micon.Parameters.AddWithValue("@pr03", "0");
@@ -3528,9 +3546,11 @@ namespace Grael2
         {
             val_NoCaracteres(tx_obser1);
         }
-        private void rb_si_Click(object sender, EventArgs e)
+        private void rb_si_Click(object sender, EventArgs e)            // contado furioso, SE COBRA entra la plata a caja de frente
         {
             cmb_tipop.Enabled = true;
+            cmb_tipop.SelectedIndex = 0;        // el primer registro de tipo de pago es el predefinido
+            cmb_tipop.Enabled = false;
             //
             tx_pagado.Text = "0.00";
             double once = 0;
@@ -3544,7 +3564,7 @@ namespace Grael2
             //
             cmb_plazoc.SelectedIndex = -1;
             cmb_plazoc.Enabled = false;
-            /*
+            //
             if (tx_idcaja.Text != "")
             {
                 // validamos la fecha de la caja
@@ -3582,6 +3602,16 @@ namespace Grael2
                             return;
                         }
                     }
+                    //
+                    if (ppauto == "SI")           // automatico o no?
+                    {
+                        /*
+                        cmb_plazoc.Enabled = true;
+                        cmb_plazoc.SelectedValue = codppc;
+                        DataRow[] dias = dtp.Select("idcodice='" + codppc + "'");
+                        tx_dat_diasp.Text = dias[0][3].ToString();
+                        */
+                    }
                 }
             }
             else
@@ -3591,9 +3621,26 @@ namespace Grael2
                 rb_si.Checked = false;
                 rb_no.PerformClick();
             }
-            */
         }
-        private void rb_no_Click(object sender, EventArgs e)
+        private void rb_no_Click(object sender, EventArgs e)            // contado reparto, se genera contado PERO NO SE COBRA!
+        {
+            cmb_tipop.SelectedIndex = -1;
+            cmb_tipop.Enabled = false;
+            //
+            tx_pagado.Text = "0.00";
+            double once = 0;
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[11].Value.ToString())) dataGridView1.Rows[i].Cells[11].Value = "0";
+                once = once + double.Parse(dataGridView1.Rows[i].Cells[11].Value.ToString());
+            }
+            tx_salxcob.Text = once.ToString("#0.00"); // tx_flete.Text;
+            tx_salxcob.BackColor = Color.Red;
+            //
+            cmb_plazoc.SelectedIndex = -1;
+            cmb_plazoc.Enabled = false;
+        }
+        private void rb_cre_Click(object sender, EventArgs e)           // crédito, se cobra cuando paguen, se genera como crédito
         {
             cmb_tipop.SelectedIndex = -1;
             cmb_tipop.Enabled = false;
@@ -3601,7 +3648,7 @@ namespace Grael2
             tx_dat_plazo.Text = v_mpag;
             //
             double once = 0;
-            for (int i = 0; i<dataGridView1.Rows.Count - 1; i++)
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
             {
                 if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[11].Value.ToString())) dataGridView1.Rows[i].Cells[11].Value = "0";
                 once = once + double.Parse(dataGridView1.Rows[i].Cells[11].Value.ToString());
@@ -3609,14 +3656,6 @@ namespace Grael2
             tx_pagado.Text = "0.00";
             tx_salxcob.Text = once.ToString("#0.00"); // tx_flete.Text;
             tx_salxcob.BackColor = Color.Red;
-            //
-            if (ppauto == "SI")           // automatico o no?
-            {
-                cmb_plazoc.Enabled = true;
-                cmb_plazoc.SelectedValue = codppc;
-                DataRow[] dias = dtp.Select("idcodice='" + codppc + "'");
-                tx_dat_diasp.Text = dias[0][3].ToString();
-            }
         }
         private void chk_sinco_CheckedChanged(object sender, EventArgs e)
         {
@@ -3674,9 +3713,9 @@ namespace Grael2
         {
             if (rb_fesp.Checked == true)
             {
-                this.Width = 1020;
+                this.Width = 880;
                 panel2.Visible = true;
-                panel2.Width = 240;
+                panel2.Width = 197;
                 panel2.BackColor = Color.FloralWhite;
                 // SI ES NUEVO y ya esta "jalada" la guía => pasamos los datos del camión al panel de cargas únicas
                 if (Tx_modo.Text == "NUEVO" && dataGridView1.Rows.Count > 1) datPanelCargasU();
@@ -3686,8 +3725,8 @@ namespace Grael2
         {
             if (rb_fnor.Checked == true)
             {
-                this.Width = 785;
-                toolStrip1.Width = 769;
+                this.Width = 683;
+                toolStrip1.Width = 668;
                 pn_usloc.Width = 769;
                 panel2.Visible = false;
             }
@@ -4436,14 +4475,14 @@ namespace Grael2
                     else posi = posi + alfi + alfi;
                     if (tx_dat_tdv.Text == codfact)
                     {
-                        if (rb_si.Checked == true)
+                        if (rb_si.Checked == true || rb_no.Checked == true)
                         {
                             puntoF = new PointF(coli, posi);
                             e.Graphics.DrawString(glocopa + " " + texpagC + " " + tx_flete.Text, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                         }
                         else
                         {
-                            if (rb_no.Checked == true)
+                            if (rb_cre.Checked == true)
                             {
                                 puntoF = new PointF(coli, posi);
                                 e.Graphics.DrawString(glocopa, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);

@@ -323,7 +323,7 @@ namespace Grael2
                     {
                         DataTable dtu = new DataTable();
                         da.Fill(dtu);
-                        CacheManager.AddItem("ubigeos", dtu, 3600);
+                        CacheManager.AddItem("ubigeos", dtu, 36000);
                     }
                 }
             }
