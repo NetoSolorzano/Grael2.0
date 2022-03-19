@@ -70,6 +70,7 @@ namespace Grael2
         string codfact = "";            // idcodice de factura
         string codbole = "";            // codigo de boleta electronica
         string v_igv = "";              // valor igv %
+        string v_sercob = "";           // serie de cobranza del local
         string v_estcaj = "";           // estado de la caja
         string v_idcaj = "";            // id de la caja actual
         string codAbie = "";            // codigo estado de caja abierta
@@ -740,7 +741,7 @@ namespace Grael2
                 }
                 // datos para el combobox documento de venta
                 cmb_tdv.Items.Clear();
-                string consu = "select distinct a.idcodice,a.descrizionerid,a.enlace1,a.codsunat,b.glosaser,b.serie " +
+                string consu = "select distinct a.idcodice,a.descrizionerid,a.enlace1,a.codsunat,b.glosaser,b.serie,a.deta1 " +
                     "from desc_tdo a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and b.sede=@loca";
                 using (MySqlCommand cdv = new MySqlCommand(consu, conn))
                 {
@@ -817,7 +818,7 @@ namespace Grael2
                     cong.Open();
                     if (cong.State == ConnectionState.Open)
                     {
-                        using (MySqlCommand micon = new MySqlCommand("select id,fecha,status from macajas where local=@luc order by id desc limit 1", cong))
+                        using (MySqlCommand micon = new MySqlCommand("SELECT a.id,a.fecha,a.status,b.flag1 from macajas a LEFT JOIN desc_sds b ON b.idcodice=a.local where LOCAL=@luc order by id desc LIMIT 1", cong))
                         {   // "select id,fechope,statusc from cabccaja where loccaja=@luc order by id desc limit 1"
                             micon.Parameters.AddWithValue("@luc", v_clu);
                             using (MySqlDataReader dr = micon.ExecuteReader())
@@ -826,6 +827,7 @@ namespace Grael2
                                 {
                                     v_estcaj = dr.GetString("status");
                                     v_idcaj = dr.GetString("id");
+                                    v_sercob = dr.GetString("flag1");
                                 }
                             }
                         }
@@ -2951,7 +2953,7 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@subpgr", tx_subt.Text);                     // sub total
                     micon.Parameters.AddWithValue("@igvpgr", tx_igv.Text);                      // igv
                     micon.Parameters.AddWithValue("@totpgr", tx_flete.Text);                    // total inc. igv
-                    micon.Parameters.AddWithValue("@estpgr", (tx_pagado.Text == "" || tx_pagado.Text == "0.00") ? tx_dat_estad.Text : codCanc); // estado
+                    micon.Parameters.AddWithValue("@estpgr", (rb_si.Checked == true && tx_idcaja.Text.Trim() != "") ? codCanc : tx_dat_estad.Text); // estado;
                     micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@asd", asd);
                     micon.Parameters.AddWithValue("@ldcpgr", Grael2.Program.almuser);         // local origen
@@ -3101,7 +3103,7 @@ namespace Grael2
                                 micon.Parameters.AddWithValue("@pret", dataGridView1.Rows[i].Cells[4].Value.ToString());
                                 micon.Parameters.AddWithValue("@ruta", dataGridView1.Rows[i].Cells[10].Value.ToString());
                                 micon.Parameters.AddWithValue("@desc", vint_gg + " " + dataGridView1.Rows[i].Cells[1].Value.ToString());
-                                micon.Parameters.AddWithValue("@sta", (tx_pagado.Text == "" || tx_pagado.Text == "0.00") ? tx_dat_estad.Text : codCanc); // estado;
+                                micon.Parameters.AddWithValue("@sta", (rb_si.Checked == true && tx_idcaja.Text.Trim() != "") ? codCanc : tx_dat_estad.Text); // estado;
                                 micon.Parameters.AddWithValue("@asd", asd);
                                 micon.Parameters.AddWithValue("@dre", dataGridView1.Rows[i].Cells[8].Value.ToString());
                                 micon.Parameters.AddWithValue("@bult", dataGridView1.Rows[i].Cells[2].Value.ToString() + " " + dataGridView1.Rows[i].Cells[12].Value.ToString());
@@ -3125,6 +3127,115 @@ namespace Grael2
                             // actualizaciones de magrem, manoen y mactacte LOS HACE EL TRIGGER DETAVTAS 
                         }
                     }
+                }
+                // cobranza automática en efectivo?
+                if (rb_si.Checked == true && tx_idcaja.Text.Trim() != "")
+                {
+                    string consulta = "select id,fecha,status from macajas where local=@loc order by id desc limit 1";
+                    MySqlCommand micon = new MySqlCommand(consulta, conn);
+                    micon.Parameters.AddWithValue("@loc", Grael2.Program.almuser);
+                    MySqlDataReader dr = micon.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        if (dr.GetString(0) != tx_idcaja.Text)
+                        {
+                            tx_idcaja.Text = "";
+                            MessageBox.Show("No esta abierta la caja del local!","No se puede cobrar",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                        }
+                        if (dr.GetDateTime(1).ToString("dd/MM/yyyy") != tx_fechope.Text)
+                        {
+                            tx_idcaja.Text = "";
+                            MessageBox.Show("La fecha del documento no corresponde a la caja", "Caja abierta con fecha anterior", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        }
+                    }
+                    else
+                    {
+                        tx_idcaja.Text = "";
+                        MessageBox.Show("Error interno en cobranzas", "No se puede cobrar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    dr.Close();
+                    //
+                    if (tx_idcaja.Text != "")
+                    {
+                        {
+                            string inscob = "insert into macobran (" +
+                                "fechope,tipcam,sercob,local,status,docvta,servta,corvta,doccli,numcli," +
+                                "moneda,totdoc,saldo,empcob,fechcob,observ,userc,fechc,mpago,valortc," +
+                                "pagado,idcaja,mfe" +
+                                ") values (" +
+                                "@fec,@tca,@sco,@loc,@sta,@doc,@svt,@cvt,@dcl,@ndc," +
+                                "@mon,@tot,@sal,@eco,@fco,@obs,@asd,now(),@mpa,@vtc," +
+                                "@pag,@caj,@mfe)";
+                            // prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10,
+                            // @pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10,
+                            using (MySqlCommand minsert = new MySqlCommand(inscob, conn))
+                            {
+                                minsert.Parameters.AddWithValue("@fec", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
+                                minsert.Parameters.AddWithValue("@tca", tx_tipcam.Text);
+                                minsert.Parameters.AddWithValue("@sco", v_sercob);
+                                minsert.Parameters.AddWithValue("@loc", v_clu);
+                                minsert.Parameters.AddWithValue("@sta", tx_dat_estad.Text);
+                                minsert.Parameters.AddWithValue("@doc", tx_dat_tdv.Text);
+                                minsert.Parameters.AddWithValue("@svt", tx_serie.Text);
+                                minsert.Parameters.AddWithValue("@cvt", tx_numero.Text);
+                                minsert.Parameters.AddWithValue("@dcl", tx_dat_tdRem.Text);
+                                minsert.Parameters.AddWithValue("@ndc", tx_numDocRem.Text);
+                                minsert.Parameters.AddWithValue("@mon", tx_dat_mone.Text);
+                                minsert.Parameters.AddWithValue("@tot", tx_flete.Text);
+                                minsert.Parameters.AddWithValue("@sal", 0);
+                                minsert.Parameters.AddWithValue("@eco", lib.codemple(asd));
+                                minsert.Parameters.AddWithValue("@fco", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
+                                minsert.Parameters.AddWithValue("@obs", tx_obser1.Text);
+                                minsert.Parameters.AddWithValue("@asd", asd);
+                                minsert.Parameters.AddWithValue("@mpa", tx_dat_tipag.Text);
+                                if (tx_tipcam.Text != "") minsert.Parameters.AddWithValue("@vtc", double.Parse(tx_flete.Text) * double.Parse(tx_tipcam.Text));
+                                else minsert.Parameters.AddWithValue("@vtc", tx_flete.Text);
+                                minsert.Parameters.AddWithValue("@pag", tx_flete.Text);
+                                minsert.Parameters.AddWithValue("@caj", tx_idcaja.Text);
+                                minsert.Parameters.AddWithValue("@mfe", tx_cfe.Text);
+                                minsert.ExecuteNonQuery();
+                                //
+                                consulta = "select last_insert_id()";
+                                micon = new MySqlCommand(consulta, conn);
+                                MySqlDataReader dri = micon.ExecuteReader();
+                                if (dri.Read())
+                                {
+                                    tx_idcob.Text = dri.GetString(0);
+                                }
+                                dri.Close();
+                            }
+                            consulta = "insert into detacobnot (sercob,corcob,sernot,cornot,valnot,salnot,pagado,userc,fechc,idc) " +
+                                "select @sco,@cco,sernot,cornot,totnot,0,totnot,@asd,now(),@idc from mactacte " +
+                                "where tipdv=@tdv and serdv=@svt and cordv=@cvt and mfe=@mfe";
+                            using (micon = new MySqlCommand(consulta, conn))
+                            {
+                                micon.Parameters.AddWithValue("@sco", v_sercob);
+                                micon.Parameters.AddWithValue("@cco", lib.Right(("000000" + tx_idcob.Text), 7));
+                                micon.Parameters.AddWithValue("@asd", asd);
+                                micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
+                                micon.Parameters.AddWithValue("@svt", tx_serie.Text);
+                                micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
+                                micon.Parameters.AddWithValue("@idc", tx_idcob.Text);
+                                micon.Parameters.AddWithValue("@mfe", tx_cfe.Text);
+                                micon.ExecuteNonQuery();
+                            }
+                            //
+                            consulta = "update mactacte, manoen set mactacte.status=@nst,mactacte.pagado=totnot,mactacte.saldo=0,mactacte.fecpa=@fpa " +
+                                "WHERE mactacte.tipdv = manoen.tdvfac and mactacte.serdv = manoen.serfac and mactacte.cordv = manoen.corfac and mactacte.mfe = manoen.mfe AND " +
+                                "mactacte.tipdv = @tdv and mactacte.serdv = @sdv and mactacte.cordv = @cdv and mactacte.mfe = @mfe";
+                            using (micon = new MySqlCommand(consulta, conn))
+                            {
+                                micon.Parameters.AddWithValue("@nst", codCanc);
+                                micon.Parameters.AddWithValue("@fpa", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
+                                micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
+                                micon.Parameters.AddWithValue("@sdv", tx_serie.Text);
+                                micon.Parameters.AddWithValue("@cdv", tx_numero.Text);
+                                micon.Parameters.AddWithValue("@mfe", tx_cfe.Text);
+                                micon.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                    
                 }
             }
             else
@@ -3989,6 +4100,7 @@ namespace Grael2
                     tx_dat_tdv.Text = row[0].ItemArray[0].ToString();
                     tx_dat_tdec.Text = row[0].ItemArray[2].ToString();
                     glosser = row[0].ItemArray[4].ToString();
+                    tx_cfe.Text = row[0].ItemArray[6].ToString();
                     if (Tx_modo.Text == "NUEVO") tx_serie.Text = row[0].ItemArray[5].ToString();
                     tx_numero.Text = "";
                 }

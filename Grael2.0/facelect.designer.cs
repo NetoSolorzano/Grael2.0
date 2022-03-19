@@ -144,6 +144,7 @@
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.pan_pago = new System.Windows.Forms.Panel();
+            this.rb_cre = new System.Windows.Forms.RadioButton();
             this.rb_no = new System.Windows.Forms.RadioButton();
             this.rb_si = new System.Windows.Forms.RadioButton();
             this.groupBox39 = new System.Windows.Forms.GroupBox();
@@ -254,7 +255,7 @@
             this.tx_serGR = new Grael2.NumericTextBox();
             this.tx_tfil = new Grael2.NumericTextBox();
             this.tx_totcant = new Grael2.NumericTextBox();
-            this.rb_cre = new System.Windows.Forms.RadioButton();
+            this.tx_cfe = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -1346,6 +1347,20 @@
             this.pan_pago.Size = new System.Drawing.Size(77, 50);
             this.pan_pago.TabIndex = 17;
             // 
+            // rb_cre
+            // 
+            this.rb_cre.AutoSize = true;
+            this.rb_cre.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_cre.ForeColor = System.Drawing.Color.Crimson;
+            this.rb_cre.Location = new System.Drawing.Point(2, 33);
+            this.rb_cre.Name = "rb_cre";
+            this.rb_cre.Size = new System.Drawing.Size(53, 16);
+            this.rb_cre.TabIndex = 2;
+            this.rb_cre.TabStop = true;
+            this.rb_cre.Text = "Crédito";
+            this.rb_cre.UseVisualStyleBackColor = true;
+            this.rb_cre.Click += new System.EventHandler(this.rb_cre_Click);
+            // 
             // rb_no
             // 
             this.rb_no.AutoSize = true;
@@ -1494,7 +1509,7 @@
             // 
             this.tx_dat_tipag.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dat_tipag.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dat_tipag.Location = new System.Drawing.Point(1, 160);
+            this.tx_dat_tipag.Location = new System.Drawing.Point(1, 148);
             this.tx_dat_tipag.Name = "tx_dat_tipag";
             this.tx_dat_tipag.Size = new System.Drawing.Size(41, 18);
             this.tx_dat_tipag.TabIndex = 420;
@@ -1942,7 +1957,7 @@
             // 
             this.tx_tfmn.BackColor = System.Drawing.SystemColors.Window;
             this.tx_tfmn.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfmn.Location = new System.Drawing.Point(553, 366);
+            this.tx_tfmn.Location = new System.Drawing.Point(553, 363);
             this.tx_tfmn.Name = "tx_tfmn";
             this.tx_tfmn.Size = new System.Drawing.Size(22, 18);
             this.tx_tfmn.TabIndex = 368;
@@ -2533,19 +2548,15 @@
             this.tx_totcant.TabIndex = 25;
             this.tx_totcant.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // rb_cre
+            // tx_cfe
             // 
-            this.rb_cre.AutoSize = true;
-            this.rb_cre.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_cre.ForeColor = System.Drawing.Color.Crimson;
-            this.rb_cre.Location = new System.Drawing.Point(2, 33);
-            this.rb_cre.Name = "rb_cre";
-            this.rb_cre.Size = new System.Drawing.Size(53, 16);
-            this.rb_cre.TabIndex = 2;
-            this.rb_cre.TabStop = true;
-            this.rb_cre.Text = "Crédito";
-            this.rb_cre.UseVisualStyleBackColor = true;
-            this.rb_cre.Click += new System.EventHandler(this.rb_cre_Click);
+            this.tx_cfe.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_cfe.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_cfe.Location = new System.Drawing.Point(123, 25);
+            this.tx_cfe.Name = "tx_cfe";
+            this.tx_cfe.Size = new System.Drawing.Size(26, 18);
+            this.tx_cfe.TabIndex = 434;
+            this.tx_cfe.Visible = false;
             // 
             // facelect
             // 
@@ -2554,6 +2565,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ClientSize = new System.Drawing.Size(864, 532);
+            this.Controls.Add(this.tx_cfe);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.tx_dat_diasp);
             this.Controls.Add(this.tx_dat_loca);
@@ -2895,5 +2907,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn unidad;
         private System.Windows.Forms.DataGridViewTextBoxColumn valboldet;
         private System.Windows.Forms.RadioButton rb_cre;
+        private System.Windows.Forms.TextBox tx_cfe;
     }
 }

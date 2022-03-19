@@ -1911,7 +1911,7 @@ namespace Grael2
         public string codemple(string codi)                                 // retorna codigo de empleado según su usuario
         {
             string retorna = "";
-            MySqlConnection conl = new MySqlConnection(DB_CONN_STR);
+            MySqlConnection conl = new MySqlConnection(db_conn_grael);
             conl.Open();
             if (conl.State == ConnectionState.Open)
             {
