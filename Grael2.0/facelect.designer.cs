@@ -1947,7 +1947,7 @@
             // 
             this.tx_idcob.BackColor = System.Drawing.SystemColors.Window;
             this.tx_idcob.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_idcob.Location = new System.Drawing.Point(13, 119);
+            this.tx_idcob.Location = new System.Drawing.Point(71, 396);
             this.tx_idcob.Name = "tx_idcob";
             this.tx_idcob.Size = new System.Drawing.Size(29, 18);
             this.tx_idcob.TabIndex = 367;

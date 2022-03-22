@@ -261,6 +261,8 @@ namespace Grael2
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             // todo desabilidado
             sololee();
+            // jalamos datos de fact electrónica
+            OSE_Fact_Elect();
         }
         private void initIngreso()
         {
@@ -512,7 +514,7 @@ namespace Grael2
                     string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
                         "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
                         "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
-                        "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred," +
+                        "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred,a.condpag," +
                         "f.tipoAd,f.placa,f.placa2,f.confv,f.autoriz,f.cargaEf,f.cargaUt,f.rucTrans,f.nomTrans,f.fecIniTras,f.dirPartida,f.ubiPartida,f.dirDestin,f.ubiDestin," +
                         "f.dniChof,f.brevete,f.valRefViaje,f.valRefVehic,f.valRefTon,f.precioTN,f.pesoTN,f.glosa1,f.glosa2,f.glosa3,f.detMon1,f.detMon2,f.detMon3 " +
                         "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
@@ -586,27 +588,18 @@ namespace Grael2
                             tx_estado.Text = dr.GetString("nomest");   // lib.nomstat(tx_dat_estad.Text);
                             if (dr.GetString("userm") == "") tx_digit.Text = lib.nomuser(dr.GetString("userc"));
                             else tx_digit.Text = lib.nomuser(dr.GetString("userm"));
+                            if (dr.GetString("condpag") == "E") rb_si.Checked = true;
+                            if (dr.GetString("condpag") == "R") rb_no.Checked = true;
+                            if (dr.GetString("condpag") == "C") rb_cre.Checked = true;
                             if (dr.GetString("tippago") == "")
                             {
                                 // es anterior al tiempo que se ponía contado o credito
                                 // MessageBox.Show("Que hago aca?");
                             }
-                            else
-                            {
-                                tx_dat_plazo.Text = dr.GetString("tippago");
-                                if (dr.GetString("tippago") != mpdef)
-                                {
-                                    rb_no.Checked = true;
-                                    //rb_no.PerformClick();
-                                    tx_dat_dpla.Text = dr.GetString("plazocred");
-                                    cmb_plazoc.SelectedValue = tx_dat_dpla.Text;
-                                }
-                                else
-                                {
-                                    rb_si.Checked = true;
-                                    //rb_si.PerformClick();
-                                }
-                            }
+                            tx_dat_tipag.Text = dr.GetString("tippago");
+                            cmb_tipop.SelectedValue = tx_dat_tipag.Text;
+                            tx_dat_dpla.Text = dr.GetString("plazocred");
+                            cmb_plazoc.SelectedValue = tx_dat_dpla.Text;
                             // campos de carga unica
                             //tx_dat_upd.Text = dr.GetString("ubipdest");
                             //tx_dat_upo.Text = dr.GetString("ubiporig");
@@ -1511,6 +1504,16 @@ namespace Grael2
             }
             conn.Close();
         }
+        private bool valiconsql(string strcon)              // valida conexion al servidor sql de bizlinks
+        {
+            bool retorna = false;
+            using (SqlConnection conms = new SqlConnection(strcon))
+            {
+                conms.Open();
+                if (conms.State == ConnectionState.Open) retorna = true;
+            }
+            return retorna;
+        }
         private void grabfactelec()                         // graba en la tabla de fact. electrónicas
         {                               // facturacion electrónica con OSE BIZLINKS 10-10-2018  / actualizacion 14/08/2021
             string tipo = tx_dat_tdv.Text;
@@ -2136,6 +2139,61 @@ namespace Grael2
                 return;
             }
         }
+        private void anulfactelec(int cta)                         // anula (baja) de comprobante electrónica
+        {
+            using (SqlConnection conn = new SqlConnection(script))
+            {
+                conn.Open();
+                if (conn.State == ConnectionState.Open)
+                {
+                    string nudoem = Program.ruc;                                                            // v numeroDocumentoEmisor
+                    string tidoem = "6";                                                                    // v tipoDocumentoEmisor
+                    string restip = "RA";
+                    string resuid = restip + "-" + tx_fechope.Text.Substring(6, 4) + tx_fechope.Text.Substring(3, 2) + tx_fechope.Text.Substring(0, 2) + "-" + lib.Right("00"+cta,3);    // resumen id
+                    string fecomp = tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2);
+                    string rasoem = Program.cliente.Trim();                                                 // v razonSocialEmisor
+                    string coremi = Program.mailclte.Trim();                                               // v correoEmisor
+                    string insertcab = "insert into SPE_CANCELHEADER (" +
+                        "numeroDocumentoEmisor,tipoDocumentoEmisor,resumenId,fechaEmisionComprobante,fechaGeneracionResumen,razonSocialEmisor,correoEmisor,resumenTipo,inhabilitado) " +
+                        "values (@nudoem,@tidoem,@resuid,@fecomp,@fecomp,@rasoem,@coremi,@restip,1)";
+                    //
+                    DataRow[] row = dttd1.Select("idcodice='" + tx_dat_tdv.Text + "'");                     // tipo de documento venta
+                    string tipdoc = row[0][3].ToString();                                                   // v tipoDocumento
+                    string serdoc = cmb_tdv.Text.Substring(0, 1) + tx_serie.Text;                           // v serieNumero
+                    string numdoc = lib.Right("0000000" + tx_numero.Text,8);                                // numero 
+                    string motivo = "Anulación por error en emisión";                                       // motivo de la baja
+                    string insertdet = "insert into SPE_CANCELDETAIL (" +
+                        "tipoDocumentoEmisor,numeroDocumentoEmisor,resumenId,numeroFila,tipoDocumento,serieDocumentoBaja,numeroDocumentoBaja,motivoBaja) " +
+                        "values (@tidoem,@nudoem,@resuid,1,@tipdoc,@serdoc,@numdoc,@motivo)";
+                    // 
+                    SqlCommand sqlc = new SqlCommand(insertcab, conn);
+                    sqlc.Parameters.AddWithValue("@nudoem", nudoem);
+                    sqlc.Parameters.AddWithValue("@tidoem", tidoem);
+                    sqlc.Parameters.AddWithValue("@resuid", resuid);
+                    sqlc.Parameters.AddWithValue("@fecomp", fecomp);
+                    sqlc.Parameters.AddWithValue("@rasoem", rasoem);
+                    sqlc.Parameters.AddWithValue("@coremi", coremi);
+                    sqlc.Parameters.AddWithValue("@restip", restip);
+                    sqlc.ExecuteNonQuery();
+                    // 
+                    sqlc = new SqlCommand(insertdet, conn);
+                    sqlc.Parameters.AddWithValue("@tidoem", tidoem);
+                    sqlc.Parameters.AddWithValue("@nudoem", nudoem);
+                    sqlc.Parameters.AddWithValue("@resuid", resuid);
+                    sqlc.Parameters.AddWithValue("@tipdoc", tipdoc);
+                    sqlc.Parameters.AddWithValue("@serdoc", serdoc);
+                    sqlc.Parameters.AddWithValue("@numdoc", numdoc);
+                    sqlc.Parameters.AddWithValue("@motivo", motivo);
+                    sqlc.ExecuteNonQuery();
+                }
+                else
+                {
+                    MessageBox.Show("Se perdió conexión con el servidor" + Environment.NewLine +
+                        "de facturación electrónica" + Environment.NewLine +
+                        "Notifique a Contabilidad y sistemas!","Transacción electrónica NO HECHA",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                }
+            }
+        }
         #endregion
 
         #region autocompletados
@@ -2240,6 +2298,9 @@ namespace Grael2
         private void limpia_chk()    
         {
             lp.limpia_chk(this);
+            rb_si.Checked = false;
+            rb_no.Checked = false;
+            rb_cre.Checked = false;
         }
         private void limpia_otros()
         {
@@ -2249,6 +2310,7 @@ namespace Grael2
         {
             lp.limpia_cmb(this);
             cmb_plazoc.SelectedIndex = -1;
+            cmb_tipop.SelectedIndex = -1;
         }
         #endregion limpiadores_modos;
 
@@ -2317,7 +2379,7 @@ namespace Grael2
                 {
                     rb_desGR.PerformClick();
                 }
-                // validamos que las guias esten con saldo o no
+                /* validamos que las guias esten con saldo o no
                 if (rb_si.Checked == false && rb_no.Checked == false)
                 {
                     // estamos ante la primera guia
@@ -2334,7 +2396,7 @@ namespace Grael2
                 }
                 else
                 {
-                    // DE MOMENTO NO USAMOS ESTA PARTE PORQUE NO GENERAMOS COBRANZAS AUTOMATICAS DESDE ESTE FORM ... 15/03/2022
+                    // NO USAMOS ESTA PARTE PORQUE NO GENERAMOS COBRANZAS AUTOMATICAS DESDE ESTE FORM ... 15/03/2022 || SI COBRAMOS EN AUTOMATICO 21/03/2022
                     if (rb_si.Checked == true && double.Parse(datguias[16].ToString()) > 0)
                     {
                         MessageBox.Show("Las Guías deben ser todas con o sin saldo","Error en ingreso",MessageBoxButtons.OK,MessageBoxIcon.Error);
@@ -2343,6 +2405,18 @@ namespace Grael2
                         return;
                     }
                     if (rb_no.Checked == true && double.Parse(datguias[16].ToString()) <= 0)
+                    {
+                        MessageBox.Show("Las Guías deben ser todas con o sin saldo", "Error en ingreso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        tx_numGR.Text = "";
+                        tx_numGR.Focus();
+                        return;
+                    }
+                }
+                */
+                if (dataGridView1.Rows.Count >= 2)
+                {
+                    if ((double.Parse(datguias[16].ToString()) > 0 && double.Parse(tx_salxcob.Text) <= 0) ||
+                        (double.Parse(datguias[16].ToString()) <= 0 && double.Parse(tx_salxcob.Text) > 0))
                     {
                         MessageBox.Show("Las Guías deben ser todas con o sin saldo", "Error en ingreso", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         tx_numGR.Text = "";
@@ -2382,12 +2456,18 @@ namespace Grael2
                 // comprobación de filas de guias, pagos y saldos, si hay + de 1 fila y alguna esta pagada => no se permite cobrar automatico
                 if (dataGridView1.Rows.Count >= 3 && decimal.Parse(tx_dat_saldoGR.Text) <= 0)
                 {
+                    /*
                     MessageBox.Show("El presente comprobante no se " + Environment.NewLine +
                          "puede cobrar en automático", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     rb_si.Checked = false;
                     rb_si.Enabled = false;
                     tx_salxcob.Text = tx_flete.Text;
                     tx_pagado.Text = "0";
+                    */
+                    MessageBox.Show("El presente comprobante tiene guias" + Environment.NewLine +
+                         "con y sin saldo, no se permite continuar", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Bt_add_Click(null, null);
+                    return;
                 }
                 if (dataGridView1.Rows.Count <= 2 && decimal.Parse(tx_dat_saldoGR.Text) <= 0)
                 {
@@ -2395,7 +2475,9 @@ namespace Grael2
                          "se creará con el estado cancelado","Atención verifique",MessageBoxButtons.OK,MessageBoxIcon.Information);
                     //rb_si.PerformClick();
                     rb_no.Enabled = false;
-                    rb_si.Enabled = false;
+                    rb_cre.Enabled = false;
+                    rb_si.Enabled = true;
+                    rb_si.Checked = true;
                     tx_salxcob.Text = "0";
                     tx_pagado.Text = tx_flete.Text;
                 }
@@ -2617,11 +2699,10 @@ namespace Grael2
                     var aa = MessageBox.Show("Confirma que desea crear el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (aa == DialogResult.Yes)
                     {
-                        if (true)  // confirmas que se pueda abrir conexión con la base bizlinks
+                        if (valiconsql(script) == true)  // confirmas que se pueda abrir conexión con la base bizlinks
                         {
                             if (graba() == true)
                             {
-                                OSE_Fact_Elect();
                                 grabfactelec();
                                 if (true)       // factElec(nipfe, "txt", "alta", 0) == true
                                 {
@@ -2730,10 +2811,8 @@ namespace Grael2
                 }
                 if (tx_idcob.Text != "")
                 {
-                    //MessageBox.Show("El documento de venta tiene Cobranza activa" + Environment.NewLine +
-                    //    "La cobranza permanece sin cambios", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    // 31/08/2021 en esta etapa no tenemos nada que ver con cobranzas para hacer anulaciones
-                    //tx_numero.Focus();
+                    MessageBox.Show("El documento de venta tiene Cobranza activa" + Environment.NewLine +
+                        "La cobranza permanece sin cambios", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     //return;
                 }
                 // validaciones de fecha para poder anular
@@ -2753,19 +2832,10 @@ namespace Grael2
                             var aa = MessageBox.Show("Confirma que desea ANULAR el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (aa == DialogResult.Yes)
                             {
-                                if (lib.DirectoryVisible(rutatxt) == true)
+                                if (valiconsql(script) == true)
                                 {
                                     int cta = anula("FIS");      // cantidad de doc.vtas anuladas en la fecha
-                                    /*                                    
-                                    if (factElec(nipfe, "txt", "baja", cta) == true)
-                                    {
-                                        string resulta = lib.ult_mov(nomform, nomtab, asd);
-                                        if (resulta != "OK")
-                                        {
-                                            MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                        }
-                                    }
-                                    */
+                                    anulfactelec(cta);
                                 }
                                 else
                                 {
@@ -2798,19 +2868,10 @@ namespace Grael2
                         var aa = MessageBox.Show("Confirma que desea ANULAR el documento?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (aa == DialogResult.Yes)
                         {
-                            if (lib.DirectoryVisible(rutatxt) == true)
+                            if (valiconsql(script) == true)
                             {
                                 int cta = anula("FIS");      // cantidad de doc.vtas anuladas en la fecha
-                                /*
-                                if (factElec(nipfe, "txt", "baja", cta) == true)
-                                {
-                                    string resulta = lib.ult_mov(nomform, nomtab, asd);
-                                    if (resulta != "OK")
-                                    {
-                                        MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    }
-                                }
-                                */
+                                anulfactelec(cta);
                             }
                             else
                             {
@@ -2926,12 +2987,12 @@ namespace Grael2
                     "@verApp,@asd,now(),@iplan,@ipwan,@nbnam)";
                 */
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
-                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc," +
+                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc,condpag," +
                     "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred,pagauto," +
                     "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                     "values (" +
                     "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
-                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now()," +
+                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now(),@copag," +
                     "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc,@pagau," +
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 //                    "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
@@ -2956,6 +3017,7 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@estpgr", (rb_si.Checked == true && tx_idcaja.Text.Trim() != "") ? codCanc : tx_dat_estad.Text); // estado;
                     micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@asd", asd);
+                    micon.Parameters.AddWithValue("@copag", (rb_si.Checked == true)? "E" : (rb_no.Checked == true)? "R" : "C");    // condicion de pago E=contado efectivo, R=contado en reparto, C=crédito
                     micon.Parameters.AddWithValue("@ldcpgr", Grael2.Program.almuser);         // local origen
                     micon.Parameters.AddWithValue("@tcdvta", (rb_remGR.Checked == true) ? "1" : (rb_desGR.Checked == true) ? "2" : "3");
                     micon.Parameters.AddWithValue("@distcl", tx_distRtt.Text);
@@ -3129,7 +3191,7 @@ namespace Grael2
                     }
                 }
                 // cobranza automática en efectivo?
-                if (rb_si.Checked == true && tx_idcaja.Text.Trim() != "")
+                if (rb_si.Checked == true && tx_idcaja.Text.Trim() != "" && double.Parse(tx_salxcob.Text)>0)
                 {
                     string consulta = "select id,fecha,status from macajas where local=@loc order by id desc limit 1";
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
@@ -3310,12 +3372,11 @@ namespace Grael2
                             micon.Parameters.AddWithValue("@asd", asd);
                             micon.ExecuteNonQuery();
                         }
-                        // falta actualizar con TRIGGER  mactacte,magrem y manoen
-                        /*
-                        string consul = "select count(id) from cabfactu where date(fecha)=@fech and estdvta=@estser";
+                        //
+                        string consul = "select count(id) from madocvtas where date(fechope)=@fech and status=@estser";
                         using (MySqlCommand micon = new MySqlCommand(consul, conn))
                         {
-                            micon.Parameters.AddWithValue("@fech", tx_fechact.Text.Substring(6, 4) + "-" + tx_fechact.Text.Substring(3, 2) + "-" + tx_fechact.Text.Substring(0, 2));
+                            micon.Parameters.AddWithValue("@fech", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
                             micon.Parameters.AddWithValue("@estser", codAnul);
                             using (MySqlDataReader dr = micon.ExecuteReader())
                             {
@@ -3325,7 +3386,6 @@ namespace Grael2
                                 }
                             }
                         }
-                        */
                     }
                 }
             }
@@ -3676,7 +3736,7 @@ namespace Grael2
             cmb_plazoc.SelectedIndex = -1;
             cmb_plazoc.Enabled = false;
             //
-            if (tx_idcaja.Text != "")
+            if (tx_idcaja.Text != "" && Tx_modo.Text == "NUEVO")
             {
                 // validamos la fecha de la caja
                 string fhoy = lib.fechaServ("ansi");
