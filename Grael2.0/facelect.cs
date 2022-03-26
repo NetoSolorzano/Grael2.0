@@ -144,7 +144,8 @@ namespace Grael2
         DataTable dtp = new DataTable();        // plazo de credito 
         DataTable tcfe = new DataTable();       // facturacion electronica - cabecera
         DataTable tdfe = new DataTable();       // facturacion electronica -detalle
-        DataTable mpa = new DataTable();        // pago mpa - contado efectivo, credito
+        DataTable mpa = new DataTable();        // pago mpa - contado efectivo, credito.
+        DataTable dtru = new DataTable();       // rutas cargas unicas detraccion
         public string script = "";              // script de conexion a Bizlinks
         NumLetra nl = new NumLetra();
         string[] datcltsR = { "", "", "", "", "", "", "", "", "", "" };
@@ -803,6 +804,19 @@ namespace Grael2
                         cmb_tipop.ValueMember = "idcodice";
                     }
                 }
+                // datos de ruta para cargas únicas (detracción)
+                using (MySqlCommand conrut = new MySqlCommand("select idcodice,descrizione,marca2 from desc_rut where numero=@bloq", conn))
+                {
+                    conrut.Parameters.AddWithValue("@bloq", 1);
+                    using (MySqlDataAdapter darut = new MySqlDataAdapter(conrut))
+                    {
+                        dtru.Clear();
+                        darut.Fill(dtru);
+                        cmb_ruta.DataSource = dtru;
+                        cmb_ruta.DisplayMember = "descrizione";
+                        cmb_ruta.ValueMember = "idcodice";
+                    }
+                }
                 // jalamos la caja
                 using (MySqlConnection cong = new MySqlConnection(db_conn_grael))
                 {
@@ -825,7 +839,7 @@ namespace Grael2
                     }
                     else
                     {
-                        MessageBox.Show("No hay conexión a la base de Grael 1.0","Error!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        MessageBox.Show("No hay conexión a la base de Grael 1.0", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
                     }
                 }
@@ -3923,6 +3937,21 @@ namespace Grael2
             else
             {
                 tx_dat_tipag.Text = "";
+            }
+        }
+        private void cmb_ruta_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmb_ruta.SelectedIndex > -1)
+            {
+                tx_dat_ruta.Text = dtru.Rows[cmb_ruta.SelectedIndex].ItemArray[0].ToString();
+                tx_sxtm.Text = dtru.Rows[cmb_ruta.SelectedIndex].ItemArray[2].ToString();
+                if (tx_sxtm.Text != "" && tx_e_cant.Text != "") tx_detrac.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.00");
+            }
+            else
+            {
+                tx_dat_ruta.Text = "";
+                tx_sxtm.Text = "";
+                tx_detrac.Text = "";
             }
         }
         #endregion comboboxes
