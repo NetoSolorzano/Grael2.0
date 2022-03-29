@@ -325,7 +325,7 @@ namespace Grael2
             //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
             //tx_dat_plazo.Text = mpdef;
         }
-        private void jalainfo()                 // obtiene datos de imagenes y variables
+        private void jalainfo()                  // obtiene datos de imagenes y variables
         {
             try
             {
@@ -617,7 +617,7 @@ namespace Grael2
                                 tx_e_glos1.Text = dr.GetString("glosa1");
                                 tx_e_glos2.Text = dr.GetString("glosa2");
                                 tx_e_glos3.Text = dr.GetString("glosa3");
-                                tx_e_nfv.Text = dr.GetString("confv");
+                                tx_e_nfv.Text = dr.GetString("nfv");
                                 tx_e_ntrans.Text = dr.GetString("nomTrans");
                                 tx_e_placa.Text = dr.GetString("placa");
                                 tx_e_prec.Text = dr.GetString("precioTN");
@@ -1140,16 +1140,19 @@ namespace Grael2
             }
             return retorna;
         }
-        private void datPanelCargasU()
+        private void datPanelCargasU()          // carga datos panel cargas unicas
         {
             tx_e_placa.Text = datguias[11];
             tx_e_aut.Text = datguias[13];
             tx_e_ruct.Text = datcargu[10];
             tx_e_ntrans.Text = datcargu[11];
             tx_e_ftras.Text = datcargu[12];
+            tx_e_nfv.Text = datguias[14];
             //tx_e_dnicho.Text = 
             tx_e_dirpar.Text = datcargu[0] + datcargu[1] + " - " + datcargu[2] + " - " + datcargu[3];
             tx_e_dirlle.Text = datcargu[5] + datcargu[6] + " - " + datcargu[7] + " - " + datcargu[8];
+            tx_e_ubiori.Text = datcargu[4];
+            tx_e_ubides.Text = datcargu[9];
         }
         private void tipcambio(string codmod)               // funcion para calculos con el tipo de cambio
         {
@@ -1413,7 +1416,6 @@ namespace Grael2
             string gpadqui = dataGridView1.Rows[0].Cells[3].Value.ToString();                         // guias del adquiriente
             for (int j = 1; j < dataGridView1.Rows.Count - 1; j++)
             {
-                //gpgrael = gpgrael + " - " + dataGridView1.Rows[j].Cells[5].Value.ToString();
                 gpadqui = gpadqui + " - " + dataGridView1.Rows[j].Cells[3].Value.ToString();
             }
             string codaux40_1 = "9011";                                                             // v codigoAuxiliar40_1
@@ -1450,8 +1452,16 @@ namespace Grael2
                         string nuori1 = (q + 1).ToString();                                                                     // numeroOrdenItem
                         string codprd1 = "-";                                                                                   // codigoProducto
                         string coprsu1 = "78101802";                                                                            // codigoProductoSunat
-                        string descr1 = glosser + " " + glosser2 + " " +
-                            vint_gg + " " + dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                            // descripcion
+                        string descr1 = "";
+                        if (rb_fesp.Checked == true)
+                        {
+                            descr1 = tx_e_glos1.Text.Trim() + " " + tx_e_glos2.Text.Trim() + " " + tx_e_glos3.Text.Trim();      // descripcion cargas únicas 
+                        }
+                        else
+                        {
+                            descr1 = glosser + " " + glosser2 + " " +
+                                vint_gg + " " + dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                        // descripcion estandar
+                        }
                         decimal canti1 = Math.Round(decimal.Parse("1"), 2);
                         string unime1 = "ZZ";                                                                                   // unidadMedida
                         decimal psi1, igv1;                                                                                     // calculos de precios x item sin y con impuestos
@@ -1474,88 +1484,40 @@ namespace Grael2
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
                         double intos1 = inuns1;                                                                 // importeTotalSinImpuesto
-                        //nudor1 = gpadqui;  // (OJo, 40 guias aprox. remitente x cada guia grael)                // textoAuxiliar500_1
-                        //gpadqui = gpadqui + "," + dataGridView1.Rows[q].Cells[8].Value.ToString().Trim();
-                        /*
-                        if (gpadqui.Length > 1 && gpadqui.Length < 500)
-                        {
-                            tiref1 = "9840";   // G.R. remitente                                                // codigoAuxiliar500_1
-                            nudor1 = gpadqui;                                                                   // textoAuxiliar500_1
-                        }
-                        else
-                        {
-                            if (gpadqui.Length > 500 && gpadqui.Length < 1000)
-                            {
-                                tiref1 = "9840";   // G.R. remitente                                            // codigoAuxiliar500_1
-                                nudor1 = gpadqui.Substring(0, 500);                                             // textoAuxiliar500_1
-                                tiref2 = "9841";                                                                // codigoAuxiliar500_2
-                                nudor2 = gpadqui.Substring(499, 1000);                                          // textoAuxiliar500_2
-                            }
-                            else
-                            {
-                                tiref1 = "9840";   // G.R. remitente                                           // codigoAuxiliar500_1
-                                nudor1 = gpadqui.Substring(0, 500);                                            // textoAuxiliar500_1
-                                tiref2 = "9841";                                                               // codigoAuxiliar500_2
-                                nudor2 = gpadqui.Substring(499, 500);                                          // textoAuxiliar500_2
-                                tiref3 = "9842";                                                               // codigoAuxiliar500_3
-                                nudor3 = gpadqui.Substring(999, 500);                                          // textoAuxiliar500_3
-                            }
-                        }
-                        gpgrael = gpgrael + "," + dataGridView1.Rows[q].Cells[0].Value.ToString();            // guias de grael ..... ACA ESTA EL TESORO Rows[0] 04/07/2019
-                        if (gpgrael.Length > 1 && gpgrael.Length < 501)
-                        {
-                            Ctiref1 = "8054";   // G.R. transportista de grael                                  // codigoAuxiliar40_1
-                            Cnudor1 = gpgrael;                                                                  // textoAuxiliar40_1 
-                        }
-                        else
-                        {
-                            if (gpgrael.Length > 500 && gpgrael.Length < 1001)
-                            {
-                                Ctiref1 = "8054";   // G.R. transportista de grael                              // codigoAuxiliar40_1
-                                Cnudor1 = gpgrael.Substring(0, 500);                                            // textoAuxiliar40_1
-                                Ctiref2 = "8055";                                                               // 
-                                Cnudor2 = gpgrael.Substring(500, gpgrael.Length - 500);                         // 
-                            }
-                            else
-                            {
-                                Ctiref1 = "8054";   // G.R. transportista de grael                              // codigoAuxiliar500_1
-                                Cnudor1 = gpgrael.Substring(0, 500);                                            // textoAuxiliar500_1
-                                Ctiref2 = "8055";                                                               // 
-                                Cnudor2 = gpgrael.Substring(500, gpgrael.Length - 500);                                          // 
-                                Ctiref3 = "8056";                                                               // en teoria, al ser la cant.maxima de guias 100
-                                Cnudor3 = gpgrael.Substring(1000, gpgrael.Length - 1000);                       // significa que la longitud en caracter. maximo es 1300
-                            }
-                        }
-                        */
-                        string ubiPtoOri = "";  // dataGridView1.Rows[q].Cells["ubigOrigen"].Value.ToString();          // ubigeoPtoOrigen
-                        string dirPtoOri = "";  // dataGridView1.Rows[q].Cells["dirOrigen"].Value.ToString();           // direccionCompletaPtoOrigen
-                        string ubiPtoDes = "";  // dataGridView1.Rows[q].Cells["ubigDestino"].Value.ToString();         // ubigeoPtoDestino
-                        string dirPtoDes = "";  // dataGridView1.Rows[q].Cells["dirDestino"].Value.ToString();          // direccionCompletaPtoDestino
-                        string detViaje = "";   // dataGridView1.Rows[q].Cells["DETALLE"].Value.ToString();              // detalleViaje
-                        string monRefSer = "";  // "1.00";
-                                                //monRefSer = dataGridView1.Rows[q].Cells["monRefSerTrans"].Value.ToString();      // montoRefServicioTransporte
-                        string monRefCar = "";  // "1.00";
-                                                //string monRefCar = dataGridView1.Rows[q].Cells["monRefCarEfec"].Value.ToString();       // montoRefCargaEfectiva
-                        string monRefUti = "";  // "1.00";
-                                                //string monRefUti = dataGridView1.Rows[q].Cells["monRefCarUtilNominal"].Value.ToString();// montoRefCargaUtilNominal
-                        tipope = "1004";                                                                          // tipo de operacion con detraccion
+                        string ubiPtoOri = tx_e_ubiori.Text;                                                    // ubigeoPtoOrigen
+                        string dirPtoOri = tx_e_dirpar.Text;                                                    // direccionCompletaPtoOrigen
+                        string ubiPtoDes = tx_e_ubides.Text;                                                    // ubigeoPtoDestino
+                        string dirPtoDes = tx_e_dirlle.Text;                                                    // direccionCompletaPtoDestino
+                        string detViaje = "Detalle del viaje";                                                  // detalleViaje
+                        string monRefSer = tx_e_valref.Text;                                                    // montoRefServicioTransporte
+                        string monRefCar = tx_e_valref.Text;                                                    // montoRefCargaEfectiva
+                        string monRefUti = tx_e_carut.Text;                                                     // montoRefCargaUtilNominal
+                        tipope = "1004";                                                                        // tipo de operacion con detraccion
 
                         insertadet = "insert into SPE_EINVOICEDETAIL (tipoDocumentoEmisor,numeroDocumentoEmisor,tipoDocumento,serieNumero," +
                             "numeroOrdenItem,codigoProducto,codigoProductoSunat,descripcion,cantidad,unidadMedida,importeTotalSinImpuesto," +
                             "importeUnitarioSinImpuesto,importeUnitarioConImpuesto,codigoImporteUnitarioConImpues,montoBaseIgv,tasaIgv," +
                             "importeIgv,importeTotalImpuestos,codigoRazonExoneracion,codigoAuxiliar40_1,textoAuxiliar40_1,codigoAuxiliar500_1,textoAuxiliar500_1";
-                        insertadet = insertadet + ",ubigeoPtoOrigen,direccionCompletaPtoOrigen,ubigeoPtoDestino,direccionCompletaPtoDestino," +
-                            "detalleViaje,montoRefServicioTransporte,montoRefCargaEfectiva,montoRefCargaUtilNominal) ";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",codigoAuxiliar500_2,textoAuxiliar500_2";
                         if (!string.IsNullOrEmpty(tiref3) && !string.IsNullOrWhiteSpace(tiref3)) insertadet = insertadet + ",codigoAuxiliar500_3,textoAuxiliar500_3";
+                        if (rb_fesp.Checked == true)
+                        {
+                            insertadet = insertadet + ",ubigeoPtoOrigen,direccionCompletaPtoOrigen,ubigeoPtoDestino,direccionCompletaPtoDestino,detalleViaje," +
+                                "montoRefServicioTransporte,montoRefCargaEfectiva,montoRefCargaUtilNominal";
+                        }
+                        insertadet = insertadet + ") ";
                         insertadet = insertadet + "values (@tidoem,@nudoem,@tipdoc,@sernum," +
                             "@nuori1,@codprd1,@coprsu1,@descr1,@canti1,@unime1,@intos1," +
                             "@inuns1,@inunc1,@coimu1,@mobai1,@taigv1," +
                             "@imigv1,@imtoi1,@corae1,@tiref1,@nudor1,@coaux1,@teaux1";
-                        insertadet = insertadet + ",@ubiPtoOri,@dirPtoOri,@ubiPtoDes,@dirPtoDes," +
-                            "@detViaje,@monRefSer,@monRefCar,@monRefUti)";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",@coaux2,@teaux2";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",@coaux3,@teaux3";
+                        if (rb_fesp.Checked == true)
+                        {
+                            insertadet = insertadet + ",@ubiPtoOri,@dirPtoOri,@ubiPtoDes,@dirPtoDes,@detViaje," +
+                            "@monRefSer,@monRefCar,@monRefUti";
+                        }
+                        insertadet = insertadet + ") ";
                         {
                             SqlCommand indet = new SqlCommand(insertadet, conms);
                             indet.Parameters.AddWithValue("@tidoem", tidoem);       // tipo documento
@@ -1591,15 +1553,17 @@ namespace Grael2
                                 indet.Parameters.AddWithValue("@coaux3", tiref3);                       // codigoAuxiliar500_3
                                 indet.Parameters.AddWithValue("@teaux3", nudor3);                       // textoAuxiliar500_3
                             }
-                            indet.Parameters.AddWithValue("@ubiPtoOri", ubiPtoOri);                   // ubigeoPtoOrigen
-                            indet.Parameters.AddWithValue("@dirPtoOri", dirPtoOri);                   // direccionCompletaPtoOrigen
-                            indet.Parameters.AddWithValue("@ubiPtoDes", ubiPtoDes);                   // ubigeoPtoDestino
-                            indet.Parameters.AddWithValue("@dirPtoDes", dirPtoDes);                   // direccionCompletaPtoDestino
-                            indet.Parameters.AddWithValue("@detViaje", detViaje);                     // detalleViaje
-                            indet.Parameters.AddWithValue("@monRefSer", monRefSer);                   // montoRefServicioTransporte
-                            indet.Parameters.AddWithValue("@monRefCar", monRefCar);                   // montoRefCargaEfectiva
-                            indet.Parameters.AddWithValue("@monRefUti", monRefUti);                   // montoRefCargaUtilNominal
-                            //                                                                          //
+                            if (rb_fesp.Checked == true)
+                            {
+                                indet.Parameters.AddWithValue("@ubiPtoOri", ubiPtoOri);                   // ubigeoPtoOrigen
+                                indet.Parameters.AddWithValue("@dirPtoOri", dirPtoOri);                   // direccionCompletaPtoOrigen
+                                indet.Parameters.AddWithValue("@ubiPtoDes", ubiPtoDes);                   // ubigeoPtoDestino
+                                indet.Parameters.AddWithValue("@dirPtoDes", dirPtoDes);                   // direccionCompletaPtoDestino
+                                indet.Parameters.AddWithValue("@detViaje", detViaje);                     // detalleViaje
+                                indet.Parameters.AddWithValue("@monRefSer", monRefSer);                   // montoRefServicioTransporte
+                                indet.Parameters.AddWithValue("@monRefCar", monRefCar);                   // montoRefCargaEfectiva
+                                indet.Parameters.AddWithValue("@monRefUti", monRefUti);                   // montoRefCargaUtilNominal
+                            }
                             indet.ExecuteNonQuery();
                         }
                     }
@@ -1675,11 +1639,6 @@ namespace Grael2
                     MessageBox.Show(ex.Message, "Error en insertar adicional cabecera");
                     Application.Exit();
                     return;
-                }
-
-                if ((double.Parse(tx_flete.Text) > double.Parse(Program.valdetra)) && tx_dat_tdv.Text == codfact)     // con detraccion 
-                {
-
                 }
                 string insertcab = "";                          // segmento cabecera
                 try
@@ -2397,6 +2356,18 @@ namespace Grael2
                     {
                         MessageBox.Show("Falta el ruc del transportista", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         tx_e_ruct.Focus();
+                        return;
+                    }
+                    if (tx_dat_ruta.Text.Trim() == "")
+                    {
+                        cmb_ruta.Focus();
+                        MessageBox.Show("Seleccione la ruta", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    if (tx_e_tn.Text.Trim() == "")
+                    {
+                        MessageBox.Show("Ingrese la carga util en TN", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_tn.Focus();
                         return;
                     }
                 }
@@ -3609,6 +3580,15 @@ namespace Grael2
             }
 
         }
+        private void tx_e_tn_Leave(object sender, EventArgs e)
+        {
+            if (Tx_modo.Text == "NUEVO" && rb_fesp.Checked == true && tx_sxtm.Text.Trim() != "")
+            {
+                tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.0000");
+                tx_detrac.Text = (double.Parse(tx_e_valref.Text) * double.Parse(Program.pordetra)).ToString("#0.00");
+                tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.0000");
+            }
+        }
         #endregion
 
         #region botones_de_comando
@@ -3945,7 +3925,20 @@ namespace Grael2
             {
                 tx_dat_ruta.Text = dtru.Rows[cmb_ruta.SelectedIndex].ItemArray[0].ToString();
                 tx_sxtm.Text = dtru.Rows[cmb_ruta.SelectedIndex].ItemArray[2].ToString();
-                if (tx_sxtm.Text != "" && tx_e_cant.Text != "") tx_detrac.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.00");
+                if (tx_sxtm.Text != "" && tx_e_cant.Text != "")
+                {
+                    tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.0000");
+                    tx_detrac.Text = (double.Parse(tx_e_valref.Text) * double.Parse(Program.pordetra)/100).ToString("#0.00");
+                }
+                if (tx_e_tn.Text.Trim() == "")
+                {
+                    tx_e_tn.Focus();
+                    return;
+                }
+                else
+                {
+                    tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.0000");
+                }
             }
             else
             {

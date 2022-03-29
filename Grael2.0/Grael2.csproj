@@ -122,6 +122,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="publico.cs" />
+    <Compile Include="ubigdir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ubigdir.designer.cs">
+      <DependentUpon>ubigdir.cs</DependentUpon>
+    </Compile>
     <Compile Include="users.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +171,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ubigdir.resx">
+      <DependentUpon>ubigdir.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="users.resx">
       <DependentUpon>users.cs</DependentUpon>
     </EmbeddedResource>
