@@ -88,6 +88,7 @@ namespace Grael2
         string texpag3 = "";            // texto para la fecha vencimiento
         string glocopa = "";            // glosa de condicion de pago
         string ppauto = "SI";           // SI o NO, si el comprobante es credito, el plazo de pago es automatico?
+        string ufcorp = "";             // usuarios que pueden generar comprobantes + de 3 guias - corporativos
         //
         string leyg_sg = "";            // leyenda para la guia de la fact
         string rutatxt = "";            // ruta de los txt para la fact. electronica
@@ -165,6 +166,40 @@ namespace Grael2
             if (Control.ModifierKeys == Keys.Control && e.KeyCode == Keys.O) Bt_ver.PerformClick();
             if (Control.ModifierKeys == Keys.Control && e.KeyCode == Keys.P) Bt_print.PerformClick();
             if (Control.ModifierKeys == Keys.Control && e.KeyCode == Keys.S) Bt_close.PerformClick();
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)    // F1
+        {
+            string para1 = "";
+            string para2 = "";
+            string para3 = "";
+            if (keyData == Keys.F1 && tx_e_ubiori.Focused == true && Tx_modo.Text == "NUEVO")
+            {
+                para1 = "";
+                para2 = "";
+                para3 = "";
+                ubigdir ayu3 = new ubigdir(para1, para2, para3);
+                var result = ayu3.ShowDialog();
+                if (result == DialogResult.Cancel)
+                {
+                    tx_e_ubiori.Text = ayu3.ReturnValue1;
+                }
+                return true;    // indicate that you handled this keystroke
+            }
+            if (keyData == Keys.F1 && tx_e_ubides.Focused == true && Tx_modo.Text == "NUEVO")
+            {
+                para1 = "";
+                para2 = "";
+                para3 = "";
+                ubigdir ayu3 = new ubigdir(para1, para2, para3);
+                var result = ayu3.ShowDialog();
+                if (result == DialogResult.Cancel)  // deberia ser OK, pero que chuuu
+                {
+                    tx_e_ubides.Text = ayu3.ReturnValue1;
+                }
+                return true;    // indicate that you handled this keystroke
+            }
+            // Call the base class
+            return base.ProcessCmdKey(ref msg, keyData);
         }
         private void facelect_Load(object sender, EventArgs e)
         {
@@ -310,20 +345,15 @@ namespace Grael2
                 if (cusdscto.Contains(asd)) tx_flete.ReadOnly = false;
                 else tx_flete.ReadOnly = true;
                 rb_no.PerformClick();
+                // 
+                chk_consol.Enabled = false;
+                if (ufcorp.Contains(asd)) chk_consol.Enabled = true;
             }
             tx_dat_nombd.Text = "Bultos";
             tx_dat_nombd.ReadOnly = true;
-            //pan_pago.Enabled = false;
+
             rb_fnor.Checked = true;
             inivarGR();
-            /*
-            rb_no.Checked = false;
-            rb_si.Checked = false;
-            rb_no.Enabled = false;
-            rb_si.Enabled = false;
-            */
-            //rb_no.PerformClick(); // segun el saldo de la GR, se va poniendo si o no automaticamente
-            //tx_dat_plazo.Text = mpdef;
         }
         private void jalainfo()                  // obtiene datos de imagenes y variables
         {
@@ -404,6 +434,7 @@ namespace Grael2
                             if (row["param"].ToString() == "cltesBol") tdocsBol = row["valor"].ToString();                  // tipos de documento de clientes para boletas
                             if (row["param"].ToString() == "cltesFac") tdocsFac = row["valor"].ToString();                  // tipo de documentos para facturas
                             if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());   // limite soles para boletas sin direccion
+                            if (row["param"].ToString() == "ufcorp") ufcorp = row["valor"].ToString();                      // usuarios que emiten FT consolidados (corporativos 100 gr)
                         }
                         if (row["campo"].ToString() == "impresion")
                         {
@@ -501,28 +532,19 @@ namespace Grael2
                 conn.Open();
                 if (conn.State == ConnectionState.Open)
                 {
-                    /*
-                        string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
-                        "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
-                        "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
-                        "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred " +
-                        "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
-                        "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
-                        "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " 
- *                  */
                     string consulta = "select a.id,a.fechope,a.mfe,a.tipcam,a.servta,a.corvta,a.rd3,a.doccli,a.numdcli,a.nomclie,a.direc,a.dpto,a.prov,a.dist,a.ubiclte,a.email,d.telef1," +
                         "a.local,'' as dirorig,'' as ubiorig,a.observ,0 as canfidt,0 as canbudt,a.moneda,a.tipcam,a.subtot,a.igv,a.pigv,a.doctot,0 as totpags,a.saldo,a.status,'' as frase01,'S' as impreso," +
                         "'' as tipoclt,'' as m1clien,a.frecepf,a.userc,a.fechc,a.userm,a.fechm,b.descrizionerid as nomest,ifnull(c.id, '') as cobra,0 as idcaja," +
                         "0 as porcendscto,a.dscto,a.docvta,a.tippago,a.plazocred,a.condpag," +
                         "f.tipoAd,f.placa,f.placa2,f.confv,f.autoriz,f.cargaEf,f.cargaUt,f.rucTrans,f.nomTrans,f.fecIniTras,f.dirPartida,f.ubiPartida,f.dirDestin,f.ubiDestin," +
-                        "f.dniChof,f.brevete,f.valRefViaje,f.valRefVehic,f.valRefTon,f.precioTN,f.pesoTN,f.glosa1,f.glosa2,f.glosa3,f.detMon1,f.detMon2,f.detMon3 " +
+                        "f.dniChof,f.brevete,f.valRefViaje,f.valRefVehic,f.valRefTon,f.precioTN,f.pesoTN,f.glosa1,f.glosa2,f.glosa3,f.detMon1,f.detMon2,f.detMon3," +
+                        "f.ruta,f.valruta,f.detrac,f.valrefcu,f.cargaUt,f.valRefViaje " +
                         "from madocvtas a left join desc_sit b on b.idcodice = a.status " +
                         "left join macobran c on c.docvta = a.docvta and c.servta = a.servta and c.corvta = a.corvta and c.status<> @coda " +
                         "left join anag_cli d on d.ruc = a.numdcli and d.docu = a.doccli " +
                         "LEFT JOIN adifactu f ON f.idc=a.id " 
                         + parte;
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
-                    //micon.Parameters.AddWithValue("@tdep", vtc_ruc);
                     micon.Parameters.AddWithValue("@coda", codAnul);
                     if (campo == "tx_idr")
                     {
@@ -600,14 +622,11 @@ namespace Grael2
                             tx_dat_dpla.Text = dr.GetString("plazocred");
                             cmb_plazoc.SelectedValue = tx_dat_dpla.Text;
                             // campos de carga unica
-                            //tx_dat_upd.Text = dr.GetString("ubipdest");
-                            //tx_dat_upo.Text = dr.GetString("ubiporig");
                             tx_valdscto.Text = dr.GetString("dscto");
                             tx_dat_porcDscto.Text = dr.GetString("porcendscto");
                             if (dr["tipoAd"].ToString() != "")   // campos de factura especial
                             {
                                 rb_fesp.Checked = true;
-                                // placa2,cargaEf,cargaUt,brevete,valRefViaje,valRefVehic,valRefTon,detMon1,detMon2,detMon3
                                 tx_e_aut.Text = dr.GetString("autoriz");
                                 tx_e_cant.Text = dr.GetString("pesoTN");
                                 tx_e_dirlle.Text = dr.GetString("dirDestin");
@@ -617,13 +636,20 @@ namespace Grael2
                                 tx_e_glos1.Text = dr.GetString("glosa1");
                                 tx_e_glos2.Text = dr.GetString("glosa2");
                                 tx_e_glos3.Text = dr.GetString("glosa3");
-                                tx_e_nfv.Text = dr.GetString("nfv");
+                                tx_e_nfv.Text = dr.GetString("confv");
                                 tx_e_ntrans.Text = dr.GetString("nomTrans");
                                 tx_e_placa.Text = dr.GetString("placa");
                                 tx_e_prec.Text = dr.GetString("precioTN");
                                 tx_e_ruct.Text = dr.GetString("rucTrans");
                                 tx_e_ubides.Text = dr.GetString("ubiDestin");
                                 tx_e_ubiori.Text = dr.GetString("ubiPartida");
+                                tx_dat_ruta.Text = dr.GetString("ruta");
+                                tx_sxtm.Text = dr.GetString("valruta");
+                                tx_e_valref.Text = dr.GetString("valRefViaje");
+                                tx_detrac.Text = dr.GetString("detrac");
+                                tx_e_carut.Text = dr.GetString("valrefcu");
+                                tx_e_tn.Text = dr.GetString("cargaUt");
+                                cmb_ruta.SelectedValue = tx_dat_ruta.Text;
                             }
                         }
                         else
@@ -1456,11 +1482,13 @@ namespace Grael2
                         if (rb_fesp.Checked == true)
                         {
                             descr1 = tx_e_glos1.Text.Trim() + " " + tx_e_glos2.Text.Trim() + " " + tx_e_glos3.Text.Trim();      // descripcion cargas únicas 
+                            descr1 = descr1.Replace(System.Environment.NewLine, " ");
                         }
                         else
                         {
                             descr1 = glosser + " " + glosser2 + " " +
                                 vint_gg + " " + dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                        // descripcion estandar
+                            descr1 = descr1.Replace(System.Environment.NewLine, " ");
                         }
                         decimal canti1 = Math.Round(decimal.Parse("1"), 2);
                         string unime1 = "ZZ";                                                                                   // unidadMedida
@@ -1659,7 +1687,8 @@ namespace Grael2
                     }
                     if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                     {
-                        totdet = Math.Round(double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
+                        if (rb_fesp.Checked == true) totdet = double.Parse(tx_detrac.Text);
+                        else totdet = Math.Round(double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
                         insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2";
                     }
                     insertcab = insertcab + ") " +
@@ -2298,6 +2327,12 @@ namespace Grael2
                 // validaciones si el comprobante es "especial"
                 if (rb_fesp.Checked == true)
                 {
+                    if (double.Parse(tx_fletMN.Text) < double.Parse(Program.valdetra))
+                    {
+                        MessageBox.Show("El valor del comprobante debe estar en el rango de detracción" + Environment.NewLine + 
+                            "Los comprobantes especiales tienen que tener detracción","Tipo de comprobante erróneo",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                        return;
+                    }
                     if (tx_e_aut.Text.Trim() == "")
                     {
                         MessageBox.Show("Falta Autorización de circulación","Config. Fact. Especial",MessageBoxButtons.OK,MessageBoxIcon.Warning);
@@ -2368,6 +2403,20 @@ namespace Grael2
                     {
                         MessageBox.Show("Ingrese la carga util en TN", "Config. Fact. Especial", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         tx_e_tn.Focus();
+                        return;
+                    }
+                    if (tx_e_ubiori.Text.Trim().Length != 6)
+                    {
+                        MessageBox.Show("Debe ingresar el código de ubigeo" + Environment.NewLine +
+                            "Presione F1", "Falta código de origen!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        tx_e_ubiori.Focus();
+                        return;
+                    }
+                    if (tx_e_ubides.Text.Trim().Length != 6)
+                    {
+                        MessageBox.Show("Debe ingresar el código de ubigeo" + Environment.NewLine +
+                            "Presione F1", "Falta código de destino!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tx_e_ubides.Focus();
                         return;
                     }
                 }
@@ -2650,19 +2699,6 @@ namespace Grael2
                         }
                     }
                 }
-                /*
-                string inserta = "insert into cabfactu (" +
-                    "fechope,martdve,tipdvta,serdvta,numdvta,ticltgr,tidoclt,nudoclt,nombclt,direclt,dptoclt,provclt,distclt,ubigclt,corrclt,teleclt," +
-                    "locorig,dirorig,ubiorig,obsdvta,canfidt,canbudt,mondvta,tcadvta,subtota,igvtota,porcigv,totdvta,totpags,saldvta,estdvta,frase01," +
-                    "tipoclt,m1clien,tippago,ferecep,impreso,codMN,subtMN,igvtMN,totdvMN,pagauto,tipdcob,idcaja,plazocred,porcendscto,valordscto," +
-                    "cargaunica,placa,confveh,autoriz,detPeso,detputil,detMon1,detMon2,detMon3,dirporig,ubiporig,dirpdest,ubipdest," +
-                    "verApp,userc,fechc,diriplan4,diripwan4,netbname) values (" +
-                    "@fechop,@mtdvta,@ctdvta,@serdv,@numdv,@tcdvta,@tdcrem,@ndcrem,@nomrem,@dircre,@dptocl,@provcl,@distcl,@ubicre,@mailcl,@telecl," +
-                    "@ldcpgr,@didegr,@ubdegr,@obsprg,@canfil,@totcpr,@monppr,@tcoper,@subpgr,@igvpgr,@porcigv,@totpgr,@pagpgr,@salxpa,@estpgr,@frase1," +
-                    "@ticlre,@m1clte,@tipacc,@feredv,@impSN,@codMN,@subMN,@igvMN,@totMN,@pagaut,@tipdco,@idcaj,@plazc,@pordesc,@valdesc," +
-                    "@caruni,@placa,@confv,@autor,@dPeso,@dputil,@dMon1,@dMon2,@dMon3,@dporig,@uporig,@dpdest,@updest," +
-                    "@verApp,@asd,now(),@iplan,@ipwan,@nbnam)";
-                */
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
                     "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc,condpag," +
                     "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred,pagauto," +
@@ -2672,8 +2708,6 @@ namespace Grael2
                     "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now(),@copag," +
                     "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc,@pagau," +
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
-                //                    "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
-                //                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
                 {
                     micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
@@ -2719,46 +2753,6 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@pr08", "0");
                     micon.Parameters.AddWithValue("@pr09", "0");
                     micon.Parameters.AddWithValue("@pr10", "0");
-                    /*
-                    micon.Parameters.AddWithValue("@telecl", tx_telc1.Text);
-                    micon.Parameters.AddWithValue("@didegr", dirloc);                             // direccion origen
-                    micon.Parameters.AddWithValue("@ubdegr", ubiloc);                             // ubigeo origen
-                    micon.Parameters.AddWithValue("@totcpr", tx_totcant.Text);  // total bultos
-                    micon.Parameters.AddWithValue("@pagpgr", (rb_si.Checked == true) ? tx_fletMN.Text : "0");  // (tx_pagado.Text == "") ? "0" : tx_pagado.Text);
-                    micon.Parameters.AddWithValue("@frase1", "");                   // no hay nada que poner 19/11/2020
-                    micon.Parameters.AddWithValue("@ticlre", tx_dat_tcr.Text);      // tipo de cliente credito o contado
-                    micon.Parameters.AddWithValue("@m1clte", tx_dat_m1clte.Text);
-                    micon.Parameters.AddWithValue("@tipacc", v_mpag);                   // pago del documento x defecto si nace la fact pagada
-                    micon.Parameters.AddWithValue("@feredv", DBNull.Value);         // si es pago contado la fecha de recep del doc. es la misma fecha
-                    micon.Parameters.AddWithValue("@impSN", "N");
-                    micon.Parameters.AddWithValue("@codMN", MonDeft);               // codigo moneda local
-                    micon.Parameters.AddWithValue("@subMN", subtMN);
-                    micon.Parameters.AddWithValue("@igvMN", igvtMN);
-                    micon.Parameters.AddWithValue("@totMN", fletMN);
-                    micon.Parameters.AddWithValue("@pagaut", (rb_si.Checked == true)? "S" : "N");
-                    micon.Parameters.AddWithValue("@tipdco", (rb_si.Checked == true)? v_codcob : "");
-                    micon.Parameters.AddWithValue("@idcaj", (rb_si.Checked == true)? tx_idcaja.Text : "0");
-                    micon.Parameters.AddWithValue("@plazc", (rb_no.Checked == true)? codppc : "");
-                    micon.Parameters.AddWithValue("@pordesc", (tx_dat_porcDscto.Text.Trim() == "") ? "0" : tx_dat_porcDscto.Text);
-                    micon.Parameters.AddWithValue("@valdesc", (tx_valdscto.Text.Trim() == "") ? "0" : tx_valdscto.Text);
-                    micon.Parameters.AddWithValue("@caruni", (chk_cunica.Checked == true)? 1 : 0);
-                    micon.Parameters.AddWithValue("@placa", tx_pla_placa.Text);
-                    micon.Parameters.AddWithValue("@confv", tx_pla_confv.Text);
-                    micon.Parameters.AddWithValue("@autor", tx_pla_autor.Text);
-                    micon.Parameters.AddWithValue("@dPeso", (tx_cetm.Text.Trim() == "")? "0" : tx_cetm.Text);
-                    micon.Parameters.AddWithValue("@dputil", (tx_cutm.Text.Trim() == "")? "0" : tx_cutm.Text);
-                    micon.Parameters.AddWithValue("@dMon1", (tx_valref1.Text.Trim() == "")? "0" : tx_valref1.Text);
-                    micon.Parameters.AddWithValue("@dMon2", (tx_valref2.Text.Trim() == "")? "0" : tx_valref2.Text);
-                    micon.Parameters.AddWithValue("@dMon3", (tx_valref3.Text.Trim() == "")? "0" : tx_valref3.Text);
-                    micon.Parameters.AddWithValue("@dporig", tx_dat_dpo.Text);
-                    micon.Parameters.AddWithValue("@uporig", tx_dat_upo.Text);
-                    micon.Parameters.AddWithValue("@dpdest", tx_dat_dpd.Text);
-                    micon.Parameters.AddWithValue("@updest", tx_dat_upd.Text);
-                    micon.Parameters.AddWithValue("@verApp", verapp);
-                    micon.Parameters.AddWithValue("@iplan", lib.iplan());
-                    micon.Parameters.AddWithValue("@ipwan", Grael2.Program.vg_ipwan);
-                    micon.Parameters.AddWithValue("@nbnam", Environment.MachineName);
-                    */
                     micon.ExecuteNonQuery();
                 }
                 using (MySqlCommand micon = new MySqlCommand("select last_insert_id()", conn))
@@ -2781,10 +2775,10 @@ namespace Grael2
                     }
                     string insesp = "insert into adifactu (idc,tipoAd,placa,placa2,confv,autoriz,cargaEf,cargaUt,rucTrans,nomTrans,fecIniTras," +
                                     "dirPartida,ubiPartida,dirDestin,ubiDestin,dniChof,brevete,valRefViaje,valRefVehic,valRefTon,precioTN," +
-	                                "pesoTN,glosa1,glosa2,glosa3,detMon1,detMon2,detMon3) " +
+                                    "pesoTN,glosa1,glosa2,glosa3,detMon1,detMon2,detMon3,ruta,valruta,detrac,valrefcu) " +
                                     "values (@idc,@tipo,@pla1,@pla2,@conf,@auto,@carE,@carU,@rucT,@nomT,@fecI," +
                                     "@dirP,@ubiP,@dirD,@ubiD,@dniC,@brev,@vaRV,@vaVe,@valR,@prec," +
-                                    "@peTN,@glo1,@glo2,@glo3,@deM1,@deM2,@deM3)";
+                                    "@peTN,@glo1,@glo2,@glo3,@deM1,@deM2,@deM3,@rut,@varu,@detra,@vrcu)";
                     using (MySqlCommand micon = new MySqlCommand(insesp, conn))
                     {
                         micon.Parameters.AddWithValue("@idc", tx_idr.Text);             // id de la cabecera de factura
@@ -2794,7 +2788,7 @@ namespace Grael2
                         micon.Parameters.AddWithValue("@conf", tx_e_nfv.Text);          // configuración vehicular
                         micon.Parameters.AddWithValue("@auto", tx_e_aut.Text);          // autorizacion circulación
                         micon.Parameters.AddWithValue("@carE", 0);                      // carga efectiva
-                        micon.Parameters.AddWithValue("@carU", 0);                      // carga util
+                        micon.Parameters.AddWithValue("@carU", tx_e_tn.Text);           // carga util del vehículo
                         micon.Parameters.AddWithValue("@rucT", tx_e_ruct.Text);         // ruc del transportista
                         micon.Parameters.AddWithValue("@nomT", tx_e_ntrans.Text);       // nombre razon social
                         micon.Parameters.AddWithValue("@fecI", tx_e_ftras.Text);        // fecha traslado inicial
@@ -2804,7 +2798,7 @@ namespace Grael2
                         micon.Parameters.AddWithValue("@ubiD", tx_e_ubides.Text);       // ubigeo destino
                         micon.Parameters.AddWithValue("@dniC", tx_e_dnicho.Text);       // dni chofer
                         micon.Parameters.AddWithValue("@brev", "");                     // brevete chofer
-                        micon.Parameters.AddWithValue("@vaRV", 0);                      // valor referencial del viaje
+                        micon.Parameters.AddWithValue("@vaRV", tx_e_valref.Text);       // valor referencial del viaje
                         micon.Parameters.AddWithValue("@vaVe", 0);                      // valor referencial del vehículo
                         micon.Parameters.AddWithValue("@valR", 0);                      // valor referencial en T.M.
                         micon.Parameters.AddWithValue("@prec", tx_e_prec.Text);         // precio por tonelada
@@ -2815,6 +2809,10 @@ namespace Grael2
                         micon.Parameters.AddWithValue("@deM1", 0);                      // monto referencial del servicio de transp
                         micon.Parameters.AddWithValue("@deM2", 0);                      // monto referencial de la carga efectiva
                         micon.Parameters.AddWithValue("@deM3", 0);                      // monto referencial de la carga nominal
+                        micon.Parameters.AddWithValue("@rut", tx_dat_ruta.Text);        // ruta del viaje
+                        micon.Parameters.AddWithValue("@varu", tx_sxtm.Text);           // valor S/ de la ruta/viaje, se multiplica por TN
+                        micon.Parameters.AddWithValue("@detra", tx_detrac.Text);        // detraccion resultante
+                        micon.Parameters.AddWithValue("@vrcu", tx_e_carut.Text);        // valor referencial de la carga util
                         micon.ExecuteNonQuery();
                     }
                 }
@@ -3582,11 +3580,11 @@ namespace Grael2
         }
         private void tx_e_tn_Leave(object sender, EventArgs e)
         {
-            if (Tx_modo.Text == "NUEVO" && rb_fesp.Checked == true && tx_sxtm.Text.Trim() != "")
+            if (Tx_modo.Text == "NUEVO" && rb_fesp.Checked == true && tx_sxtm.Text.Trim() != "" && tx_e_tn.Text.Trim() != "")
             {
-                tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.0000");
-                tx_detrac.Text = (double.Parse(tx_e_valref.Text) * double.Parse(Program.pordetra)).ToString("#0.00");
-                tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.0000");
+                tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.00");
+                tx_detrac.Text = (double.Parse(tx_e_valref.Text) * double.Parse(Program.pordetra) / 100).ToString("#0.00");
+                tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.00");
             }
         }
         #endregion
@@ -3927,7 +3925,7 @@ namespace Grael2
                 tx_sxtm.Text = dtru.Rows[cmb_ruta.SelectedIndex].ItemArray[2].ToString();
                 if (tx_sxtm.Text != "" && tx_e_cant.Text != "")
                 {
-                    tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.0000");
+                    tx_e_valref.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_cant.Text)).ToString("#0.00");
                     tx_detrac.Text = (double.Parse(tx_e_valref.Text) * double.Parse(Program.pordetra)/100).ToString("#0.00");
                 }
                 if (tx_e_tn.Text.Trim() == "")
@@ -3937,7 +3935,7 @@ namespace Grael2
                 }
                 else
                 {
-                    tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.0000");
+                    tx_e_carut.Text = (double.Parse(tx_sxtm.Text) * double.Parse(tx_e_tn.Text)).ToString("#0.00");
                 }
             }
             else
@@ -4486,6 +4484,5 @@ namespace Grael2
         {
             totalizaG();
         }
-
     }
 }

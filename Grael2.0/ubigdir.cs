@@ -36,6 +36,16 @@ namespace Grael2
             {
                 DataTable dataUbig = (DataTable)CacheManager.GetItem("ubigeos");
             }
+            // autocompletados
+            tx_dptoRtt.AutoCompleteMode = AutoCompleteMode.Suggest;           // departamentos
+            tx_dptoRtt.AutoCompleteSource = AutoCompleteSource.CustomSource;  // departamentos
+            tx_dptoRtt.AutoCompleteCustomSource = departamentos;              // departamentos
+            tx_provRtt.AutoCompleteMode = AutoCompleteMode.Suggest;           // provincias
+            tx_provRtt.AutoCompleteSource = AutoCompleteSource.CustomSource;  // provincias
+            tx_provRtt.AutoCompleteCustomSource = provincias;                 // provincias
+            tx_distRtt.AutoCompleteMode = AutoCompleteMode.Suggest;           // distritos
+            tx_distRtt.AutoCompleteSource = AutoCompleteSource.CustomSource;  // distritos
+            tx_distRtt.AutoCompleteCustomSource = distritos;                  // distritos
 
             autodepa();                                     // autocompleta departamentos
 
@@ -56,7 +66,8 @@ namespace Grael2
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            ReturnValue1 = tx_ubigRtt.Text;
+            this.Close();
         }
         private void button3_Click(object sender, EventArgs e)
         {

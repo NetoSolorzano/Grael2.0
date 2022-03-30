@@ -55,10 +55,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(88, 151);
+            this.button2.Location = new System.Drawing.Point(88, 140);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(170, 49);
-            this.button2.TabIndex = 2;
+            this.button2.TabIndex = 4;
             this.button2.Text = "GRABA";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button1_Click);
@@ -79,52 +79,52 @@
             // 
             this.tx_distRtt.BackColor = System.Drawing.SystemColors.Window;
             this.tx_distRtt.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_distRtt.Location = new System.Drawing.Point(247, 75);
+            this.tx_distRtt.Location = new System.Drawing.Point(247, 62);
             this.tx_distRtt.MaxLength = 0;
             this.tx_distRtt.Name = "tx_distRtt";
             this.tx_distRtt.Size = new System.Drawing.Size(80, 18);
-            this.tx_distRtt.TabIndex = 17;
+            this.tx_distRtt.TabIndex = 2;
             this.tx_distRtt.Leave += new System.EventHandler(this.tx_distRtt_Leave);
             // 
             // tx_provRtt
             // 
             this.tx_provRtt.BackColor = System.Drawing.SystemColors.Window;
             this.tx_provRtt.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_provRtt.Location = new System.Drawing.Point(137, 75);
+            this.tx_provRtt.Location = new System.Drawing.Point(137, 62);
             this.tx_provRtt.MaxLength = 0;
             this.tx_provRtt.Name = "tx_provRtt";
             this.tx_provRtt.Size = new System.Drawing.Size(80, 18);
-            this.tx_provRtt.TabIndex = 16;
+            this.tx_provRtt.TabIndex = 1;
             this.tx_provRtt.Leave += new System.EventHandler(this.tx_provRtt_Leave);
             // 
             // tx_dptoRtt
             // 
             this.tx_dptoRtt.BackColor = System.Drawing.SystemColors.Window;
             this.tx_dptoRtt.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_dptoRtt.Location = new System.Drawing.Point(28, 75);
+            this.tx_dptoRtt.Location = new System.Drawing.Point(28, 62);
             this.tx_dptoRtt.MaxLength = 0;
             this.tx_dptoRtt.Name = "tx_dptoRtt";
             this.tx_dptoRtt.Size = new System.Drawing.Size(80, 18);
-            this.tx_dptoRtt.TabIndex = 15;
+            this.tx_dptoRtt.TabIndex = 0;
             this.tx_dptoRtt.Leave += new System.EventHandler(this.tx_dptoRtt_Leave);
             // 
             // tx_ubigRtt
             // 
             this.tx_ubigRtt.BackColor = System.Drawing.SystemColors.Window;
             this.tx_ubigRtt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_ubigRtt.Location = new System.Drawing.Point(196, 123);
+            this.tx_ubigRtt.Location = new System.Drawing.Point(196, 110);
             this.tx_ubigRtt.MaxLength = 6;
             this.tx_ubigRtt.Name = "tx_ubigRtt";
             this.tx_ubigRtt.ReadOnly = true;
             this.tx_ubigRtt.Size = new System.Drawing.Size(44, 18);
-            this.tx_ubigRtt.TabIndex = 295;
+            this.tx_ubigRtt.TabIndex = 3;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(31, 61);
+            this.label5.Location = new System.Drawing.Point(31, 47);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 12);
             this.label5.TabIndex = 296;
@@ -135,7 +135,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(140, 61);
+            this.label1.Location = new System.Drawing.Point(140, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 12);
             this.label1.TabIndex = 297;
@@ -146,7 +146,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(250, 61);
+            this.label2.Location = new System.Drawing.Point(250, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 12);
             this.label2.TabIndex = 298;
@@ -157,7 +157,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(100, 126);
+            this.label3.Location = new System.Drawing.Point(100, 113);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(94, 12);
             this.label3.TabIndex = 299;
