@@ -2067,7 +2067,7 @@ namespace Grael2
                         }
                     }
                     */
-                        }
+                }
                 else
                 {
                     rb_desGR.PerformClick();
@@ -2633,7 +2633,7 @@ namespace Grael2
         private bool graba()
         {
             bool retorna = false;
-            MySqlConnection conn = new MySqlConnection(db_conn_grael);   // DB_CONN_STR
+            MySqlConnection conn = new MySqlConnection(db_conn_grael);
             conn.Open();
             if(conn.State == ConnectionState.Open)
             {
@@ -2866,7 +2866,7 @@ namespace Grael2
                     }
                 }
                 // cobranza automática en efectivo?
-                if (rb_si.Checked == true && tx_idcaja.Text.Trim() != "" && double.Parse(tx_salxcob.Text)>0)
+                if (rb_si.Checked == true && tx_idcaja.Text.Trim() != "" && double.Parse(tx_salxcob.Text) <= 0)
                 {
                     string consulta = "select id,fecha,status from macajas where local=@loc order by id desc limit 1";
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
@@ -4227,8 +4227,11 @@ namespace Grael2
                             posi = posi + alfi;
                             puntoF = new PointF(coli, posi);
                             //recto = new RectangleF(puntoF, siz);
-                            if (Tx_modo.Text == "NUEVO") e.Graphics.DrawString(dataGridView1.Rows[l].Cells[0].Value.ToString() + " " + vint_gg + " " + dataGridView1.Rows[l].Cells[1].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
-                            else e.Graphics.DrawString(dataGridView1.Rows[l].Cells[0].Value.ToString() + " " + dataGridView1.Rows[l].Cells[1].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                            if (Tx_modo.Text == "NUEVO") e.Graphics.DrawString(vint_gg + " " + dataGridView1.Rows[l].Cells[1].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                            else e.Graphics.DrawString(dataGridView1.Rows[l].Cells[1].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                            posi = posi + alfi;
+                            puntoF = new PointF(coli, posi);
+                            e.Graphics.DrawString("GR Transportista: " + dataGridView1.Rows[l].Cells[0].Value.ToString(), lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                             posi = posi + alfi;
                             puntoF = new PointF(coli, posi);
                             if (dataGridView1.Rows[l].Cells[8].Value.ToString().Trim().Length > 30)
