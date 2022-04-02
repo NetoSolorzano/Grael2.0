@@ -14,5 +14,9 @@ me quede en agregar los procedimientos y triggers a la base erp_grael para :
 - form facelect, codigo para dinamizar si quieren plazo pago autom o no ....... ok 15/09/2021    (si es credito, se autoselecciona ó el operador debe hacerlo)
 - form enlaces, mejorar el form, que sea ampliable ............................ ok 09/02/2022
 - form publico, pasar a 36000 el tiempo limite del cache manager .............. ok 09/02/2022
-- form facelect, agregar elementos de cargas especiales o únicas .............. 
+- form facelect, agregar elementos de cargas especiales o únicas .............. ok 31/03/2022
 Se "achicó" los forms y textos a Arial 7 en su mayoría ........................ ok 16/03/2022
+- form facelect, adecuaciones finales, corporativos, impresion, etc ........... ok 31/03/2022
+- libreria, cambio de conector solorsoft, ahora se usa la base sunat0 .........		solo para rucs, para dni se usa el conector
+OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, solo nombres, el digitador le completa la dirección
+

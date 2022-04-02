@@ -2967,6 +2967,7 @@ namespace Grael2
             string dirLoc = Directory.GetCurrentDirectory() + @"\conectores\";
             if (cual == "RUC")
             {
+                /*
                 ProcessStartInfo start = new ProcessStartInfo();
                 //start.FileName = dirLoc + "ConectorSolorsoft.exe";
                 start.FileName = dirLoc + "conectorJson.exe";
@@ -2989,6 +2990,33 @@ namespace Grael2
                         retorna[5] = datos[6];                          // distrito
                         retorna[6] = datos[2];                          // estado del contrib.
                         retorna[7] = datos[3];                          // condicion domicilio
+                    }
+                }
+                */
+                using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
+                {
+                    conn.Open();
+                    if (conn.State == ConnectionState.Open)
+                    {
+                        string busca = "SELECT * from sunat0.nombres WHERE ruc=@num";
+                        using (MySqlCommand micon = new MySqlCommand(busca,conn))
+                        {
+                            micon.Parameters.AddWithValue("@num", numDoc);
+                            using (MySqlDataReader dr = micon.ExecuteReader())
+                            {
+                                if (dr.Read())
+                                {
+                                    retorna[0] = dr.GetString(1);         // razon social
+                                    retorna[1] = dr.GetString(4);         // ubigeo
+                                    retorna[2] = dr.GetString(5) + " " + dr.GetString(6) + " " + dr.GetString(9);   // direccion
+                                    retorna[3] = dr.GetString(15);       // departamento
+                                    retorna[4] = dr.GetString(16);       // provincia
+                                    retorna[5] = dr.GetString(17);       // distrito
+                                    retorna[6] = dr.GetString(2);        // estado del contrib.
+                                    retorna[7] = dr.GetString(3);        // condicion domicilio
+                                }
+                            }
+                        }
                     }
                 }
             }
