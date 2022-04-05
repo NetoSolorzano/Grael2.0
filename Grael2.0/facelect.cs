@@ -1464,6 +1464,9 @@ namespace Grael2
             string Cnudor3 = "";     // cabecera
             double totdet = 0;
             string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
+            string cauxdet1 = "6665";   // codigo para adicional observacion detracción en caso de fact de cargas unicas
+            string tauxdet1 = "OPERACION SUJETA A SPOT BANCO DE LA NACION CTA.CTE.MN " + Program.ctadetra + 
+                " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text  + " AL T.C. " + tx_tipcam.Text;       // texto de la observacion de la detraccion en fact especiales de cargas unicas
 
             SqlConnection conms = new SqlConnection(script);
             conms.Open();
@@ -1687,9 +1690,16 @@ namespace Grael2
                     }
                     if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                     {
-                        if (rb_fesp.Checked == true) totdet = double.Parse(tx_detrac.Text);
-                        else totdet = Math.Round(double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
-                        insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2";
+                        if (rb_fesp.Checked == true)
+                        {
+                            totdet = double.Parse(tx_detrac.Text);
+                            insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2"; // codigoAuxiliar500_2,textoAuxiliar500_2
+                        }
+                        else
+                        {
+                            totdet = Math.Round(double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
+                            insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2";
+                        }
                     }
                     insertcab = insertcab + ") " +
                         "values (@sernum,@fecemi,@tipdoc,@tipmon," +
@@ -1702,7 +1712,14 @@ namespace Grael2
                     if (!string.IsNullOrEmpty(nudor3) && !string.IsNullOrWhiteSpace(nudor3)) insertcab = insertcab + ",@tiref3,@nudor3";
                     if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                     {
-                        insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@leydet";
+                        if (rb_fesp.Checked == true)
+                        {
+                            insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@tauxdet1";   // @cauxdet1,
+                        }
+                        else
+                        {
+                            insertcab = insertcab + ",@coddetra,@totdet,@pordetra,@ctadetra,@codleyt,@leydet";
+                        }
                     }
                     insertcab = insertcab + ")";
                     //
@@ -1758,6 +1775,8 @@ namespace Grael2
                     inserta.Parameters.AddWithValue("@ctadetra", Program.ctadetra);
                     inserta.Parameters.AddWithValue("@codleyt", codleyt);
                     inserta.Parameters.AddWithValue("@leydet", leydet);
+                    inserta.Parameters.AddWithValue("@cauxdet1", cauxdet1);
+                    inserta.Parameters.AddWithValue("@tauxdet1", tauxdet1);
                     inserta.ExecuteNonQuery();
                 }
                 catch (SqlException ex)

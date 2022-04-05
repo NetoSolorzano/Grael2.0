@@ -2998,7 +2998,10 @@ namespace Grael2
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
-                        string busca = "SELECT * from sunat0.nombres WHERE ruc=@num";
+                        string busca = "SELECT a.*,b1.nombre,b2.nombre,b3.nombre from sunat0.nombres a " +
+                            "LEFT JOIN grael2.ubigeos b1 ON b1.depart = left(a.ubigeo, 2) AND b1.provin = '00' AND b1.distri = '00' " +
+                            "LEFT JOIN grael2.ubigeos b2 ON CONCAT(b2.depart, b2.provin)= LEFT(a.ubigeo, 4) AND b2.distri = '00' " +
+                            "LEFT JOIN grael2.ubigeos b3 ON CONCAT(b3.depart, b3.provin, b3.distri)= a.ubigeo WHERE a.ruc=@num";
                         using (MySqlCommand micon = new MySqlCommand(busca,conn))
                         {
                             micon.Parameters.AddWithValue("@num", numDoc);
