@@ -1465,9 +1465,9 @@ namespace Grael2
             double totdet = 0;
             string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
             string cauxdet1 = "6665";   // codigo para adicional observacion detracción en caso de fact de cargas unicas
-            string tauxdet1 = "OPERACION SUJETA A SPOT BANCO DE LA NACION CTA.CTE.MN " + Program.ctadetra + 
-                " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text  + " AL T.C. " + tx_tipcam.Text;       // texto de la observacion de la detraccion en fact especiales de cargas unicas
-
+            string tauxdet1 = "OPERACION SUJETA A SPOT BANCO DE LA NACION CTA.CTE.MN " + Program.ctadetra +
+                " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text;     // texto de la observacion de la detraccion en fact especiales de cargas unicas
+            if (tx_dat_mone.Text != MonDeft) tauxdet1 = tauxdet1 + " AL T.C. " + tx_tipcam.Text;
             SqlConnection conms = new SqlConnection(script);
             conms.Open();
             if (conms.State == ConnectionState.Open)
@@ -1482,34 +1482,41 @@ namespace Grael2
                         string codprd1 = "-";                                                                                   // codigoProducto
                         string coprsu1 = "78101802";                                                                            // codigoProductoSunat
                         string descr1 = "";
+                        decimal canti1 = Math.Round(decimal.Parse("1"), 2);
+                        string unime1 = "ZZ";                                                                                   // unidadMedida
+                        decimal psi1, igv1;                                                                                     // calculos de precios x item sin y con impuestos
+                        double inuns1 = 0;                                                                                      // importeUnitarioSinImpuesto
+                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[q].Cells["valor"].Value.ToString()), 2);   // importeUnitarioConImpuesto
+                        string coimu1 = "01";                                                                   // codigoImporteUnitarioConImpues
+                        string imtoi1 = "";
+
                         if (rb_fesp.Checked == true)
                         {
+                            unime1 = "TNE";                                                                                     // unidadMedida
                             descr1 = tx_e_glos1.Text.Trim() + " " + tx_e_glos2.Text.Trim() + " " + tx_e_glos3.Text.Trim();      // descripcion cargas únicas 
                             descr1 = descr1.Replace(System.Environment.NewLine, " ");
+                            canti1 = Math.Round(decimal.Parse(tx_e_cant.Text), 2);
+                            //unime1 = "TN";
+                            inuns1 = Math.Round(double.Parse(tx_e_prec.Text), 2);                                               // importeUnitarioSinImpuesto
+                            inunc1 = Math.Round(decimal.Parse(tx_e_prec.Text) * (1 + (decimal.Parse(v_igv)/100)), 2);           // importeUnitarioConImpuesto
+                            imtoi1 = Math.Round(inunc1 - Convert.ToDecimal(inuns1), 2).ToString();
                         }
                         else
                         {
                             descr1 = glosser + " " + glosser2 + " " +
                                 vint_gg + " " + dataGridView1.Rows[q].Cells["Descrip"].Value.ToString();                        // descripcion estandar
                             descr1 = descr1.Replace(System.Environment.NewLine, " ");
+                            if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out psi1))
+                            {
+                                inuns1 = Math.Round(((double)psi1 / ((double)decimal.Parse(v_igv) / 100 + 1)), 2);                  // importeUnitarioSinImpuesto
+                            }
+                            else { inuns1 = 0; }                                                                                    // importeUnitarioSinImpuesto
+                            if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out igv1))
+                            {
+                                imtoi1 = Math.Round(((double)igv1 - ((double)igv1 / ((double)decimal.Parse(v_igv) / 100 + 1))), 2).ToString();
+                            }
+                            else { imtoi1 = "0.00"; }                                                               // importeTotalImpuestos 
                         }
-                        decimal canti1 = Math.Round(decimal.Parse("1"), 2);
-                        string unime1 = "ZZ";                                                                                   // unidadMedida
-                        decimal psi1, igv1;                                                                                     // calculos de precios x item sin y con impuestos
-                        double inuns1 = 0;                                                                                      // importeUnitarioSinImpuesto
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out psi1))
-                        {
-                            inuns1 = Math.Round(((double)psi1 / ((double)decimal.Parse(v_igv) / 100 + 1)), 2);                  // importeUnitarioSinImpuesto
-                        }
-                        else { inuns1 = 0; }                                                                                    // importeUnitarioSinImpuesto
-                        decimal inunc1 = Math.Round(decimal.Parse(dataGridView1.Rows[q].Cells["valor"].Value.ToString()), 2);   // importeUnitarioConImpuesto
-                        string coimu1 = "01";                                                                   // codigoImporteUnitarioConImpues
-                        string imtoi1 = "";
-                        if (decimal.TryParse(dataGridView1.Rows[q].Cells["valor"].Value.ToString(), out igv1))
-                        {
-                            imtoi1 = Math.Round(((double)igv1 - ((double)igv1 / ((double)decimal.Parse(v_igv) / 100 + 1))), 2).ToString();
-                        }
-                        else { imtoi1 = "0.00"; }                                                               // importeTotalImpuestos 
                         double mobai1 = inuns1;                                                                 // montoBaseIgv
                         string taigv1 = ((decimal.Parse(v_igv))).ToString();                                    // tasaIgv
                         string imigv1 = imtoi1;                                                                 // importeIgv
@@ -1617,11 +1624,7 @@ namespace Grael2
                     string paiadq = "PE";
                     string formpa = (rb_cre.Checked == true) ? "1" : "0";
                     string fecpag = "";
-                    if (rb_cre.Checked == true)
-                    {
-                        DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
-                        fecpag = fecpd.AddDays(int.Parse(tx_dat_diasp.Text)).ToString("yyyy'-'MM'-'dd");  // ToString("dd'/'MM'/'yyyy")
-                    }
+                    decimal tvc = totvta;
                     insadd = "insert into SPE_EINVOICEHEADER_ADD (" +
                             "clave,numeroDocumentoEmisor,serieNumero,tipoDocumento,tipoDocumentoEmisor,valor) values ";
                     insadd = insadd + "('direccionAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@diradq)," +
@@ -1631,10 +1634,28 @@ namespace Grael2
                                 "('paisAdquiriente',@nudoem,@sernum,@tipdoc,@tidoem,@paiadq)";
                     if (tx_dat_tdv.Text == codfact)                                                         // esto aplica solo para facturas
                     {
-                        if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                        if (tx_dat_mone.Text == MonDeft)
                         {
-                            insadd = insadd + ",('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD)";
+                            if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                            {
+                                if (rb_fesp.Checked == true) tvc = tvc - decimal.Parse(tx_detrac.Text);
+                                else tvc = tvc - Math.Round(decimal.Parse(tx_flete.Text) * decimal.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
+                            }
                         }
+                        else
+                        {
+                            if (double.Parse(tx_flete.Text) * double.Parse(tx_tipcam.Text) > double.Parse(Program.valdetra) * double.Parse(tx_tipcam.Text))
+                            {
+                                if (rb_fesp.Checked == true) tvc = tvc - (decimal.Parse(tx_detrac.Text) / decimal.Parse(tx_tipcam.Text));
+                                else tvc = tvc - (decimal.Parse(tx_flete.Text) * decimal.Parse(Program.pordetra) / 100);
+                            }
+                        }
+                        if (rb_cre.Checked == true)
+                        {
+                            DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
+                            fecpag = fecpd.AddDays(int.Parse(tx_dat_diasp.Text)).ToString("yyyy'-'MM'-'dd");  // ToString("dd'/'MM'/'yyyy")
+                        }
+                        insadd = insadd + ",('formaPago',@nudoem,@sernum,@tipdoc,@tidoem,@fpagoD)";
                         if (formpa == "0") insadd = insadd + ",('formaPagoNegociable',@nudoem,@sernum,@tipdoc,@tidoem,@formpa)";
                         else
                         {
@@ -1660,7 +1681,7 @@ namespace Grael2
                     {
                         insertadd.Parameters.AddWithValue("@formpa", formpa);
                         insertadd.Parameters.AddWithValue("@fpagoD", "009");
-                        insertadd.Parameters.AddWithValue("@totvta", totvta.ToString("#0.00"));
+                        insertadd.Parameters.AddWithValue("@totvta", tvc.ToString("#0.00")); // totvta.ToString("#0.00")
                         insertadd.Parameters.AddWithValue("@fecpag", fecpag);
                     }
                     insertadd.ExecuteNonQuery();
@@ -2436,6 +2457,13 @@ namespace Grael2
                         MessageBox.Show("Debe ingresar el código de ubigeo" + Environment.NewLine +
                             "Presione F1", "Falta código de destino!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         tx_e_ubides.Focus();
+                        return;
+                    }
+                    if (Math.Round(double.Parse(tx_e_cant.Text) * double.Parse(tx_e_prec.Text),1) != Math.Round(double.Parse(tx_subt.Text),1))
+                    {
+                        MessageBox.Show("Carga en TN por el precio debe ser igual" + Environment.NewLine +
+                            "al valor del subtotal del comprobante","Error en importes",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        tx_e_prec.Focus();
                         return;
                     }
                 }
