@@ -1465,8 +1465,10 @@ namespace Grael2
             double totdet = 0;
             string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
             string cauxdet1 = "6665";   // codigo para adicional observacion detracción en caso de fact de cargas unicas
-            string tauxdet1 = "OPERACION SUJETA A SPOT BANCO DE LA NACION CTA.CTE.MN " + Program.ctadetra +
-                " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text;     // texto de la observacion de la detraccion en fact especiales de cargas unicas
+            //string tauxdet1 = "OPERACION SUJETA A SPOT BANCO DE LA NACION CTA.CTE.MN " + Program.ctadetra +
+            //    " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text;     // texto de la observacion de la detraccion en fact especiales de cargas unicas
+            string tauxdet1 = leydet1 + " " + leydet2 + Program.ctadetra +
+                " VALOR REFERENCIAL S/ " + tx_e_valref.Text + " DETRACCION S/ " + tx_detrac.Text;
             if (tx_dat_mone.Text != MonDeft) tauxdet1 = tauxdet1 + " AL T.C. " + tx_tipcam.Text;
             SqlConnection conms = new SqlConnection(script);
             conms.Open();
@@ -1497,8 +1499,8 @@ namespace Grael2
                             descr1 = descr1.Replace(System.Environment.NewLine, " ");
                             canti1 = Math.Round(decimal.Parse(tx_e_cant.Text), 2);
                             //unime1 = "TN";
-                            inuns1 = Math.Round(double.Parse(tx_e_prec.Text), 2);                                               // importeUnitarioSinImpuesto
-                            inunc1 = Math.Round(decimal.Parse(tx_e_prec.Text) * (1 + (decimal.Parse(v_igv)/100)), 2);           // importeUnitarioConImpuesto
+                            inuns1 = Math.Round(double.Parse(tx_e_prec.Text), 6);                                               // importeUnitarioSinImpuesto
+                            inunc1 = Math.Round(decimal.Parse(tx_e_prec.Text) * (1 + (decimal.Parse(v_igv)/100)), 6);           // importeUnitarioConImpuesto
                             imtoi1 = Math.Round(inunc1 - Convert.ToDecimal(inuns1), 2).ToString();
                         }
                         else
@@ -1517,11 +1519,11 @@ namespace Grael2
                             }
                             else { imtoi1 = "0.00"; }                                                               // importeTotalImpuestos 
                         }
-                        double mobai1 = inuns1;                                                                 // montoBaseIgv
+                        double mobai1 = Math.Round(inuns1,2);                                                     // montoBaseIgv
                         string taigv1 = ((decimal.Parse(v_igv))).ToString();                                    // tasaIgv
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
-                        double intos1 = inuns1;                                                                 // importeTotalSinImpuesto
+                        double intos1 = Math.Round(inuns1,2);                                                   // importeTotalSinImpuesto
                         string ubiPtoOri = tx_e_ubiori.Text;                                                    // ubigeoPtoOrigen
                         string dirPtoOri = tx_e_dirpar.Text;                                                    // direccionCompletaPtoOrigen
                         string ubiPtoDes = tx_e_ubides.Text;                                                    // ubigeoPtoDestino
@@ -2477,11 +2479,14 @@ namespace Grael2
                             if (graba() == true)
                             {
                                 grabfactelec();
-                                var bb = MessageBox.Show("Desea imprimir el documento?" + Environment.NewLine +
-                                    "El formato actual es " + vi_formato, "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                                if (bb == DialogResult.Yes)
+                                if (rb_fnor.Checked == true)
                                 {
-                                    Bt_print.PerformClick();
+                                    var bb = MessageBox.Show("Desea imprimir el documento?" + Environment.NewLine +
+                                        "El formato actual es " + vi_formato, "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    if (bb == DialogResult.Yes)
+                                    {
+                                        Bt_print.PerformClick();
+                                    }
                                 }
                                 // actualizamos la tabla seguimiento de usuarios
                                 string resulta = lib.ult_mov(nomform, nomtab, asd);
@@ -3612,6 +3617,8 @@ namespace Grael2
                 panel2.BackColor = Color.FloralWhite;
                 // SI ES NUEVO y ya esta "jalada" la guía => pasamos los datos del camión al panel de cargas únicas
                 if (Tx_modo.Text == "NUEVO" && dataGridView1.Rows.Count > 1) datPanelCargasU();
+                tx_dat_tdv.Text = codfact;
+                cmb_tdv.SelectedValue = tx_dat_tdv.Text;
             }
         }
         private void rb_fnor_CheckedChanged(object sender, EventArgs e)
@@ -3767,7 +3774,13 @@ namespace Grael2
                         }
                         if (vi_formato == "TK")            // Seleccion de formato ... Ticket
                         {
-                            if (imprimeTK() == true) updateprint("S");
+                            if (rb_fnor.Checked == true) if (imprimeTK() == true) updateprint("S");
+                            else
+                                {
+                                    MessageBox.Show("Las facturas especiales no tienen" + Environment.NewLine + 
+                                        "formato de impresión en ticket!","Atención",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+                                    return;
+                                }
                         }
                     }
                 }
@@ -3894,6 +3907,12 @@ namespace Grael2
                     tx_cfe.Text = row[0].ItemArray[6].ToString();
                     if (Tx_modo.Text == "NUEVO") tx_serie.Text = row[0].ItemArray[5].ToString();
                     tx_numero.Text = "";
+                }
+                if (tx_dat_tdv.Text == codbole && rb_fesp.Checked == true && Tx_modo.Text == "NUEVO")
+                {
+                    MessageBox.Show("Solo las Facturas pueden ser especiales","Atención",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    rb_fnor.Checked = true;
+                    return;
                 }
             }
         }
@@ -4421,20 +4440,27 @@ namespace Grael2
                                 puntoF = new PointF(coli, posi);
                                 e.Graphics.DrawString(glocopa, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
                                 posi = posi + alfi;
-
                                 puntoF = new PointF(coli, posi);
                                 DateTime fecpd = Convert.ToDateTime(tx_fechope.Text);
                                 string fecpag = fecpd.AddDays(int.Parse(tx_dat_diasp.Text)).ToString("dd'/'MM'/'yyyy");  // ToString("yyyy'-'MM'-'dd")
-                                e.Graphics.DrawString(texpagD + " " + tx_flete.Text + " " + texpag2 + " " + texpag3 + fecpag, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                                if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
+                                {
+                                    string aaa = (double.Parse(tx_flete.Text) - (double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100)).ToString("#0.00");
+                                    e.Graphics.DrawString(texpagD + " " + aaa + " " + texpag2 + " " + texpag3 + fecpag, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawString(texpagD + " " + tx_flete.Text + " " + texpag2 + " " + texpag3 + fecpag, lt_peq, Brushes.Black, puntoF, StringFormat.GenericTypographic);
+                                }
                             }
                         }
                         if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra))
                         {
                             posi = posi + alfi * 1.5F;
-                            siz = new SizeF(CentimeterToPixel(anchTik), 15 * 3);        // detraccion solo facturas .. Richard 07/09/2021
+                            siz = new SizeF(CentimeterToPixel(anchTik), 15 * 4);        // detraccion solo facturas .. Richard 07/09/2021
                             puntoF = new PointF(coli, posi);
                             recto = new RectangleF(puntoF, siz);
-                            e.Graphics.DrawString(leydet1.Trim() + " " + Program.ctadetra.Trim(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
+                            e.Graphics.DrawString(leydet1.Trim() + " "  + leydet2 + " " + Program.ctadetra.Trim(), lt_peq, Brushes.Black, recto, StringFormat.GenericTypographic);
                             posi = posi + alfi * 3;
                         }
                         else

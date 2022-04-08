@@ -1773,15 +1773,15 @@ namespace Grael2
         public string[] datossn(string vista, string docu, string numero)   // retorna datos del socio, (nombre,direc, etc)
         {
             string[] retorna = new string[] { "", "", "", "", "", "", "", "" };
-            MySqlConnection conn = new MySqlConnection(DB_CONN_STR);  // 
+            MySqlConnection conn = new MySqlConnection(db_conn_grael);  // DB_CONN_STR
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
                 if (vista == "CLI")
                 {
-                    string consulta = "select tipdoc,RUC,RazonSocial,Direcc1,Direcc2,depart,Provincia,Localidad,NumeroTel1,NumeroTel2,EMail,pais,ubigeo," +
-                        "codigo,estado,idcategoria,id " +
-                        "from anag_cli where tipdoc=@tdo and ruc=@ndo";
+                    string consulta = "select docu,RUC,concat(nombre,nombre2) AS RazonSocial,Direc,dpto,Provin,dist,telef1,telef2,EMail,pais,ubigeo," +
+                        "codigo,estado,vista,id " +
+                        "from anag_cli where docu=@tdo and ruc=@ndo";
                     MySqlCommand micon = new MySqlCommand(consulta, conn);
                     micon.Parameters.AddWithValue("@tdo", docu);
                     micon.Parameters.AddWithValue("@ndo", numero);
@@ -1789,12 +1789,12 @@ namespace Grael2
                     if (dr.Read())
                     {
                         retorna[0] = dr.GetString("RazonSocial");
-                        retorna[1] = dr.GetString("Direcc1").Trim() + " " + dr.GetString("Direcc2").Trim();
-                        retorna[2] = dr.GetString("depart");
-                        retorna[3] = dr.GetString("Provincia");
-                        retorna[4] = dr.GetString("Localidad");
+                        retorna[1] = dr.GetString("Direc").Trim();  //  + " " + dr.GetString("Direcc2").Trim()
+                        retorna[2] = dr.GetString("dpto");
+                        retorna[3] = dr.GetString("Provin");
+                        retorna[4] = dr.GetString("dist");
                         retorna[5] = dr.GetString("ubigeo");
-                        retorna[6] = dr.GetString("NumeroTel1");
+                        retorna[6] = dr.GetString("telef1");
                         retorna[7] = dr.GetString("EMail");
                     }
                     dr.Dispose();
@@ -2998,27 +2998,41 @@ namespace Grael2
                     conn.Open();
                     if (conn.State == ConnectionState.Open)
                     {
-                        string busca = "SELECT a.*,b1.nombre,b2.nombre,b3.nombre from sunat0.nombres a " +
-                            "LEFT JOIN grael2.ubigeos b1 ON b1.depart = left(a.ubigeo, 2) AND b1.provin = '00' AND b1.distri = '00' " +
-                            "LEFT JOIN grael2.ubigeos b2 ON CONCAT(b2.depart, b2.provin)= LEFT(a.ubigeo, 4) AND b2.distri = '00' " +
-                            "LEFT JOIN grael2.ubigeos b3 ON CONCAT(b3.depart, b3.provin, b3.distri)= a.ubigeo WHERE a.ruc=@num";
-                        using (MySqlCommand micon = new MySqlCommand(busca,conn))
+                        try
                         {
-                            micon.Parameters.AddWithValue("@num", numDoc);
-                            using (MySqlDataReader dr = micon.ExecuteReader())
+                            string busca = "SELECT a.*,ifnull(b1.nombre,''),ifnull(b2.nombre,''),ifnull(b3.nombre,'') from sunat0.nombres a " +
+                                "LEFT JOIN grael2.ubigeos b1 ON b1.depart = left(a.ubigeo, 2) AND b1.provin = '00' AND b1.distri = '00' " +
+                                "LEFT JOIN grael2.ubigeos b2 ON CONCAT(b2.depart, b2.provin)= LEFT(a.ubigeo, 4) AND b2.distri = '00' " +
+                                "LEFT JOIN grael2.ubigeos b3 ON CONCAT(b3.depart, b3.provin, b3.distri)= a.ubigeo WHERE a.ruc=@num";
+                            using (MySqlCommand micon = new MySqlCommand(busca, conn))
                             {
-                                if (dr.Read())
+                                micon.Parameters.AddWithValue("@num", numDoc);
+                                using (MySqlDataReader dr = micon.ExecuteReader())
                                 {
-                                    retorna[0] = dr.GetString(1);         // razon social
-                                    retorna[1] = dr.GetString(4);         // ubigeo
-                                    retorna[2] = dr.GetString(5) + " " + dr.GetString(6) + " " + dr.GetString(9);   // direccion
-                                    retorna[3] = dr.GetString(15);       // departamento
-                                    retorna[4] = dr.GetString(16);       // provincia
-                                    retorna[5] = dr.GetString(17);       // distrito
-                                    retorna[6] = dr.GetString(2);        // estado del contrib.
-                                    retorna[7] = dr.GetString(3);        // condicion domicilio
+                                    if (dr.Read())
+                                    {
+                                        retorna[0] = dr.GetString(1);         // razon social
+                                        retorna[1] = dr.GetString(4);         // ubigeo
+                                        retorna[2] = dr.GetString(5) + " " + dr.GetString(6) + " " + dr.GetString(9);   // direccion
+                                        retorna[3] = dr.GetString(15);       // departamento
+                                        retorna[4] = dr.GetString(16);       // provincia
+                                        retorna[5] = dr.GetString(17);       // distrito
+                                        retorna[6] = dr.GetString(2);        // estado del contrib.
+                                        retorna[7] = dr.GetString(3);        // condicion domicilio
+                                    }
                                 }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            retorna[0] = "";
+                            retorna[1] = "";
+                            retorna[2] = "";
+                            retorna[3] = "";
+                            retorna[4] = "";
+                            retorna[5] = "";
+                            retorna[6] = "";
+                            retorna[7] = "";
                         }
                     }
                 }
