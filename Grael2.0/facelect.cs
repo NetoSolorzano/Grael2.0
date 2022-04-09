@@ -1532,7 +1532,6 @@ namespace Grael2
                         string monRefSer = tx_e_valref.Text;                                                    // montoRefServicioTransporte
                         string monRefCar = tx_e_valref.Text;                                                    // montoRefCargaEfectiva
                         string monRefUti = tx_e_carut.Text;                                                     // montoRefCargaUtilNominal
-                        tipope = "1004";                                                                        // tipo de operacion con detraccion
 
                         insertadet = "insert into SPE_EINVOICEDETAIL (tipoDocumentoEmisor,numeroDocumentoEmisor,tipoDocumento,serieNumero," +
                             "numeroOrdenItem,codigoProducto,codigoProductoSunat,descripcion,cantidad,unidadMedida,importeTotalSinImpuesto," +
@@ -1713,6 +1712,7 @@ namespace Grael2
                     }
                     if (double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                     {
+                        tipope = "1004";                                                                        // tipo de operacion con detraccion
                         if (rb_fesp.Checked == true)
                         {
                             totdet = double.Parse(tx_detrac.Text);
