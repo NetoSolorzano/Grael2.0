@@ -466,7 +466,6 @@ namespace Grael2
         }
         private void fac_reportes_Click(object sender, EventArgs e)     // reportes de facturas
         {
-            /*
             repsventas fpe = new repsventas();
             fpe.TopLevel = false;
             fpe.Parent = this;
@@ -477,7 +476,6 @@ namespace Grael2
                 this.Width = this.Width + (this.Width - fpe.Width) + 20;
             }
             fpe.BringToFront();
-            */
         }
         //
         private void bt_ventas_Click(object sender, EventArgs e)        // Operaciones
