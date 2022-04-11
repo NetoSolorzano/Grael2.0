@@ -45,6 +45,7 @@ namespace Grael2
         string codAnul = "";            // codigo de documento anulado
         string nomAnul = "";            // texto nombre del estado anulado
         string codGene = "";            // codigo documento nuevo generado
+        string nomVtasCR = "";          // nombre del formato CR del reporte de ventas
         //int pageCount = 1, cuenta = 0;
         #endregion
         libreria lib = new libreria();
@@ -147,6 +148,7 @@ namespace Grael2
                     {
                         if (row["campo"].ToString() == "documento" && row["param"].ToString() == "factura") codfact = row["valor"].ToString().Trim();         // tipo de pedido por defecto en almacen
                         if (row["campo"].ToString() == "moneda" && row["param"].ToString() == "default") codmon = row["valor"].ToString().Trim();
+                        if (row["campo"].ToString() == "reportes" && row["param"].ToString() == "ventas") nomVtasCR = row["valor"].ToString().Trim();
                     }
                     if (row["formulario"].ToString() == "clients")
                     {
@@ -190,9 +192,9 @@ namespace Grael2
                 MySqlDataAdapter dataller = new MySqlDataAdapter(cmd);
                 dataller.Fill(dttaller);
                 // PANEL facturacion
-                cmb_sede_guias.DataSource = dttaller;
-                cmb_sede_guias.DisplayMember = "descrizionerid";
-                cmb_sede_guias.ValueMember = "idcodice";
+                cmb_sede.DataSource = dttaller;
+                cmb_sede.DisplayMember = "descrizionerid";
+                cmb_sede.ValueMember = "idcodice";
                 // PANEL notas de credito
                 //cmb_sede_plan.DataSource = dttaller;
                 //cmb_sede_plan.DisplayMember = "descrizionerid"; ;
@@ -204,9 +206,9 @@ namespace Grael2
                 MySqlDataAdapter daestad = new MySqlDataAdapter(cmd);
                 daestad.Fill(dtestad);
                 // PANEL facturacion
-                cmb_estad_guias.DataSource = dtestad;
-                cmb_estad_guias.DisplayMember = "descrizionerid";
-                cmb_estad_guias.ValueMember = "idcodice";
+                cmb_estad.DataSource = dtestad;
+                cmb_estad.DisplayMember = "descrizionerid";
+                cmb_estad.ValueMember = "idcodice";
                 // PANEL notas de credito
                 //cmb_estad_plan.DataSource = dtestad;
                 //cmb_estad_plan.DisplayMember = "descrizionerid";
@@ -251,7 +253,7 @@ namespace Grael2
                     break;
             }
         }
-        private void bt_guias_Click(object sender, EventArgs e)         // genera reporte guias
+        private void bt_guias_Click(object sender, EventArgs e)         // genera reporte facturacion
         {
             using (MySqlConnection conn = new MySqlConnection(DB_CONN_STR))
             {
@@ -260,10 +262,10 @@ namespace Grael2
                 using (MySqlCommand micon = new MySqlCommand(consulta,conn))
                 {
                     micon.CommandType = CommandType.StoredProcedure;
-                    micon.Parameters.AddWithValue("@loca", (tx_sede_guias.Text != "") ? tx_sede_guias.Text : "");
-                    micon.Parameters.AddWithValue("@fecini", dtp_ini_guias.Value.ToString("yyyy-MM-dd"));
-                    micon.Parameters.AddWithValue("@fecfin", dtp_fin_guias.Value.ToString("yyyy-MM-dd"));
-                    micon.Parameters.AddWithValue("@esta", (tx_estad_guias.Text != "") ? tx_estad_guias.Text : "");
+                    micon.Parameters.AddWithValue("@loca", (tx_dat_sede.Text != "") ? tx_dat_sede.Text : "");
+                    micon.Parameters.AddWithValue("@fecini", dtp_fac_ini.Value.ToString("yyyy-MM-dd"));
+                    micon.Parameters.AddWithValue("@fecfin", dtp_fac_fin.Value.ToString("yyyy-MM-dd"));
+                    micon.Parameters.AddWithValue("@esta", (tx_dat_est.Text != "") ? tx_dat_est.Text : "");
                     micon.Parameters.AddWithValue("@excl", (chk_excl_guias.Checked == true) ? "1" : "0");
                     using (MySqlDataAdapter da = new MySqlDataAdapter(micon))
                     {
@@ -280,6 +282,10 @@ namespace Grael2
                     }
                 }
             }
+        }
+        private void button1_Click(object sender, EventArgs e)          // vista previa formato de impresión
+        {
+            setParaCrystal("ventas");
         }
         private void suma_grilla(string dgv)
         {
@@ -315,28 +321,28 @@ namespace Grael2
         #region combos
         private void cmb_sede_guias_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (cmb_sede_guias.SelectedValue != null) tx_sede_guias.Text = cmb_sede_guias.SelectedValue.ToString();
-            else tx_sede_guias.Text = "";
+            if (cmb_sede.SelectedValue != null) tx_dat_sede.Text = cmb_sede.SelectedValue.ToString();
+            else tx_dat_sede.Text = "";
         }
         private void cmb_sede_guias_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                cmb_sede_guias.SelectedIndex = -1;
-                tx_sede_guias.Text = "";
+                cmb_sede.SelectedIndex = -1;
+                tx_dat_sede.Text = "";
             }
         }
         private void cmb_estad_guias_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (cmb_estad_guias.SelectedValue != null) tx_estad_guias.Text = cmb_estad_guias.SelectedValue.ToString();
-            else tx_estad_guias.Text = "";
+            if (cmb_estad.SelectedValue != null) tx_dat_est.Text = cmb_estad.SelectedValue.ToString();
+            else tx_dat_est.Text = "";
         }
         private void cmb_estad_guias_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                cmb_estad_guias.SelectedIndex = -1;
-                tx_estad_guias.Text = "";
+                cmb_estad.SelectedIndex = -1;
+                tx_dat_est.Text = "";
             }
         }
         #endregion
@@ -443,8 +449,8 @@ namespace Grael2
             Tx_modo.Text = "IMPRIMIR";
             tabControl1.Enabled = true;
             //
-            cmb_sede_guias.SelectedIndex = -1;
-            cmb_estad_guias.SelectedIndex = -1;
+            cmb_sede.SelectedIndex = -1;
+            cmb_estad.SelectedIndex = -1;
         }
         private void Bt_anul_Click(object sender, EventArgs e)
         {
@@ -457,7 +463,7 @@ namespace Grael2
             if (tabControl1.Enabled == false) return;
             if (tabControl1.SelectedTab == tabfacts && dgv_facts.Rows.Count > 0)
             {
-                nombre = "Reportes_facturacion_" + cmb_sede_guias.Text.Trim() +"_" + DateTime.Now.Date.ToString("yyyy-MM-dd") + ".xlsx";
+                nombre = "Reportes_facturacion_" + cmb_sede.Text.Trim() +"_" + DateTime.Now.Date.ToString("yyyy-MM-dd") + ".xlsx";
                 var aa = MessageBox.Show("Confirma que desea generar la hoja de calculo?",
                     "Archivo: " + nombre, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (aa == DialogResult.Yes)
@@ -474,84 +480,63 @@ namespace Grael2
         #endregion
 
         #region crystal
-        private void button2_Click(object sender, EventArgs e)      // resumen de contrato
-        {
-            setParaCrystal("resumen");
-        }
-        private void button4_Click(object sender, EventArgs e)      // reporte de ventas
-        {
-            //if (rb_listado.Checked == true) setParaCrystal("vtasxclte");
-            //else setParaCrystal("ventas");
-        }
         private void setParaCrystal(string repo)                    // genera el set para el reporte de crystal
         {
-            if (repo== "resumen")
-            {
-                //conClie datos = generareporte();                        // conClie = dataset de impresion de contrato   
-                //frmvizcont visualizador = new frmvizcont(datos);        // POR ESO SE CREO ESTE FORM frmvizcont PARA MOSTRAR AHI. ES MEJOR ASI.  
-                //visualizador.Show();
-            }
             if (repo == "ventas")
             {
-                //conClie datos = generarepvtas();
-                //frmvizcont visualizador = new frmvizcont(datos);
-                //visualizador.Show();
+                conClie datos = generarepvtas();
+                frmvizcont visualizador = new frmvizcont(datos);
+                visualizador.Show();
             }
-            if (repo == "vtasxclte")
+            if (repo == "xxx")
             {
                 //conClie datos = generarepvtasxclte();
                 //frmvizoper visualizador = new frmvizoper(datos);
                 //visualizador.Show();
             }
         }
-        private conClie generareporte()
+        private conClie generarepvtas()
         {
-            conClie rescont = new conClie();                                    // dataset
-            /*
-            conClie.rescont_cabRow rowcabeza = rescont.rescont_cab.Newrescont_cabRow();
-            
-            rowcabeza.id = "0";
-            rowcabeza.contrato = tx_codped.Text;
-            rowcabeza.doccli = tx_docu.Text;
-            rowcabeza.nomcli = tx_cliente.Text.Trim();
-            rowcabeza.estado = tx_estad.Text;
-            rowcabeza.fecha = tx_fecha.Text;
-            rowcabeza.tienda = tx_tiend.Text;
-            rowcabeza.valor = tx_valor.Text;
-            rowcabeza.fent = tx_fent.Text;
-            rescont.rescont_cab.Addrescont_cabRow(rowcabeza);
+            conClie rescont = new conClie();
+            conClie.ventasCabRow cabRow = rescont.ventasCab.NewventasCabRow();
+
+            cabRow.id = "0";
+            cabRow.codEsta = tx_dat_est.Text;
+            cabRow.codSede = tx_dat_sede.Text;
+            cabRow.codTdoc = "";
+            cabRow.fecIni = dtp_fac_ini.Text;
+            cabRow.fecFin = dtp_fac_fin.Text;
+            cabRow.nomCliente = Program.cliente;
+            cabRow.nomEsta = cmb_estad.Text;
+            cabRow.nomForm = nomVtasCR;             // nombre del formato CR
+            cabRow.nomSede = cmb_sede.Text;
+            cabRow.nomTdoc = "";
+            cabRow.rucCliente = Program.ruc;
+            cabRow.titRep = tabfacts.Text;
+            rescont.ventasCab.AddventasCabRow(cabRow);
             // detalle
-            foreach(DataGridViewRow row in dgv_resumen.Rows)
+            foreach(DataGridViewRow row in dgv_facts.Rows)
             {
-                if (row.Cells["codigo"].Value != null && row.Cells["codigo"].Value.ToString().Trim() != "")
+                if (row.Cells["numero"].Value != null && row.Cells["numero"].Value.ToString().Trim() != "")
                 {
-                    conClie.rescont_detRow rowdetalle = rescont.rescont_det.Newrescont_detRow();
-                    rowdetalle.id = row.Cells["id"].Value.ToString();
-                    rowdetalle.codigo = row.Cells["codigo"].Value.ToString();
-                    rowdetalle.nombre = row.Cells["nombre"].Value.ToString();
-                    rowdetalle.madera = row.Cells["madera"].Value.ToString();
-                    rowdetalle.cantC = row.Cells["CanC"].Value.ToString();
-                    rowdetalle.sep_id = row.Cells["sep_id"].Value.ToString();
-                    rowdetalle.sep_fecha = row.Cells["sep_fecha"].Value.ToString().PadRight(10).Substring(0,10);
-                    rowdetalle.sep_almac = row.Cells["sep_almac"].Value.ToString();
-                    rowdetalle.sep_cant = row.Cells["canS"].Value.ToString();
-                    rowdetalle.ent_id = row.Cells["ent_id"].Value.ToString();
-                    rowdetalle.ent_fecha = row.Cells["ent_fecha"].Value.ToString().PadRight(10).Substring(0,10);
-                    rowdetalle.ent_cant = row.Cells["canE"].Value.ToString();
-                    rowdetalle.tallerped = row.Cells["tallerped"].Value.ToString();
-                    rowdetalle.ped_pedido = row.Cells["codped"].Value.ToString();
-                    rowdetalle.ped_fecha = row.Cells["ped_fecha"].Value.ToString().PadRight(10).Substring(0,10);
-                    rowdetalle.ped_cant = row.Cells["canP"].Value.ToString();
-                    rowdetalle.ing_id = row.Cells["ing_id"].Value.ToString();
-                    rowdetalle.ing_fecha = row.Cells["ing_fecha"].Value.ToString().PadRight(10).Substring(0,10);
-                    rowdetalle.ing_cant = row.Cells["canI"].Value.ToString();
-                    rowdetalle.sal_id = row.Cells["sal_id"].Value.ToString();
-                    rowdetalle.sal_fecha = row.Cells["sal_fecha"].Value.ToString().PadRight(10).Substring(0,10);
-                    rowdetalle.sal_cant = row.Cells["canA"].Value.ToString();
-                    rescont.rescont_det.Addrescont_detRow(rowdetalle);
+                    conClie.ventasDetRow detRow = rescont.ventasDet.NewventasDetRow();
+                    detRow.id = "0";    // row.Cells["id"].Value.ToString();
+                    detRow.cliente = row.Cells["RUC_DNI"].Value.ToString();
+                    detRow.estado = row.Cells["ESTADO"].Value.ToString();
+                    detRow.guiaRem = ""; // row.Cells["guia"].Value.ToString();
+                    detRow.moneda = row.Cells["MONEDA"].Value.ToString();
+                    detRow.nomclie = row.Cells["CLIENTE"].Value.ToString();
+                    detRow.numero = row.Cells["SERIE"].Value.ToString() + "-" + row.Cells["NUMERO"].Value.ToString();
+                    detRow.origen = row.Cells["ORIGEN"].Value.ToString();
+                    detRow.tipCob = " ";    // row.Cells["tipcob"].Value.ToString();
+                    detRow.tipComp = " ";   // row.Cells["tipcomp"].Value.ToString();
+                    detRow.tipDV = row.Cells["TIPO"].Value.ToString();
+                    detRow.valor = row.Cells["TOTAL_DOC"].Value.ToString();
+                    detRow.fecha = row.Cells["FECHA"].Value.ToString().PadRight(10).Substring(0, 10);
+                    rescont.ventasDet.AddventasDetRow(detRow);
                 }
+                // ,,,DOC,,,DIRECCION,DPTO,PROVIN,DISTRIT,CORREO,,,SUBT,IGV,,TOTAL_MN,,DETRAC
             }
-            */
             return rescont;
         }
         #endregion

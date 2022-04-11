@@ -55,21 +55,17 @@
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabfacts = new System.Windows.Forms.TabPage();
-            this.tx_totv_a = new Grael2.NumericTextBox();
-            this.tx_tfi_a = new Grael2.NumericTextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.tx_tfi_f = new Grael2.NumericTextBox();
             this.label28 = new System.Windows.Forms.Label();
-            this.tx_totval = new Grael2.NumericTextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.chk_excl_guias = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tx_estad_guias = new System.Windows.Forms.TextBox();
-            this.cmb_estad_guias = new System.Windows.Forms.ComboBox();
+            this.tx_dat_est = new System.Windows.Forms.TextBox();
+            this.cmb_estad = new System.Windows.Forms.ComboBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
@@ -79,14 +75,18 @@
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.tx_sede_guias = new System.Windows.Forms.TextBox();
-            this.cmb_sede_guias = new System.Windows.Forms.ComboBox();
+            this.tx_dat_sede = new System.Windows.Forms.TextBox();
+            this.cmb_sede = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.dtp_fin_guias = new System.Windows.Forms.DateTimePicker();
-            this.dtp_ini_guias = new System.Windows.Forms.DateTimePicker();
+            this.dtp_fac_fin = new System.Windows.Forms.DateTimePicker();
+            this.dtp_fac_ini = new System.Windows.Forms.DateTimePicker();
             this.bt_guias = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.tx_totv_a = new Grael2.NumericTextBox();
+            this.tx_tfi_a = new Grael2.NumericTextBox();
+            this.tx_tfi_f = new Grael2.NumericTextBox();
+            this.tx_totval = new Grael2.NumericTextBox();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabfacts.SuspendLayout();
@@ -377,19 +377,19 @@
             this.tabfacts.Controls.Add(this.label12);
             this.tabfacts.Controls.Add(this.chk_excl_guias);
             this.tabfacts.Controls.Add(this.groupBox3);
-            this.tabfacts.Controls.Add(this.tx_estad_guias);
-            this.tabfacts.Controls.Add(this.cmb_estad_guias);
+            this.tabfacts.Controls.Add(this.tx_dat_est);
+            this.tabfacts.Controls.Add(this.cmb_estad);
             this.tabfacts.Controls.Add(this.groupBox5);
             this.tabfacts.Controls.Add(this.groupBox11);
             this.tabfacts.Controls.Add(this.dgv_facts);
             this.tabfacts.Controls.Add(this.label1);
             this.tabfacts.Controls.Add(this.groupBox13);
             this.tabfacts.Controls.Add(this.label2);
-            this.tabfacts.Controls.Add(this.tx_sede_guias);
-            this.tabfacts.Controls.Add(this.cmb_sede_guias);
+            this.tabfacts.Controls.Add(this.tx_dat_sede);
+            this.tabfacts.Controls.Add(this.cmb_sede);
             this.tabfacts.Controls.Add(this.button1);
-            this.tabfacts.Controls.Add(this.dtp_fin_guias);
-            this.tabfacts.Controls.Add(this.dtp_ini_guias);
+            this.tabfacts.Controls.Add(this.dtp_fac_fin);
+            this.tabfacts.Controls.Add(this.dtp_fac_ini);
             this.tabfacts.Controls.Add(this.bt_guias);
             this.tabfacts.Controls.Add(this.label3);
             this.tabfacts.Controls.Add(this.label4);
@@ -399,30 +399,6 @@
             this.tabfacts.TabIndex = 7;
             this.tabfacts.Text = "Facturación";
             this.tabfacts.UseVisualStyleBackColor = true;
-            // 
-            // tx_totv_a
-            // 
-            this.tx_totv_a.AllowSpace = false;
-            this.tx_totv_a.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tx_totv_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_totv_a.Location = new System.Drawing.Point(278, 352);
-            this.tx_totv_a.Name = "tx_totv_a";
-            this.tx_totv_a.ReadOnly = true;
-            this.tx_totv_a.Size = new System.Drawing.Size(76, 20);
-            this.tx_totv_a.TabIndex = 408;
-            this.tx_totv_a.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tx_tfi_a
-            // 
-            this.tx_tfi_a.AllowSpace = false;
-            this.tx_tfi_a.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tx_tfi_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfi_a.Location = new System.Drawing.Point(86, 352);
-            this.tx_tfi_a.Name = "tx_tfi_a";
-            this.tx_tfi_a.ReadOnly = true;
-            this.tx_tfi_a.Size = new System.Drawing.Size(41, 20);
-            this.tx_tfi_a.TabIndex = 407;
-            this.tx_tfi_a.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label13
             // 
@@ -468,18 +444,6 @@
             this.groupBox8.TabIndex = 113;
             this.groupBox8.TabStop = false;
             // 
-            // tx_tfi_f
-            // 
-            this.tx_tfi_f.AllowSpace = false;
-            this.tx_tfi_f.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tx_tfi_f.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_tfi_f.Location = new System.Drawing.Point(468, 352);
-            this.tx_tfi_f.Name = "tx_tfi_f";
-            this.tx_tfi_f.ReadOnly = true;
-            this.tx_tfi_f.Size = new System.Drawing.Size(41, 20);
-            this.tx_tfi_f.TabIndex = 403;
-            this.tx_tfi_f.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // label28
             // 
             this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -491,18 +455,6 @@
             this.label28.TabIndex = 402;
             this.label28.Text = "Filas vigentes";
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tx_totval
-            // 
-            this.tx_totval.AllowSpace = false;
-            this.tx_totval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tx_totval.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tx_totval.Location = new System.Drawing.Point(633, 352);
-            this.tx_totval.Name = "tx_totval";
-            this.tx_totval.ReadOnly = true;
-            this.tx_totval.Size = new System.Drawing.Size(76, 20);
-            this.tx_totval.TabIndex = 398;
-            this.tx_totval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label12
             // 
@@ -545,27 +497,27 @@
             this.groupBox4.TabIndex = 113;
             this.groupBox4.TabStop = false;
             // 
-            // tx_estad_guias
+            // tx_dat_est
             // 
-            this.tx_estad_guias.Location = new System.Drawing.Point(153, 28);
-            this.tx_estad_guias.Name = "tx_estad_guias";
-            this.tx_estad_guias.Size = new System.Drawing.Size(17, 20);
-            this.tx_estad_guias.TabIndex = 389;
-            this.tx_estad_guias.Visible = false;
+            this.tx_dat_est.Location = new System.Drawing.Point(153, 28);
+            this.tx_dat_est.Name = "tx_dat_est";
+            this.tx_dat_est.Size = new System.Drawing.Size(17, 20);
+            this.tx_dat_est.TabIndex = 389;
+            this.tx_dat_est.Visible = false;
             // 
-            // cmb_estad_guias
+            // cmb_estad
             // 
-            this.cmb_estad_guias.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.cmb_estad_guias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_estad_guias.DropDownWidth = 100;
-            this.cmb_estad_guias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmb_estad_guias.FormattingEnabled = true;
-            this.cmb_estad_guias.Location = new System.Drawing.Point(260, 25);
-            this.cmb_estad_guias.Name = "cmb_estad_guias";
-            this.cmb_estad_guias.Size = new System.Drawing.Size(85, 21);
-            this.cmb_estad_guias.TabIndex = 388;
-            this.cmb_estad_guias.SelectionChangeCommitted += new System.EventHandler(this.cmb_estad_guias_SelectionChangeCommitted);
-            this.cmb_estad_guias.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_estad_guias_KeyDown);
+            this.cmb_estad.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.cmb_estad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_estad.DropDownWidth = 100;
+            this.cmb_estad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmb_estad.FormattingEnabled = true;
+            this.cmb_estad.Location = new System.Drawing.Point(260, 25);
+            this.cmb_estad.Name = "cmb_estad";
+            this.cmb_estad.Size = new System.Drawing.Size(85, 21);
+            this.cmb_estad.TabIndex = 388;
+            this.cmb_estad.SelectionChangeCommitted += new System.EventHandler(this.cmb_estad_guias_SelectionChangeCommitted);
+            this.cmb_estad.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_estad_guias_KeyDown);
             // 
             // groupBox5
             // 
@@ -658,55 +610,56 @@
             this.label2.TabIndex = 380;
             this.label2.Text = "Local Sede";
             // 
-            // tx_sede_guias
+            // tx_dat_sede
             // 
-            this.tx_sede_guias.Location = new System.Drawing.Point(153, 4);
-            this.tx_sede_guias.Name = "tx_sede_guias";
-            this.tx_sede_guias.Size = new System.Drawing.Size(20, 20);
-            this.tx_sede_guias.TabIndex = 381;
-            this.tx_sede_guias.Visible = false;
+            this.tx_dat_sede.Location = new System.Drawing.Point(153, 4);
+            this.tx_dat_sede.Name = "tx_dat_sede";
+            this.tx_dat_sede.Size = new System.Drawing.Size(20, 20);
+            this.tx_dat_sede.TabIndex = 381;
+            this.tx_dat_sede.Visible = false;
             // 
-            // cmb_sede_guias
+            // cmb_sede
             // 
-            this.cmb_sede_guias.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.cmb_sede_guias.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_sede_guias.DropDownWidth = 100;
-            this.cmb_sede_guias.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmb_sede_guias.FormattingEnabled = true;
-            this.cmb_sede_guias.Location = new System.Drawing.Point(243, 3);
-            this.cmb_sede_guias.Name = "cmb_sede_guias";
-            this.cmb_sede_guias.Size = new System.Drawing.Size(85, 21);
-            this.cmb_sede_guias.TabIndex = 379;
-            this.cmb_sede_guias.SelectionChangeCommitted += new System.EventHandler(this.cmb_sede_guias_SelectionChangeCommitted);
-            this.cmb_sede_guias.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_sede_guias_KeyDown);
+            this.cmb_sede.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.cmb_sede.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_sede.DropDownWidth = 100;
+            this.cmb_sede.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmb_sede.FormattingEnabled = true;
+            this.cmb_sede.Location = new System.Drawing.Point(243, 3);
+            this.cmb_sede.Name = "cmb_sede";
+            this.cmb_sede.Size = new System.Drawing.Size(85, 21);
+            this.cmb_sede.TabIndex = 379;
+            this.cmb_sede.SelectionChangeCommitted += new System.EventHandler(this.cmb_sede_guias_SelectionChangeCommitted);
+            this.cmb_sede.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_sede_guias_KeyDown);
             // 
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Enabled = false;
+            this.button1.Image = global::Grael2.Properties.Resources.print_preview_24;
             this.button1.Location = new System.Drawing.Point(753, 5);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(50, 41);
             this.button1.TabIndex = 378;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // dtp_fin_guias
+            // dtp_fac_fin
             // 
-            this.dtp_fin_guias.Checked = false;
-            this.dtp_fin_guias.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtp_fin_guias.Location = new System.Drawing.Point(542, 26);
-            this.dtp_fin_guias.Name = "dtp_fin_guias";
-            this.dtp_fin_guias.Size = new System.Drawing.Size(95, 20);
-            this.dtp_fin_guias.TabIndex = 374;
+            this.dtp_fac_fin.Checked = false;
+            this.dtp_fac_fin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_fac_fin.Location = new System.Drawing.Point(542, 26);
+            this.dtp_fac_fin.Name = "dtp_fac_fin";
+            this.dtp_fac_fin.Size = new System.Drawing.Size(95, 20);
+            this.dtp_fac_fin.TabIndex = 374;
             // 
-            // dtp_ini_guias
+            // dtp_fac_ini
             // 
-            this.dtp_ini_guias.Checked = false;
-            this.dtp_ini_guias.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtp_ini_guias.Location = new System.Drawing.Point(542, 4);
-            this.dtp_ini_guias.Name = "dtp_ini_guias";
-            this.dtp_ini_guias.Size = new System.Drawing.Size(95, 20);
-            this.dtp_ini_guias.TabIndex = 373;
+            this.dtp_fac_ini.Checked = false;
+            this.dtp_fac_ini.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_fac_ini.Location = new System.Drawing.Point(542, 4);
+            this.dtp_fac_ini.Name = "dtp_fac_ini";
+            this.dtp_fac_ini.Size = new System.Drawing.Size(95, 20);
+            this.dtp_fac_ini.TabIndex = 373;
             // 
             // bt_guias
             // 
@@ -736,6 +689,54 @@
             this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 376;
             this.label4.Text = "Fech Inicial";
+            // 
+            // tx_totv_a
+            // 
+            this.tx_totv_a.AllowSpace = false;
+            this.tx_totv_a.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tx_totv_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_totv_a.Location = new System.Drawing.Point(278, 352);
+            this.tx_totv_a.Name = "tx_totv_a";
+            this.tx_totv_a.ReadOnly = true;
+            this.tx_totv_a.Size = new System.Drawing.Size(76, 20);
+            this.tx_totv_a.TabIndex = 408;
+            this.tx_totv_a.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tx_tfi_a
+            // 
+            this.tx_tfi_a.AllowSpace = false;
+            this.tx_tfi_a.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tx_tfi_a.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_tfi_a.Location = new System.Drawing.Point(86, 352);
+            this.tx_tfi_a.Name = "tx_tfi_a";
+            this.tx_tfi_a.ReadOnly = true;
+            this.tx_tfi_a.Size = new System.Drawing.Size(41, 20);
+            this.tx_tfi_a.TabIndex = 407;
+            this.tx_tfi_a.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tx_tfi_f
+            // 
+            this.tx_tfi_f.AllowSpace = false;
+            this.tx_tfi_f.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tx_tfi_f.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_tfi_f.Location = new System.Drawing.Point(468, 352);
+            this.tx_tfi_f.Name = "tx_tfi_f";
+            this.tx_tfi_f.ReadOnly = true;
+            this.tx_tfi_f.Size = new System.Drawing.Size(41, 20);
+            this.tx_tfi_f.TabIndex = 403;
+            this.tx_tfi_f.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tx_totval
+            // 
+            this.tx_totval.AllowSpace = false;
+            this.tx_totval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tx_totval.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_totval.Location = new System.Drawing.Point(633, 352);
+            this.tx_totval.Name = "tx_totval";
+            this.tx_totval.ReadOnly = true;
+            this.tx_totval.Size = new System.Drawing.Size(76, 20);
+            this.tx_totval.TabIndex = 398;
+            this.tx_totval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // repsventas
             // 
@@ -797,8 +798,8 @@
         private System.Windows.Forms.CheckBox chk_excl_guias;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TextBox tx_estad_guias;
-        private System.Windows.Forms.ComboBox cmb_estad_guias;
+        private System.Windows.Forms.TextBox tx_dat_est;
+        private System.Windows.Forms.ComboBox cmb_estad;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox11;
@@ -808,11 +809,11 @@
         private System.Windows.Forms.GroupBox groupBox13;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tx_sede_guias;
-        private System.Windows.Forms.ComboBox cmb_sede_guias;
+        private System.Windows.Forms.TextBox tx_dat_sede;
+        private System.Windows.Forms.ComboBox cmb_sede;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DateTimePicker dtp_fin_guias;
-        private System.Windows.Forms.DateTimePicker dtp_ini_guias;
+        private System.Windows.Forms.DateTimePicker dtp_fac_fin;
+        private System.Windows.Forms.DateTimePicker dtp_fac_ini;
         private System.Windows.Forms.Button bt_guias;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;

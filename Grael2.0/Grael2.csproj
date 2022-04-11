@@ -112,6 +112,12 @@
     <Compile Include="facelect.designer.cs">
       <DependentUpon>facelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmvizcont.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmvizcont.designer.cs">
+      <DependentUpon>frmvizcont.cs</DependentUpon>
+    </Compile>
     <Compile Include="libreria.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -143,6 +149,12 @@
     <Compile Include="repsventas.designer.cs">
       <DependentUpon>repsventas.cs</DependentUpon>
     </Compile>
+    <Compile Include="repVetas1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>repVetas1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ubigdir.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +185,9 @@
     <EmbeddedResource Include="facelect.resx">
       <DependentUpon>facelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmvizcont.resx">
+      <DependentUpon>frmvizcont.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="login.resx">
       <DependentUpon>login.cs</DependentUpon>
     </EmbeddedResource>
@@ -194,6 +209,10 @@
     </Compile>
     <EmbeddedResource Include="repsventas.resx">
       <DependentUpon>repsventas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="repVetas1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>repVetas1.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="ubigdir.resx">
       <DependentUpon>ubigdir.cs</DependentUpon>
@@ -234,6 +253,7 @@
     <None Include="Resources\logo_fb.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\print_preview_24.png" />
     <None Include="Resources\process24.png" />
     <None Include="Resources\Close_32.png" />
     <None Include="Resources\docum32.png" />
@@ -243,6 +263,9 @@
     <Content Include="Resources\fec_elect21.png" />
     <Content Include="Resources\logo_grael.png" />
     <None Include="Resources\service_manager.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
