@@ -17,7 +17,7 @@ me quede en agregar los procedimientos y triggers a la base erp_grael para :
 - form facelect, agregar elementos de cargas especiales o únicas .............. ok 31/03/2022
 Se "achicó" los forms y textos a Arial 7 en su mayoría ........................ ok 16/03/2022
 - form facelect, adecuaciones finales, corporativos, impresion, etc ........... ok 31/03/2022
-- form facelect, terminando formato pdf fact detrac especiales ................     a la espera de la confirmacion de Richard
+- form facelect, terminando formato pdf fact detrac especiales ................ ok 09/04/2022    a la espera de la confirmacion de Richard
 - form facelect, correccion en codigos de tipo de operacion ................... ok 08/04/2022
 - libreria, cambio de conector solorsoft, ahora se usa la base sunat0 .........		solo para rucs, para dni se usa el conector
 OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, solo nombres, el digitador le completa la dirección
