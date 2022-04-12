@@ -39,6 +39,8 @@
             this.Bt_edit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.Bt_anul = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.Bt_ver = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.Tx_modo = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -63,7 +65,6 @@
             this.tx_enla1 = new System.Windows.Forms.TextBox();
             this.lb_enla1 = new System.Windows.Forms.Label();
             this.chk_marc3 = new System.Windows.Forms.CheckBox();
-            this.chk_marc2 = new System.Windows.Forms.CheckBox();
             this.chk_marc1 = new System.Windows.Forms.CheckBox();
             this.groupBox27 = new System.Windows.Forms.GroupBox();
             this.groupBox28 = new System.Windows.Forms.GroupBox();
@@ -120,8 +121,12 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.Bt_ver = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.groupBox35 = new System.Windows.Forms.GroupBox();
+            this.groupBox36 = new System.Windows.Forms.GroupBox();
+            this.groupBox37 = new System.Windows.Forms.GroupBox();
+            this.groupBox38 = new System.Windows.Forms.GroupBox();
+            this.tx_mar2 = new System.Windows.Forms.TextBox();
+            this.lb_mar2 = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabgrilla.SuspendLayout();
@@ -144,6 +149,8 @@
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox11.SuspendLayout();
+            this.groupBox35.SuspendLayout();
+            this.groupBox37.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -264,6 +271,25 @@
             this.Bt_anul.Text = "Bt_close";
             this.Bt_anul.ToolTipText = "Anular usuario";
             this.Bt_anul.Click += new System.EventHandler(this.Bt_anul_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.AutoSize = false;
+            this.toolStripSeparator12.ForeColor = System.Drawing.Color.Black;
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(3, 45);
+            // 
+            // Bt_ver
+            // 
+            this.Bt_ver.AutoSize = false;
+            this.Bt_ver.BackColor = System.Drawing.SystemColors.Control;
+            this.Bt_ver.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.Bt_ver.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Bt_ver.Name = "Bt_ver";
+            this.Bt_ver.Size = new System.Drawing.Size(32, 32);
+            this.Bt_ver.Text = "Bt_close";
+            this.Bt_ver.ToolTipText = "Visualizar (Ctrl O)";
+            this.Bt_ver.Click += new System.EventHandler(this.Bt_ver_Click);
             // 
             // toolStripSeparator4
             // 
@@ -421,13 +447,12 @@
             // tabreg
             // 
             this.tabreg.BackColor = System.Drawing.Color.Silver;
+            this.tabreg.Controls.Add(this.groupBox35);
+            this.tabreg.Controls.Add(this.groupBox37);
+            this.tabreg.Controls.Add(this.tx_mar2);
+            this.tabreg.Controls.Add(this.lb_mar2);
             this.tabreg.Controls.Add(this.groupBox31);
             this.tabreg.Controls.Add(this.groupBox33);
-            this.tabreg.Controls.Add(this.tx_enla1);
-            this.tabreg.Controls.Add(this.lb_enla1);
-            this.tabreg.Controls.Add(this.chk_marc3);
-            this.tabreg.Controls.Add(this.chk_marc2);
-            this.tabreg.Controls.Add(this.chk_marc1);
             this.tabreg.Controls.Add(this.groupBox27);
             this.tabreg.Controls.Add(this.groupBox29);
             this.tabreg.Controls.Add(this.groupBox23);
@@ -438,6 +463,15 @@
             this.tabreg.Controls.Add(this.groupBox17);
             this.tabreg.Controls.Add(this.groupBox13);
             this.tabreg.Controls.Add(this.groupBox9);
+            this.tabreg.Controls.Add(this.groupBox7);
+            this.tabreg.Controls.Add(this.groupBox5);
+            this.tabreg.Controls.Add(this.groupBox3);
+            this.tabreg.Controls.Add(this.groupBox1);
+            this.tabreg.Controls.Add(this.groupBox11);
+            this.tabreg.Controls.Add(this.tx_enla1);
+            this.tabreg.Controls.Add(this.lb_enla1);
+            this.tabreg.Controls.Add(this.chk_marc3);
+            this.tabreg.Controls.Add(this.chk_marc1);
             this.tabreg.Controls.Add(this.tx_det5);
             this.tabreg.Controls.Add(this.lb_ubigeo);
             this.tabreg.Controls.Add(this.tx_det4);
@@ -449,7 +483,6 @@
             this.tabreg.Controls.Add(this.tx_det1);
             this.tabreg.Controls.Add(this.lb_det1);
             this.tabreg.Controls.Add(this.lb_descrizrid);
-            this.tabreg.Controls.Add(this.groupBox7);
             this.tabreg.Controls.Add(this.textBox5);
             this.tabreg.Controls.Add(this.tx_rind);
             this.tabreg.Controls.Add(this.comboBox1);
@@ -458,10 +491,6 @@
             this.tabreg.Controls.Add(this.lb_descriz);
             this.tabreg.Controls.Add(this.lb_codigo);
             this.tabreg.Controls.Add(this.lb_idcodice);
-            this.tabreg.Controls.Add(this.groupBox5);
-            this.tabreg.Controls.Add(this.groupBox3);
-            this.tabreg.Controls.Add(this.groupBox1);
-            this.tabreg.Controls.Add(this.groupBox11);
             this.tabreg.Controls.Add(this.checkBox1);
             this.tabreg.Controls.Add(this.textBox4);
             this.tabreg.Controls.Add(this.textBox3);
@@ -475,6 +504,7 @@
             this.tabreg.Size = new System.Drawing.Size(654, 343);
             this.tabreg.TabIndex = 1;
             this.tabreg.Text = "Registro";
+            this.tabreg.Enter += new System.EventHandler(this.mascara);
             // 
             // groupBox31
             // 
@@ -525,7 +555,7 @@
             // 
             this.lb_enla1.AutoSize = true;
             this.lb_enla1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_enla1.Location = new System.Drawing.Point(82, 286);
+            this.lb_enla1.Location = new System.Drawing.Point(82, 287);
             this.lb_enla1.Name = "lb_enla1";
             this.lb_enla1.Size = new System.Drawing.Size(52, 13);
             this.lb_enla1.TabIndex = 216;
@@ -536,29 +566,18 @@
             // 
             this.chk_marc3.AutoSize = true;
             this.chk_marc3.ForeColor = System.Drawing.Color.Black;
-            this.chk_marc3.Location = new System.Drawing.Point(344, 315);
+            this.chk_marc3.Location = new System.Drawing.Point(479, 287);
             this.chk_marc3.Name = "chk_marc3";
             this.chk_marc3.Size = new System.Drawing.Size(62, 17);
             this.chk_marc3.TabIndex = 14;
             this.chk_marc3.Text = "Marca3";
             this.chk_marc3.UseVisualStyleBackColor = true;
             // 
-            // chk_marc2
-            // 
-            this.chk_marc2.AutoSize = true;
-            this.chk_marc2.ForeColor = System.Drawing.Color.Black;
-            this.chk_marc2.Location = new System.Drawing.Point(214, 315);
-            this.chk_marc2.Name = "chk_marc2";
-            this.chk_marc2.Size = new System.Drawing.Size(62, 17);
-            this.chk_marc2.TabIndex = 13;
-            this.chk_marc2.Text = "Marca2";
-            this.chk_marc2.UseVisualStyleBackColor = true;
-            // 
             // chk_marc1
             // 
             this.chk_marc1.AutoSize = true;
             this.chk_marc1.ForeColor = System.Drawing.Color.Black;
-            this.chk_marc1.Location = new System.Drawing.Point(84, 315);
+            this.chk_marc1.Location = new System.Drawing.Point(396, 286);
             this.chk_marc1.Name = "chk_marc1";
             this.chk_marc1.Size = new System.Drawing.Size(62, 17);
             this.chk_marc1.TabIndex = 12;
@@ -759,7 +778,7 @@
             // 
             this.lb_ubigeo.AutoSize = true;
             this.lb_ubigeo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_ubigeo.Location = new System.Drawing.Point(82, 261);
+            this.lb_ubigeo.Location = new System.Drawing.Point(82, 262);
             this.lb_ubigeo.Name = "lb_ubigeo";
             this.lb_ubigeo.Size = new System.Drawing.Size(70, 13);
             this.lb_ubigeo.TabIndex = 200;
@@ -779,7 +798,7 @@
             // 
             this.lb_det4.AutoSize = true;
             this.lb_det4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_det4.Location = new System.Drawing.Point(82, 236);
+            this.lb_det4.Location = new System.Drawing.Point(82, 237);
             this.lb_det4.Name = "lb_det4";
             this.lb_det4.Size = new System.Drawing.Size(76, 13);
             this.lb_det4.TabIndex = 198;
@@ -799,7 +818,7 @@
             // 
             this.lb_det3.AutoSize = true;
             this.lb_det3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_det3.Location = new System.Drawing.Point(82, 211);
+            this.lb_det3.Location = new System.Drawing.Point(82, 212);
             this.lb_det3.Name = "lb_det3";
             this.lb_det3.Size = new System.Drawing.Size(76, 13);
             this.lb_det3.TabIndex = 196;
@@ -819,7 +838,7 @@
             // 
             this.lb_det2.AutoSize = true;
             this.lb_det2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_det2.Location = new System.Drawing.Point(82, 186);
+            this.lb_det2.Location = new System.Drawing.Point(82, 187);
             this.lb_det2.Name = "lb_det2";
             this.lb_det2.Size = new System.Drawing.Size(76, 13);
             this.lb_det2.TabIndex = 194;
@@ -839,7 +858,7 @@
             // 
             this.lb_det1.AutoSize = true;
             this.lb_det1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_det1.Location = new System.Drawing.Point(82, 161);
+            this.lb_det1.Location = new System.Drawing.Point(82, 162);
             this.lb_det1.Name = "lb_det1";
             this.lb_det1.Size = new System.Drawing.Size(76, 13);
             this.lb_det1.TabIndex = 192;
@@ -850,7 +869,7 @@
             // 
             this.lb_descrizrid.AutoSize = true;
             this.lb_descrizrid.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_descrizrid.Location = new System.Drawing.Point(82, 136);
+            this.lb_descrizrid.Location = new System.Drawing.Point(82, 137);
             this.lb_descrizrid.Name = "lb_descrizrid";
             this.lb_descrizrid.Size = new System.Drawing.Size(74, 13);
             this.lb_descrizrid.TabIndex = 191;
@@ -919,7 +938,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(82, 36);
+            this.label3.Location = new System.Drawing.Point(82, 37);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 180;
@@ -930,7 +949,7 @@
             // 
             this.lb_descriz.AutoSize = true;
             this.lb_descriz.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_descriz.Location = new System.Drawing.Point(82, 111);
+            this.lb_descriz.Location = new System.Drawing.Point(82, 112);
             this.lb_descriz.Name = "lb_descriz";
             this.lb_descriz.Size = new System.Drawing.Size(63, 13);
             this.lb_descriz.TabIndex = 179;
@@ -941,7 +960,7 @@
             // 
             this.lb_codigo.AutoSize = true;
             this.lb_codigo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_codigo.Location = new System.Drawing.Point(82, 86);
+            this.lb_codigo.Location = new System.Drawing.Point(82, 87);
             this.lb_codigo.Name = "lb_codigo";
             this.lb_codigo.Size = new System.Drawing.Size(49, 13);
             this.lb_codigo.TabIndex = 178;
@@ -952,7 +971,7 @@
             // 
             this.lb_idcodice.AutoSize = true;
             this.lb_idcodice.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lb_idcodice.Location = new System.Drawing.Point(82, 61);
+            this.lb_idcodice.Location = new System.Drawing.Point(82, 62);
             this.lb_idcodice.Name = "lb_idcodice";
             this.lb_idcodice.Size = new System.Drawing.Size(54, 13);
             this.lb_idcodice.TabIndex = 177;
@@ -1090,24 +1109,61 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Bt_ver
+            // groupBox35
             // 
-            this.Bt_ver.AutoSize = false;
-            this.Bt_ver.BackColor = System.Drawing.SystemColors.Control;
-            this.Bt_ver.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.Bt_ver.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.Bt_ver.Name = "Bt_ver";
-            this.Bt_ver.Size = new System.Drawing.Size(32, 32);
-            this.Bt_ver.Text = "Bt_close";
-            this.Bt_ver.ToolTipText = "Visualizar (Ctrl O)";
-            this.Bt_ver.Click += new System.EventHandler(this.Bt_ver_Click);
+            this.groupBox35.BackColor = System.Drawing.Color.White;
+            this.groupBox35.Controls.Add(this.groupBox36);
+            this.groupBox35.Location = new System.Drawing.Point(81, 326);
+            this.groupBox35.Name = "groupBox35";
+            this.groupBox35.Size = new System.Drawing.Size(155, 1);
+            this.groupBox35.TabIndex = 222;
+            this.groupBox35.TabStop = false;
             // 
-            // toolStripSeparator12
+            // groupBox36
             // 
-            this.toolStripSeparator12.AutoSize = false;
-            this.toolStripSeparator12.ForeColor = System.Drawing.Color.Black;
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(3, 45);
+            this.groupBox36.Location = new System.Drawing.Point(0, -26);
+            this.groupBox36.Name = "groupBox36";
+            this.groupBox36.Size = new System.Drawing.Size(164, 1);
+            this.groupBox36.TabIndex = 113;
+            this.groupBox36.TabStop = false;
+            // 
+            // groupBox37
+            // 
+            this.groupBox37.BackColor = System.Drawing.Color.White;
+            this.groupBox37.Controls.Add(this.groupBox38);
+            this.groupBox37.Location = new System.Drawing.Point(81, 326);
+            this.groupBox37.Name = "groupBox37";
+            this.groupBox37.Size = new System.Drawing.Size(122, 1);
+            this.groupBox37.TabIndex = 221;
+            this.groupBox37.TabStop = false;
+            // 
+            // groupBox38
+            // 
+            this.groupBox38.Location = new System.Drawing.Point(0, -26);
+            this.groupBox38.Name = "groupBox38";
+            this.groupBox38.Size = new System.Drawing.Size(164, 1);
+            this.groupBox38.TabIndex = 113;
+            this.groupBox38.TabStop = false;
+            // 
+            // tx_mar2
+            // 
+            this.tx_mar2.BackColor = System.Drawing.SystemColors.Window;
+            this.tx_mar2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tx_mar2.Location = new System.Drawing.Point(167, 309);
+            this.tx_mar2.Name = "tx_mar2";
+            this.tx_mar2.Size = new System.Drawing.Size(70, 18);
+            this.tx_mar2.TabIndex = 219;
+            // 
+            // lb_mar2
+            // 
+            this.lb_mar2.AutoSize = true;
+            this.lb_mar2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lb_mar2.Location = new System.Drawing.Point(82, 311);
+            this.lb_mar2.Name = "lb_mar2";
+            this.lb_mar2.Size = new System.Drawing.Size(46, 13);
+            this.lb_mar2.TabIndex = 220;
+            this.lb_mar2.Text = "Marca 2";
+            this.lb_mar2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // defs
             // 
@@ -1153,6 +1209,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
+            this.groupBox35.ResumeLayout(false);
+            this.groupBox37.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1241,7 +1299,6 @@
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox chk_marc3;
-        private System.Windows.Forms.CheckBox chk_marc2;
         private System.Windows.Forms.CheckBox chk_marc1;
         private System.Windows.Forms.GroupBox groupBox31;
         private System.Windows.Forms.GroupBox groupBox32;
@@ -1251,5 +1308,11 @@
         private System.Windows.Forms.Label lb_enla1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         private System.Windows.Forms.ToolStripButton Bt_ver;
+        private System.Windows.Forms.GroupBox groupBox35;
+        private System.Windows.Forms.GroupBox groupBox36;
+        private System.Windows.Forms.GroupBox groupBox37;
+        private System.Windows.Forms.GroupBox groupBox38;
+        private System.Windows.Forms.TextBox tx_mar2;
+        private System.Windows.Forms.Label lb_mar2;
     }
 }
