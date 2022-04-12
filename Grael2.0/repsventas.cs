@@ -226,7 +226,7 @@ namespace Grael2
                 case "dgv_facts":
                     dgv_facts.Font = tiplg;
                     dgv_facts.DefaultCellStyle.Font = tiplg;
-                    dgv_facts.RowTemplate.Height = 15;
+                    //dgv_facts.RowTemplate.Height = 10;        // se maneja desde propiedades rows height
                     dgv_facts.AllowUserToAddRows = false;
                     dgv_facts.Width = Parent.Width; //  - 70   1015;
                     if (dgv_facts.DataSource == null) dgv_facts.ColumnCount = 11;
@@ -246,7 +246,8 @@ namespace Grael2
                             dgv_facts.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                             dgv_facts.Columns[i].Width = a;
                         }
-                        if (b < dgv_facts.Width) dgv_facts.Width = b - 20;  // b + 60;
+                        //if (b < dgv_facts.Width) dgv_facts.Width = b - 20;  // b + 60;
+                        dgv_facts.Width = Parent.Width - 80;
                         dgv_facts.ReadOnly = true;
                     }
                     suma_grilla("dgv_facts");

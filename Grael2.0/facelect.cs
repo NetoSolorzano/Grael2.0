@@ -1715,12 +1715,17 @@ namespace Grael2
                         tipope = "1004";                                                                        // tipo de operacion con detraccion
                         if (rb_fesp.Checked == true)
                         {
-                            totdet = double.Parse(tx_detrac.Text);
+                            if (Math.Round(double.Parse(tx_detrac.Text), 2) >= (Math.Round(double.Parse(tx_fletMN.Text) * double.Parse(Program.pordetra) / 100, 2))) { 
+                                totdet = double.Parse(tx_detrac.Text); 
+                            }
+                            else { 
+                                totdet = Math.Round(double.Parse(tx_fletMN.Text) * double.Parse(Program.pordetra) / 100, 2); 
+                            }
                             insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2"; // codigoAuxiliar500_2,textoAuxiliar500_2
                         }
                         else
                         {
-                            totdet = Math.Round(double.Parse(tx_flete.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
+                            totdet = Math.Round(double.Parse(tx_fletMN.Text) * double.Parse(Program.pordetra) / 100, 2);    // totalDetraccion
                             insertcab = insertcab + ",codigoDetraccion,totalDetraccion,porcentajeDetraccion,numeroCtaBancoNacion,codigoLeyenda_2,textoLeyenda_2";
                         }
                     }
