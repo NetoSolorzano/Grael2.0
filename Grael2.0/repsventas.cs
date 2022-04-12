@@ -219,16 +219,16 @@ namespace Grael2
         }
         private void grilla(string dgv)                             // 
         {
-            Font tiplg = new Font("Arial", 7, FontStyle.Bold);
+            Font tiplg = new Font("Arial", 7); // , FontStyle.Bold
             int b;
             switch (dgv)
             {
-                case "dgv_guias":
+                case "dgv_facts":
                     dgv_facts.Font = tiplg;
                     dgv_facts.DefaultCellStyle.Font = tiplg;
                     dgv_facts.RowTemplate.Height = 15;
                     dgv_facts.AllowUserToAddRows = false;
-                    dgv_facts.Width = Parent.Width - 70; // 1015;
+                    dgv_facts.Width = Parent.Width; //  - 70   1015;
                     if (dgv_facts.DataSource == null) dgv_facts.ColumnCount = 11;
                     if (dgv_facts.Rows.Count > 0)
                     {
@@ -273,7 +273,7 @@ namespace Grael2
                         DataTable dt = new DataTable();
                         da.Fill(dt);
                         dgv_facts.DataSource = dt;
-                        grilla("dgv_guias");
+                        grilla("dgv_facts");
                     }
                     string resulta = lib.ult_mov(nomform, nomtab, asd);
                     if (resulta != "OK")                                        // actualizamos la tabla usuarios
@@ -316,6 +316,10 @@ namespace Grael2
                     tx_totv_a.Text = tva.ToString("#0.00");
                     break;
             }
+        }
+        private void repsventas_Resize(object sender, EventArgs e)
+        {
+            grilla("dgv_facts");
         }
 
         #region combos
@@ -523,12 +527,12 @@ namespace Grael2
                     detRow.id = "0";    // row.Cells["id"].Value.ToString();
                     detRow.cliente = row.Cells["RUC_DNI"].Value.ToString();
                     detRow.estado = row.Cells["ESTADO"].Value.ToString();
-                    detRow.guiaRem = ""; // row.Cells["guia"].Value.ToString();
+                    detRow.guiaRem = row.Cells["GUIA"].Value.ToString();
                     detRow.moneda = row.Cells["MONEDA"].Value.ToString();
                     detRow.nomclie = row.Cells["CLIENTE"].Value.ToString();
                     detRow.numero = row.Cells["SERIE"].Value.ToString() + "-" + row.Cells["NUMERO"].Value.ToString();
                     detRow.origen = row.Cells["ORIGEN"].Value.ToString();
-                    detRow.tipCob = " ";    // row.Cells["tipcob"].Value.ToString();
+                    detRow.tipCob = row.Cells["condpag"].Value.ToString();
                     detRow.tipComp = " ";   // row.Cells["tipcomp"].Value.ToString();
                     detRow.tipDV = row.Cells["TIPO"].Value.ToString();
                     detRow.valor = row.Cells["TOTAL_DOC"].Value.ToString();
