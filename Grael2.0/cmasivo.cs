@@ -27,7 +27,7 @@ namespace Grael2
         string colsfgr = Grael2.Program.colsfc;   // color seleccion grilla
         string colstrp = Grael2.Program.colstr;   // color del strip
         bool conectS = Grael2.Program.vg_conSol;    // usa conector solorsoft? true=si; false=no
-        static string nomtab = "madocvtas";         // maestra de comprobantes del ERP_Grael 1.0 
+        static string nomtab = "";                  // maestra de comprobantes del ERP_Grael 1.0 
 
         #region variables
         string img_btN = "";
@@ -1532,7 +1532,7 @@ namespace Grael2
                 try
                 {
                     MySqlCommand consulb = new MySqlCommand(consbot, conn);
-                    consulb.Parameters.AddWithValue("@nomform", nomform);
+                    consulb.Parameters.AddWithValue("@nomform", "cmasivo");
                     consulb.Parameters.AddWithValue("@use", asd);
                     MySqlDataAdapter mab = new MySqlDataAdapter(consulb);
                     mab.Fill(mdtb);
@@ -1584,6 +1584,11 @@ namespace Grael2
                 }
                 else { this.Bt_close.Visible = false; }
             }
+            // botones inicio, fin, siguiente y regresa .... no permitidos aqui
+            Bt_fin.Visible = false;
+            Bt_ini.Visible = false;
+            Bt_sig.Visible = false;
+            Bt_ret.Visible = false;
         }
         #region botones
         private void Bt_add_Click(object sender, EventArgs e)

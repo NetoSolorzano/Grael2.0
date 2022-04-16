@@ -25,3 +25,4 @@ OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, 
 - CR repvetas1, formato para reporte de facturación ........................... ok 11/04/2022
 - form facelect, cargas especiales, detracc mayor es la que se paga ........... ok 12/04/2022	detrac del valor comercial | detrac del valor referencial el mayor se paga
 - form defs, datos de rutas no se muestran .................................... ok 12/04/2022
+- form cmasivo, arreglo de permisos, botones, etc. ............................ ok 16/04/2022
