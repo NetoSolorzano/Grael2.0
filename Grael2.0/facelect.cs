@@ -3923,7 +3923,7 @@ namespace Grael2
         }
         private void cmb_mon_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (Tx_modo.Text == "NUEVO" && tx_totcant.Text != "")    //  || Tx_modo.Text == "EDITAR"
+            if (Tx_modo.Text == "NUEVO" && int.Parse(tx_totcant.Text) > 0)    //  || Tx_modo.Text == "EDITAR"
             {   // lo de totcant es para accionar solo cuando el detalle de la GR se haya cargado
                 if (cmb_mon.SelectedValue.ToString() != tx_dat_mone.Text) // cmb_mon.SelectedIndex > -1
                 {

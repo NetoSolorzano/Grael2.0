@@ -141,14 +141,19 @@ namespace Grael2
 
         private void tx_tipcam_Leave(object sender, EventArgs e)
         {
-            string mondef = dt.Rows[0].ItemArray[0].ToString();
-            if (para2 == mondef)    // cambio a soles
+            decimal zx = 0;
+            decimal.TryParse(tx_tipcam.Text, out zx);
+            if (zx > 0)
             {
-                if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) * decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
-            }
-            else
-            {
-                if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) / decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+                string mondef = dt.Rows[0].ItemArray[0].ToString();
+                if (para2 == mondef)    // cambio a soles
+                {
+                    if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) * decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+                }
+                else
+                {
+                    if (para1 != "") tx_newVal.Text = Math.Round(decimal.Parse(para1) / decimal.Parse(tx_tipcam.Text), 3).ToString(); ;
+                }
             }
         }
 
