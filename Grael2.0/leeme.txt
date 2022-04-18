@@ -28,3 +28,4 @@ OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, 
 - form cmasivo, arreglo de permisos, botones, etc. ............................ ok 16/04/2022
 - form vtipcam, arreglo de error en campo tx_tipcam, error si es vacío ........ ok 17/04/2022
 - form facelect, corrección de error en tipo de cambio ........................ ok 17/04/2022
+- form facelect, error en boletear una guía que ya estaba cobrada .............   no debió permitir CONTADO, volvió a cobrar

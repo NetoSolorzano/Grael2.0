@@ -1227,6 +1227,7 @@ namespace Grael2
             int totcant = 0;
             decimal totflet = 0;    // acumulador en moneda de la GR 
             decimal totflMN = 0;
+            decimal totsal = 0;
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 if (dataGridView1.Rows[i].Cells[0].Value != null)
@@ -1237,11 +1238,13 @@ namespace Grael2
                     {
                         totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR de la GR
                         totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
+                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[16].Value.ToString());
                     }
                     else
                     {
                         totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR DE LA GR EN SU MONEDA
                         totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
+                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[16].Value.ToString());
                     }
                 }
             }
@@ -1250,7 +1253,7 @@ namespace Grael2
             tx_tfil.Text = totfil.ToString();
             tx_flete.Text = totflet.ToString("#0.00");
             tx_fletMN.Text = totflMN.ToString("#0.00"); // Math.Round(decimal.Parse(tx_flete.Text) * decimal.Parse(tx_tipcam.Text), 2).ToString();
-
+            tx_saldoT.Text = totsal.ToString("#0.00");
         }
         int CentimeterToPixel(double Centimeter)
         {
@@ -2342,6 +2345,11 @@ namespace Grael2
                 {
                     MessageBox.Show("Seleccione si se cancela la factura o no","Atención - Confirme",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                     rb_si.Focus();
+                    return;
+                }
+                if (rb_si.Checked == true && decimal.Parse(tx_saldoT.Text) <= 0)
+                {
+                    MessageBox.Show("No hay saldo que cobrar!","Error en condición de pago",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                     return;
                 }
                 if (tx_dat_diasp.Text.Trim() == "" && rb_cre.Checked == true)
