@@ -1049,7 +1049,7 @@ namespace Grael2
                     {
                         string consulta = "SELECT a.docrem,a.numdre,b1.nombre as nombregri,b1.direc as direregri,b1.ubigeo as ubigregri,ifnull(b1.email,'') as emailR,ifnull(b1.telef1,'') as numtel1R," +
                             "ifnull(b1.telef2, '') as numtel2R,a.docdes,a.numdes,b2.nombre as nombdegri,b2.direc as diredegri,b2.ubigeo as ubigdegri,ifnull(b2.email, '') as emailD," +
-                            "ifnull(b2.telef1, '') as numtel1D,ifnull(b2.telef2, '') as numtel2D,a.moneda,a.doctot,a.saldo,SUM(d.cantid) AS bultos, date(a.fechope) as fechopegr,a.tipcam," +
+                            "ifnull(b2.telef1, '') as numtel1D,ifnull(b2.telef2, '') as numtel2D,a.moneda,a.doctot,a.saldo as saldoG,SUM(d.cantid) AS bultos, date(a.fechope) as fechopegr,a.tipcam," +
                             "max(d.descrip) AS descrip,max(d.unidad) as unidad,ifnull(m.descrizionerid, '') as mon,a.doctot as totgrMN,a.moneda as codMN,c.fecdv,' ' as tipsrem,' ' as tipsdes,a.docremi," +
                             "a.placa,a.carreta,a.cerinsc,a.nfv,concat(lo.descrizionerid, ' - ', ld.descrizionerid) as orides,c.saldo,a.dirorig1 as dirpartida," +
                             "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial,dr.flag1 as dr,dd.flag1 as dd " +
@@ -1238,13 +1238,13 @@ namespace Grael2
                     {
                         totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR de la GR
                         totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
-                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[16].Value.ToString());
+                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[11].Value.ToString());
                     }
                     else
                     {
                         totflet = totflet + decimal.Parse(dataGridView1.Rows[i].Cells[4].Value.ToString()); // VALOR DE LA GR EN SU MONEDA
                         totflMN = totflMN + decimal.Parse(dataGridView1.Rows[i].Cells[5].Value.ToString()); // VALOR DE LA GR EN MONEDA LOCAL
-                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[16].Value.ToString());
+                        totsal = totsal + decimal.Parse(dataGridView1.Rows[i].Cells[11].Value.ToString());
                     }
                 }
             }
@@ -2350,8 +2350,10 @@ namespace Grael2
                 if (rb_si.Checked == true && decimal.Parse(tx_saldoT.Text) <= 0)
                 {
                     MessageBox.Show("No hay saldo que cobrar!","Error en condición de pago",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                    //return;
+                    rb_no.Checked = true;
                     return;
-                }
+                } 
                 if (tx_dat_diasp.Text.Trim() == "" && rb_cre.Checked == true)
                 {
                     MessageBox.Show("Seleccione el plazo de credito", "Atención - Confirme", MessageBoxButtons.OK, MessageBoxIcon.Warning);
