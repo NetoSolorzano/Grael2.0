@@ -151,7 +151,7 @@ namespace Grael2
         NumLetra nl = new NumLetra();
         string[] datcltsR = { "", "", "", "", "", "", "", "", "", "" };
         string[] datcltsD = { "", "", "", "", "", "", "", "", "", "" };
-        string[] datguias = { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" }; // 18
+        string[] datguias = { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "","", "" }; // 20
         string[] datcargu = { "", "", "", "", "", "", "", "", "", "", "", "", "", "" };    // 14
         public facelect()
         {
@@ -989,7 +989,9 @@ namespace Grael2
             datguias[15] = "";  // local origen-destino
             datguias[16] = "";  // saldo de la GR
             datguias[17] = "";  // unidad de medida 
-                                //
+            datguias[18] = "";  // direccion local grael partida 
+            datguias[19] = "";  // ubigeo local grael partida
+
             datcargu[0] = "";   // direc. partida
             datcargu[1] = "";   // depart. pto. partida
             datcargu[2] = "";   // provin. pto. partida
@@ -1052,7 +1054,8 @@ namespace Grael2
                             "ifnull(b2.telef1, '') as numtel1D,ifnull(b2.telef2, '') as numtel2D,a.moneda,a.doctot,a.saldo as saldoG,SUM(d.cantid) AS bultos, date(a.fechope) as fechopegr,a.tipcam," +
                             "max(d.descrip) AS descrip,max(d.unidad) as unidad,ifnull(m.descrizionerid, '') as mon,a.doctot as totgrMN,a.moneda as codMN,c.fecdv,' ' as tipsrem,' ' as tipsdes,a.docremi," +
                             "a.placa,a.carreta,a.cerinsc,a.nfv,concat(lo.descrizionerid, ' - ', ld.descrizionerid) as orides,c.saldo,a.dirorig1 as dirpartida," +
-                            "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial,dr.flag1 as dr,dd.flag1 as dd " +
+                            "' ' as ubigpartida,a.dirdest1 as dirllegada,' ' as ubigllegada,ifnull(c.fecma, '') as fechplani,a.ruc,ifnull(p.nombre, '') as RazonSocial,dr.flag1 as dr,dd.flag1 as dd," +
+                            "a.origen AS codOriG,lo.ubigeo AS ubiOriG,CONCAT(lo.deta1,' ',lo.deta2,' ',lo.deta3,' ',lo.deta4) AS diroriG " +
                             "from magrem a left join detagrem d on d.idc = a.id " +
                             "LEFT JOIN mactacte c ON c.sergr = a.sergre AND c.corgr = a.corgre " +
                             "left join anag_for p on p.ruc = a.ruc " +
@@ -1133,6 +1136,8 @@ namespace Grael2
                                         datguias[14] = dr.GetString("nfv");
                                         datguias[15] = dr.GetString("orides");
                                         datguias[16] = dr.GetString("saldo");
+                                        datguias[18] = dr.GetString("diroriG");     // direc local partida grael
+                                        datguias[19] = dr.GetString("ubiOriG");     // ubigeo local partida grael 
                                         //
                                         datcargu[0] = dr.GetString("dirpartida");
                                         datcargu[4] = dr.GetString("ubigpartida");   // ubigeo punto partida
@@ -1480,6 +1485,15 @@ namespace Grael2
                 string insertadet = "";                         // segmento detalle
                 try
                 {
+                    string ubiPtoOri = "";                                                    // ubigeoPtoOrigen
+                    string dirPtoOri = "";                                                    // direccionCompletaPtoOrigen
+                    string ubiPtoDes = "";                                                    // ubigeoPtoDestino
+                    string dirPtoDes = "";                                                    // direccionCompletaPtoDestino
+                    string detViaje = "";                                                  // detalleViaje
+                    string monRefSer = "";                                                    // montoRefServicioTransporte
+                    string monRefCar = "";                                                    // montoRefCargaEfectiva
+                    string monRefUti = "";                                                     // montoRefCargaUtilNominal
+
                     for (int q = 0; q < dataGridView1.Rows.Count - 1; q++)
                     {
                         glosser2 = dataGridView1.Rows[q].Cells[10].Value.ToString();
@@ -1505,6 +1519,14 @@ namespace Grael2
                             inuns1 = Math.Round(double.Parse(tx_e_prec.Text), 6);                                               // importeUnitarioSinImpuesto
                             inunc1 = Math.Round(decimal.Parse(tx_e_prec.Text) * (1 + (decimal.Parse(v_igv)/100)), 6);           // importeUnitarioConImpuesto
                             imtoi1 = Math.Round(inunc1 - Convert.ToDecimal(inuns1), 2).ToString();
+                             ubiPtoOri = tx_e_ubiori.Text;                                                    // ubigeoPtoOrigen
+                             dirPtoOri = tx_e_dirpar.Text;                                                    // direccionCompletaPtoOrigen
+                             ubiPtoDes = tx_e_ubides.Text;                                                    // ubigeoPtoDestino
+                             dirPtoDes = tx_e_dirlle.Text;                                                    // direccionCompletaPtoDestino
+                             detViaje = "Detalle del viaje";                                                  // detalleViaje
+                             monRefSer = tx_e_valref.Text;                                                    // montoRefServicioTransporte
+                             monRefCar = tx_e_valref.Text;                                                    // montoRefCargaEfectiva
+                             monRefUti = tx_e_carut.Text;                                                     // montoRefCargaUtilNominal
                         }
                         else
                         {
@@ -1521,20 +1543,23 @@ namespace Grael2
                                 imtoi1 = Math.Round(((double)igv1 - ((double)igv1 / ((double)decimal.Parse(v_igv) / 100 + 1))), 2).ToString();
                             }
                             else { imtoi1 = "0.00"; }                                                               // importeTotalImpuestos 
+                            if (rb_fnor.Checked == true && double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
+                            {
+                                ubiPtoOri = datguias[19];                                        // ubigeoPtoOrigen
+                                dirPtoOri = datguias[18];                                        // direccionCompletaPtoOrigen
+                                ubiPtoDes = tx_ubigRtt.Text;                                     // ubigeoPtoDestino
+                                dirPtoDes = tx_dirRem.Text;                                      // direccionCompletaPtoDestino
+                                detViaje = "Detalle del viaje";                                  // detalleViaje
+                                monRefSer = "0.00";                                                    // montoRefServicioTransporte
+                                monRefCar = "0.00";                                                    // montoRefCargaEfectiva
+                                monRefUti = "0.00";                                                     // montoRefCargaUtilNominal
+                            }
                         }
                         double mobai1 = Math.Round(inuns1,2);                                                     // montoBaseIgv
                         string taigv1 = ((decimal.Parse(v_igv))).ToString();                                    // tasaIgv
                         string imigv1 = imtoi1;                                                                 // importeIgv
                         string corae1 = "10";   // grabado operacion onerosa                                    // codigoRazonExoneracion
                         double intos1 = Math.Round(inuns1,2);                                                   // importeTotalSinImpuesto
-                        string ubiPtoOri = tx_e_ubiori.Text;                                                    // ubigeoPtoOrigen
-                        string dirPtoOri = tx_e_dirpar.Text;                                                    // direccionCompletaPtoOrigen
-                        string ubiPtoDes = tx_e_ubides.Text;                                                    // ubigeoPtoDestino
-                        string dirPtoDes = tx_e_dirlle.Text;                                                    // direccionCompletaPtoDestino
-                        string detViaje = "Detalle del viaje";                                                  // detalleViaje
-                        string monRefSer = tx_e_valref.Text;                                                    // montoRefServicioTransporte
-                        string monRefCar = tx_e_valref.Text;                                                    // montoRefCargaEfectiva
-                        string monRefUti = tx_e_carut.Text;                                                     // montoRefCargaUtilNominal
 
                         insertadet = "insert into SPE_EINVOICEDETAIL (tipoDocumentoEmisor,numeroDocumentoEmisor,tipoDocumento,serieNumero," +
                             "numeroOrdenItem,codigoProducto,codigoProductoSunat,descripcion,cantidad,unidadMedida,importeTotalSinImpuesto," +
@@ -1542,7 +1567,8 @@ namespace Grael2
                             "importeIgv,importeTotalImpuestos,codigoRazonExoneracion,codigoAuxiliar40_1,textoAuxiliar40_1,codigoAuxiliar500_1,textoAuxiliar500_1";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",codigoAuxiliar500_2,textoAuxiliar500_2";
                         if (!string.IsNullOrEmpty(tiref3) && !string.IsNullOrWhiteSpace(tiref3)) insertadet = insertadet + ",codigoAuxiliar500_3,textoAuxiliar500_3";
-                        if (rb_fesp.Checked == true)
+                        if (rb_fesp.Checked == true ||
+                            (rb_fnor.Checked == true && double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact))
                         {
                             insertadet = insertadet + ",ubigeoPtoOrigen,direccionCompletaPtoOrigen,ubigeoPtoDestino,direccionCompletaPtoDestino,detalleViaje," +
                                 "montoRefServicioTransporte,montoRefCargaEfectiva,montoRefCargaUtilNominal";
@@ -1554,7 +1580,8 @@ namespace Grael2
                             "@imigv1,@imtoi1,@corae1,@tiref1,@nudor1,@coaux1,@teaux1";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",@coaux2,@teaux2";
                         if (!string.IsNullOrEmpty(tiref2) && !string.IsNullOrWhiteSpace(tiref2)) insertadet = insertadet + ",@coaux3,@teaux3";
-                        if (rb_fesp.Checked == true)
+                        if (rb_fesp.Checked == true ||
+                            (rb_fnor.Checked == true && double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact))
                         {
                             insertadet = insertadet + ",@ubiPtoOri,@dirPtoOri,@ubiPtoDes,@dirPtoDes,@detViaje," +
                             "@monRefSer,@monRefCar,@monRefUti";
@@ -1596,6 +1623,17 @@ namespace Grael2
                                 indet.Parameters.AddWithValue("@teaux3", nudor3);                       // textoAuxiliar500_3
                             }
                             if (rb_fesp.Checked == true)
+                            {
+                                indet.Parameters.AddWithValue("@ubiPtoOri", ubiPtoOri);                   // ubigeoPtoOrigen
+                                indet.Parameters.AddWithValue("@dirPtoOri", dirPtoOri);                   // direccionCompletaPtoOrigen
+                                indet.Parameters.AddWithValue("@ubiPtoDes", ubiPtoDes);                   // ubigeoPtoDestino
+                                indet.Parameters.AddWithValue("@dirPtoDes", dirPtoDes);                   // direccionCompletaPtoDestino
+                                indet.Parameters.AddWithValue("@detViaje", detViaje);                     // detalleViaje
+                                indet.Parameters.AddWithValue("@monRefSer", monRefSer);                   // montoRefServicioTransporte
+                                indet.Parameters.AddWithValue("@monRefCar", monRefCar);                   // montoRefCargaEfectiva
+                                indet.Parameters.AddWithValue("@monRefUti", monRefUti);                   // montoRefCargaUtilNominal
+                            }
+                            if (rb_fnor.Checked == true && double.Parse(tx_flete.Text) > double.Parse(Program.valdetra) && tx_dat_tdv.Text == codfact)
                             {
                                 indet.Parameters.AddWithValue("@ubiPtoOri", ubiPtoOri);                   // ubigeoPtoOrigen
                                 indet.Parameters.AddWithValue("@dirPtoOri", dirPtoOri);                   // direccionCompletaPtoOrigen
