@@ -30,3 +30,4 @@ OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, 
 - form facelect, corrección de error en tipo de cambio ........................ ok 17/04/2022
 - form facelect, error en boletear una guía que ya estaba cobrada ............. ok 20/04/2022   no debió permitir CONTADO, volvió a cobrar
 - form facelect, error en factura "normal" con detraccion - ubigeo pto partida.	ok 20/04/2022	le cambie tipope = "1004" solo para fact. especiales, el resto tipope = "0101"
+- form facelect, cuando se hace contado no esta grabando nota en macobran ..... 
