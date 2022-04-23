@@ -18,6 +18,7 @@ namespace Grael2
         public static string vg_uuse = "";      // ubigeo local usuario
         public static string almuser = "";      // codigo almacen del usuario
         public static string vg_fcaj = "";      // fecha de la caja abierta (vacio si no hay caja abierta)
+        public static string codempc = "";      // codigo empleado de RR.HH. del usuario conectado
         public static string bd = "";           // base de datos seleccionada
         // colores formularios y objetos
         public static string colbac = "";       // back color

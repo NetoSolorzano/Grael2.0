@@ -3024,7 +3024,7 @@ namespace Grael2
                             minsert.Parameters.AddWithValue("@mon", tx_dat_mone.Text);
                             minsert.Parameters.AddWithValue("@tot", tx_flete.Text);
                             minsert.Parameters.AddWithValue("@sal", 0);
-                            minsert.Parameters.AddWithValue("@eco", lib.codemple(asd));
+                            minsert.Parameters.AddWithValue("@eco", Grael2.Program.codempc);  // lib.codemple(asd)
                             minsert.Parameters.AddWithValue("@fco", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
                             minsert.Parameters.AddWithValue("@obs", tx_obser1.Text);
                             minsert.Parameters.AddWithValue("@asd", asd);
@@ -3047,7 +3047,7 @@ namespace Grael2
                             }
                             dri.Close();
                         }
-                        //
+                        /*
                         for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
                         {
                             if (dataGridView1.Rows[i].Cells[0].Value.ToString().Trim() != "")
@@ -3067,24 +3067,24 @@ namespace Grael2
                                     micon.ExecuteNonQuery();
                                 }
                             }
-                            /*
-                            consulta = "insert into detacobnot (sercob,corcob,sernot,cornot,valnot,salnot,pagado,userc,fechc,idc) " +
-                                "select @sco,@cco,sernot,cornot,totnot,0,totnot,@asd,now(),@idc from mactacte " +
-                                "where tipdv=@tdv and serdv=@svt and cordv=@cvt and mfe=@mfe";
-                            using (micon = new MySqlCommand(consulta, conn))
-                            {
-                                micon.Parameters.AddWithValue("@sco", v_sercob);
-                                micon.Parameters.AddWithValue("@cco", lib.Right(("000000" + tx_idcob.Text), 7));
-                                micon.Parameters.AddWithValue("@asd", asd);
-                                micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
-                                micon.Parameters.AddWithValue("@svt", tx_serie.Text);
-                                micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
-                                micon.Parameters.AddWithValue("@idc", tx_idcob.Text);
-                                micon.Parameters.AddWithValue("@mfe", tx_cfe.Text);
-                                micon.ExecuteNonQuery();
-                            }
-                            */
                         }
+                        */
+                        consulta = "insert into detacobnot (sercob,corcob,sernot,cornot,valnot,salnot,pagado,userc,fechc,idc) " +
+                            "select @sco,@cco,sernot,cornot,totnot,0,totnot,@asd,now(),@idc from mactacte " +
+                            "where tipdv=@tdv and serdv=@svt and cordv=@cvt and mfe=@mfe";
+                        using (micon = new MySqlCommand(consulta, conn))
+                        {
+                            micon.Parameters.AddWithValue("@sco", v_sercob);
+                            micon.Parameters.AddWithValue("@cco", lib.Right(("000000" + tx_idcob.Text), 7));
+                            micon.Parameters.AddWithValue("@asd", asd);
+                            micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
+                            micon.Parameters.AddWithValue("@svt", tx_serie.Text);
+                            micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
+                            micon.Parameters.AddWithValue("@idc", tx_idcob.Text);
+                            micon.Parameters.AddWithValue("@mfe", tx_cfe.Text);
+                            micon.ExecuteNonQuery();
+                        }
+                        //
                         consulta = "update mactacte, manoen set mactacte.status=@nst,mactacte.pagado=totnot,mactacte.saldo=0,mactacte.fecpa=@fpa," +
                             "manoen.status=@nst,manoen.parcial=manoen.doctot,manoen.saldo=0 " +
                             "WHERE mactacte.tipdv = manoen.tdvfac and mactacte.serdv = manoen.serfac and mactacte.cordv = manoen.corfac and mactacte.mfe = manoen.mfe AND " +
@@ -3316,6 +3316,16 @@ namespace Grael2
                 rb_si.Checked = false;
                 rb_no.Checked = false;
                 tx_numero.Text = lib.Right("0000000" + tx_numero.Text, 7);
+                if (tx_dat_tdv.Text == "") 
+                {
+                    cmb_tdv.Focus();
+                    return;
+                }
+                if (tx_serie.Text == "")
+                {
+                    tx_serie.Focus();
+                    return;
+                }
                 dataGridView1.Rows.Clear();
                 jalaoc("sernum");
                 jaladet(tx_idr.Text);

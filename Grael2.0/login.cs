@@ -77,10 +77,11 @@ namespace Grael2
                 {
                     //validamos que el usuario y passw son los correctos
                     string query = "select a.bloqueado,a.local,a.nombre,concat(trim(b.deta1),' - ',b.deta2,' - ',b.deta3,' - ',b.deta4) AS direcc,b.ubiDir," +
-                        "b.descrizione,a.tipuser,a.nivel,b.codsunat,ifnull(c.fecha,'') " +
+                        "b.descrizione,a.tipuser,a.nivel,b.codsunat,ifnull(c.fecha,''),ifnull(h.codemp,'') " +
                         "from usuarios a " +
                         "LEFT JOIN desc_sds b ON b.idcodice=a.local " +
-                        "left join erp_grael.macajas c on c.local=a.local and c.fechter is null " +
+                        "left join " + dataG + ".macajas c on c.local=a.local and c.fechter is null " +
+                        "left join " + dataG + ".marrhhe h on h.usuario=a.nom_user " +
                         "where a.nom_user=@usuario and a.pwd_user=@contra";
                     //                         
                     MySqlCommand mycomand = new MySqlCommand(query, cn);
@@ -104,6 +105,7 @@ namespace Grael2
                                 Grael2.Program.vg_nius = dr.GetString(7);       // codigo nivel de usuario
                                 Grael2.Program.codlocsunat = dr.GetString(8);   // codigo sunat pto. emision DV
                                 Grael2.Program.vg_fcaj = dr.GetString(9);       // fecha de la caja abierta del local
+                                Grael2.Program.codempc = dr.GetString(10);
                                 dr.Close();
                                 // cambiamos la contraseña si fue hecha
                                 cambiacont();
