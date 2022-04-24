@@ -89,6 +89,7 @@ namespace Grael2
         string glocopa = "";            // glosa de condicion de pago
         string ppauto = "SI";           // SI o NO, si el comprobante es credito, el plazo de pago es automatico?
         string ufcorp = "";             // usuarios que pueden generar comprobantes + de 3 guias - corporativos
+        int v_iabol = 0;                // contador inicial para anulaciones de boletas .. RC
         //
         string leyg_sg = "";            // leyenda para la guia de la fact
         string rutatxt = "";            // ruta de los txt para la fact. electronica
@@ -481,6 +482,7 @@ namespace Grael2
                             {
                                 leyg_sg = row["valor"].ToString();      // leyenda para impresion "S/G :"
                             }
+                            if (row["param"].ToString() == "inibolanu") v_iabol = int.Parse(row["valor"].ToString());
                         }
                     }
                     if (row["formulario"].ToString() == "ayccaja" && row["campo"].ToString() == "estado")
@@ -3175,16 +3177,18 @@ namespace Grael2
                             micon.ExecuteNonQuery();
                         }
                         //
-                        string consul = "select count(id) from madocvtas where date(fecha)=@fech and status=@estser";
+                        string consul = "select count(id) from madocvtas where date(fecha)=@fech and status=@estser and docvta=@tdv";
                         using (MySqlCommand micon = new MySqlCommand(consul, conn))
                         {
                             micon.Parameters.AddWithValue("@fech", tx_fechact.Text.Substring(6, 4) + "-" + tx_fechact.Text.Substring(3, 2) + "-" + tx_fechact.Text.Substring(0, 2));
                             micon.Parameters.AddWithValue("@estser", codAnul);
+                            micon.Parameters.AddWithValue("@tdv", tx_dat_tdv.Text);
                             using (MySqlDataReader dr = micon.ExecuteReader())
                             {
                                 if (dr.Read())
                                 {
-                                    ctanul = dr.GetInt32(0);
+                                    if (tx_dat_tdv.Text == codbole) ctanul = dr.GetInt32(0) + v_iabol;
+                                    else ctanul = dr.GetInt32(0);
                                 }
                             }
                         }
