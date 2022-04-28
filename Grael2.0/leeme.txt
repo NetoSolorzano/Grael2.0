@@ -36,3 +36,4 @@ OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, 
    y estos resumenes tienen el mismo identificador que las anulaciones de las boletas RC
    entonces en los resumenes de boletas diarias serán como maximo 4 al día para que no se repita
    el codigo RC-20220424-005
+- form facelect, en anulación que pregunte si genera baja electrónica ......... ok 28/04/2022 		OJO, no mueble el correlativo de la fact

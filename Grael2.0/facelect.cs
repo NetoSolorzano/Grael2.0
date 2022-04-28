@@ -2658,11 +2658,15 @@ namespace Grael2
                                 if (valiconsql(script) == true)
                                 {
                                     int cta = anula("FIS");                             // cantidad de doc.vtas anuladas en la fecha
-                                    anulfactelec(cta);                                  // anulacion electrónica
-                                    string resulta = lib.ult_mov(nomform, nomtab, asd); // actualizamos la tabla seguimiento de usuarios
-                                    if (resulta != "OK")
+                                    var xx = MessageBox.Show("Genera la baja electrónica por anulación?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    if (xx == DialogResult.Yes)
                                     {
-                                        MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        anulfactelec(cta);                                  // anulacion electrónica
+                                        string resulta = lib.ult_mov(nomform, nomtab, asd); // actualizamos la tabla seguimiento de usuarios
+                                        if (resulta != "OK")
+                                        {
+                                            MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
                                     }
                                 }
                                 else
@@ -2699,11 +2703,15 @@ namespace Grael2
                             if (valiconsql(script) == true)
                             {
                                 int cta = anula("FIS");                             // cantidad de doc.vtas anuladas en la fecha
-                                anulfactelec(cta);                                  // anulación electrónica
-                                string resulta = lib.ult_mov(nomform, nomtab, asd); // actualizamos la tabla seguimiento de usuarios
-                                if (resulta != "OK")
+                                var xx = MessageBox.Show("Genera la baja electrónica por anulación?", "Confirme por favor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                if (xx == DialogResult.Yes)
                                 {
-                                    MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    anulfactelec(cta);                                  // anulación electrónica
+                                    string resulta = lib.ult_mov(nomform, nomtab, asd); // actualizamos la tabla seguimiento de usuarios
+                                    if (resulta != "OK")
+                                    {
+                                        MessageBox.Show(resulta, "Error en actualización de seguimiento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
                                 }
                             }
                             else
