@@ -47,6 +47,7 @@ namespace Grael2
         string vtc_ruc = "";            // variable tipo cliente empresa
         string vtc_ext = "";            // variable tipo cliente extranjero
         string codAnul = "";            // codigo de documento anulado
+        string codAnu1 = "";            // codigos de anulacion en el erp_grael 1.0
         string codGene = "";            // codigo documento nuevo generado
         string codCanc = "";            // codigo documento cancelado (pagado 100%)
         string MonDeft = "";            // moneda por defecto
@@ -287,7 +288,8 @@ namespace Grael2
                             if (row["param"].ToString() == "userdscto") cusdscto = row["valor"].ToString();                 // usuarios que pueden hacer descuentos
                             if (row["param"].ToString() == "cltesBol") tdocsBol = row["valor"].ToString();                  // tipos de documento de clientes para boletas
                             if (row["param"].ToString() == "cltesFac") tdocsFac = row["valor"].ToString();                  // tipo de documentos para facturas
-                            if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());                  // limite soles para boletas sin direccion
+                            if (row["param"].ToString() == "limbolsd") limbolsd = decimal.Parse(row["valor"].ToString());   // limite soles para boletas sin direccion
+                            if (row["param"].ToString() == "codAnu1.0") codAnu1 = row["valor"].ToString();                  // codigos anulacion erp_grael 1.0
                         }
                         if (row["campo"].ToString() == "impresion")
                         {
@@ -513,7 +515,8 @@ namespace Grael2
             bool retorna = false;
             if (true)
             {
-                // validamos que las GRs: No este facturada, No este anulada, destinatario con DNI, cobrada al 100%
+                // validamos que las GRs: No este facturada, No este anulada, destinatario con DNI, cobrada al 100% ..... ya no es valido desde 17/03/2022
+                // validamos que las GRs: No este facturada, No este anulada, cobrada al 100% ... 30/04/2022
                 using (MySqlConnection conn = new MySqlConnection(db_conn_grael))
                 {
                     lib.procConn(conn);
@@ -525,16 +528,6 @@ namespace Grael2
                             parte = " and a.destino=@dest";
                         }
                         /*
-                        string consulta = "select * from (" +
-                            "select c.descrizionerid as sede,a.fechope,concat(a.sergre, '-', a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
-                            "concat(trim(b.nombre), ' ', trim(b.nombre2)) as cliente,a.doctot as totalGR," +
-                            "a.id,a.docdes,a.moneda,a.destino,a.docremi " +
-                            "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
-                            "left join desc_sds c on c.idcodice = a.destino " +
-                            "left join desc_doc d on d.idcodice = a.docdes " +
-                            "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
-                            "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone)x order by x.sede,x.fechope";
-                        */
                         string consulta =
                             "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
                             "concat(trim(b.nombre),' ',trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
@@ -547,14 +540,28 @@ namespace Grael2
                             "left join series e on e.sede = a.destino and e.tipdoc = @tdbo " +
                             "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
                             "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone" + parte;
+                        */
+                        string consulta =
+                            "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
+                            "concat(trim(b.nombre), ' ', trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
+                            "a.destino,a.docremi,e.serie as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta,m.descrizionerid " +
+                            "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
+                            "LEFT JOIN mactacte t ON t.sergr = a.sergre AND t.corgr = a.corgre " +
+                            "left join desc_sds c on c.idcodice = a.destino " +
+                            "left join desc_doc d on d.idcodice = a.docdes " +
+                            "left join desc_sds o on o.idcodice = a.origen " +
+                            "left join desc_mon m on m.idcodice = a.moneda " +
+                            "left join series e on e.sede = a.destino and e.tipdoc = @tdbo " +
+                            "where a.fechope between @fini and @fina and a.status NOT IN(@canu) and TRIM(t.serdv)= '' and " +
+                            "t.totnot > 0 and t.saldo <= 0 and a.moneda = @mone" + parte;
                         using (MySqlCommand micon = new MySqlCommand(consulta, conn))
                         {
-                            micon.Parameters.AddWithValue("@fini", dtp_ini.Value.Date);
-                            micon.Parameters.AddWithValue("@fina", dtp_fin.Value.Date);
-                            micon.Parameters.AddWithValue("@canu", codAnul);
-                            micon.Parameters.AddWithValue("@cdes", vtc_ruc);    // documentos distintos a RUC
+                            micon.Parameters.AddWithValue("@fini", dtp_ini.Value.Date.ToString("yyyy-MM-dd"));
+                            micon.Parameters.AddWithValue("@fina", dtp_fin.Value.Date.ToString("yyyy-MM-dd"));
+                            micon.Parameters.AddWithValue("@canu", codAnu1);    // codigos de anulacion validos
+                            //micon.Parameters.AddWithValue("@cdes", vtc_ruc);  // documentos distintos a RUC
                             micon.Parameters.AddWithValue("@mone", MonDeft);    // moneda solo soles
-                            micon.Parameters.AddWithValue("@tdbo", "BV");
+                            micon.Parameters.AddWithValue("@tdbo", "BV");       // serie de BV es igual al de FT
                             if (parte != "") micon.Parameters.AddWithValue("@dest", tx_dat_loca.Text);
                             using (MySqlDataReader dr = micon.ExecuteReader())
                             {
@@ -591,7 +598,7 @@ namespace Grael2
             }
             return retorna;
         }
-        private void totalizaG()                            // calcula totales de la grilla
+        private void totalizaG()                // calcula totales de la grilla
         {
             int totfil = 0, tfsele = 0;
             double totfle = 0;
@@ -1357,7 +1364,7 @@ namespace Grael2
                 using (MySqlCommand micon = new MySqlCommand(todo, conn))
                 {
                     micon.CommandType = CommandType.StoredProcedure;
-                    micon.Parameters.AddWithValue("td", "BV");
+                    micon.Parameters.AddWithValue("td", (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC") ? "FT" : "BV"); 
                     micon.Parameters.AddWithValue("ser", dataGridView1.Rows[ind].Cells[15].Value.ToString()); // serie del local de destino
                     using (MySqlDataReader dr0 = micon.ExecuteReader())
                     {
@@ -1377,19 +1384,19 @@ namespace Grael2
                 double subt = ntot / igv;   // 1.18
                 double migv = ntot - subt;
                 string inserta = "insert into madocvtas (fechope,tipcam,docvta,servta,corvta,doccli,numdcli,direc,nomclie," +
-                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc,tippago," +
-                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild," +
+                    "observ,moneda,aumigv,subtot,igv,doctot,status,pigv,userc,fechc,condpag," +                     //      tippago,
+                    "local,rd3,dist,prov,dpto,saldo,cdr,mfe,email,ubiclte,canfild,tippago,plazocred,pagauto," +     // 
                     "prop01,prop02,prop03,prop04,prop05,prop06,prop07,prop08,prop09,prop10) " +
                     "values (" +
                     "@fechop,@tcoper,@ctdvta,@serdv,@numdv,@tdcrem,@ndcrem,@dircre,@nomrem," +
-                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now(),@tipap," +
-                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil," +
+                    "@obsprg,@monppr,@aig,@subpgr,@igvpgr,@totpgr,@estpgr,@porcigv,@asd,now(),@copag," +            //      @tipap,
+                    "@ldcpgr,@tcdvta,@distcl,@provcl,@dptocl,@salxpa,@cdr,@mtdvta,@mailcl,@ubicre,@canfil,@tippa,@plzoc,@pagau," +       // 
                     "@pr01,@pr02,@pr03,@pr04,@pr05,@pr06,@pr07,@pr08,@pr09,@pr10)";
                 using (MySqlCommand micon = new MySqlCommand(inserta, conn))
                 {
                     micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
                     micon.Parameters.AddWithValue("@tcoper", 0);                   // TIPO DE CAMBIO
-                    micon.Parameters.AddWithValue("@ctdvta", codbole);
+                    micon.Parameters.AddWithValue("@ctdvta", (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC") ? codfact : codbole);
                     micon.Parameters.AddWithValue("@serdv", dataGridView1.Rows[ind].Cells[15].Value.ToString());
                     micon.Parameters.AddWithValue("@numdv", tx_numero.Text);
                     micon.Parameters.AddWithValue("@tdcrem", dataGridView1.Rows[ind].Cells[11].Value.ToString());
@@ -1405,7 +1412,8 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@estpgr", codCanc);      // estado
                     micon.Parameters.AddWithValue("@porcigv", v_igv);                           // porcentaje en numeros de IGV
                     micon.Parameters.AddWithValue("@asd", asd);
-                    micon.Parameters.AddWithValue("@tipap", v_mpag);
+                    //micon.Parameters.AddWithValue("@tipap", v_mpag);             
+                    micon.Parameters.AddWithValue("@copag", "R");              // (rb_si.Checked == true) ? "E" : (rb_no.Checked == true) ? "R" : "C"
                     micon.Parameters.AddWithValue("@ldcpgr", dataGridView1.Rows[ind].Cells[13].Value.ToString());         // local origen
                     micon.Parameters.AddWithValue("@tcdvta", "2");          // destinatario
                     micon.Parameters.AddWithValue("@distcl", "-");
@@ -1413,10 +1421,13 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@dptocl", "-");
                     micon.Parameters.AddWithValue("@salxpa", "0");
                     micon.Parameters.AddWithValue("@cdr", "9");             // cdr en la base actual tiene valor 9
-                    micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
+                    micon.Parameters.AddWithValue("@mtdvta", (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC")? "F" : "B");
                     micon.Parameters.AddWithValue("@mailcl", correo_gen);         // "tx_email.Text"
                     micon.Parameters.AddWithValue("@ubicre", "");
                     micon.Parameters.AddWithValue("@canfil", 1);            // cant filas de detalle, como son boletas masivas les ponemos 1 a todos
+                    micon.Parameters.AddWithValue("@tippa", "");
+                    micon.Parameters.AddWithValue("@plzoc", "");
+                    micon.Parameters.AddWithValue("@pagau", "N");    // cobranza automatica en efectivo NO porque ya estan cobradas
                     micon.Parameters.AddWithValue("@pr01", "0");
                     micon.Parameters.AddWithValue("@pr02", "0");
                     micon.Parameters.AddWithValue("@pr03", "0");
@@ -1466,7 +1477,7 @@ namespace Grael2
                 using (MySqlCommand micon = new MySqlCommand(inserd2, conn))
                 {
                     micon.Parameters.AddWithValue("@idr", tx_idr.Text);
-                    micon.Parameters.AddWithValue("@doc", codbole);
+                    micon.Parameters.AddWithValue("@doc", (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC") ? codfact : codbole);    // codbole
                     micon.Parameters.AddWithValue("@svt", dataGridView1.Rows[ind].Cells[15].Value.ToString());
                     micon.Parameters.AddWithValue("@cvt", tx_numero.Text);
                     micon.Parameters.AddWithValue("@sgui", dataGridView1.Rows[ind].Cells[3].Value.ToString().Trim().Substring(0,3));
@@ -1482,7 +1493,7 @@ namespace Grael2
                     micon.Parameters.AddWithValue("@mrd1", "0.00"); // (tx_dref1.Text == "") ? "0.00" : tx_dref1.Text
                     micon.Parameters.AddWithValue("@mrd2", "0.00"); // (tx_dcar1.Text == "") ? "0.00" : tx_dcar1.Text
                     micon.Parameters.AddWithValue("@mrd3", "0.00");   // (tx_dnom1.Text == "") ? "0.00" : tx_dnom1.Text
-                    micon.Parameters.AddWithValue("@mtdvta", "B");          // todas son B de boleta
+                    micon.Parameters.AddWithValue("@mtdvta", (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC") ? "F" : "B");          // todas son B de boleta
                     micon.Parameters.AddWithValue("@fechop", tx_fechope.Text.Substring(6, 4) + "-" + tx_fechope.Text.Substring(3, 2) + "-" + tx_fechope.Text.Substring(0, 2));
                     micon.Parameters.AddWithValue("@totpgr", ntot.ToString("#0.##"));                    // total inc. igv
                     micon.Parameters.AddWithValue("@velfi", ntot.ToString("#0.##"));  // valor fila fact electronica
@@ -1495,8 +1506,8 @@ namespace Grael2
                     */
                     micon.ExecuteNonQuery();
                     //fila = 1;
-
-                    dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + "0" + tx_numero.Text;
+                    if (dataGridView1.Rows[ind].Cells[4].Value.ToString() == "RUC") dataGridView1.Rows[ind].Cells[8].Value = "F" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + "0" + tx_numero.Text;
+                    else dataGridView1.Rows[ind].Cells[8].Value = "B" + dataGridView1.Rows[ind].Cells[15].Value.ToString() + "-" + "0" + tx_numero.Text;
                     dataGridView1.Rows[ind].Cells[9].Value = ntot.ToString("#0.##");
 
                     retorna = true;         // no hubo errores!
@@ -1550,6 +1561,12 @@ namespace Grael2
                 Application.Exit();
                 return;
             }
+            Bt_add.Visible = false;
+            Bt_edit.Visible = false;
+            Bt_anul.Visible = false;
+            Bt_ver.Visible = false;
+            Bt_print.Visible = false;
+
             if (mdtb.Rows.Count > 0)
             {
                 DataRow row = mdtb.Rows[0];

@@ -740,7 +740,7 @@
             this.bt_agr.Image = global::Grael2.Properties.Resources.process24;
             this.bt_agr.Location = new System.Drawing.Point(489, 14);
             this.bt_agr.Name = "bt_agr";
-            this.bt_agr.Size = new System.Drawing.Size(35, 43);
+            this.bt_agr.Size = new System.Drawing.Size(46, 43);
             this.bt_agr.TabIndex = 4;
             this.bt_agr.UseVisualStyleBackColor = true;
             this.bt_agr.Click += new System.EventHandler(this.bt_agr_Click);
@@ -922,7 +922,7 @@
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(885, 800);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(785, 0);
+            this.MinimumSize = new System.Drawing.Size(785, 39);
             this.Name = "cmasivo";
             this.Text = "Generación masiva de comprobantes";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
