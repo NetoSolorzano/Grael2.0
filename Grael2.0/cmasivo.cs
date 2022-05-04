@@ -72,7 +72,6 @@ namespace Grael2
         string v_igv = "";              // valor igv %
         string v_estcaj = "";           // estado de la caja
         string v_idcaj = "";            // id de la caja actual
-        string codAbie = "";            // codigo estado de caja abierta
         string logoclt = "";            // ruta y nombre archivo logo
         string fshoy = "";              // fecha hoy del servidor en formato ansi
         string codppc = "";             // codigo del plazo de pago por defecto para fact a crédito
@@ -80,6 +79,8 @@ namespace Grael2
         int v_cdpa = 0;                 // cantidad de días despues de emitida la fact. en que un usuario normal puede anular
         string vint_gg = "";            // glosa del detalle inicial de la guía "sin verificar contenido"
         decimal limbolsd = 0;           // limite en soles para boletas sin direccion
+        int valini = 0;                 // valor inicial del rango nuevo valor
+        int valfin = 0;                 // valor final del rango nuevo valor
         //
         string leyg_sg = "";            // leyenda para la guia de la fact
         string rutatxt = "";            // ruta de los txt para la fact. electronica
@@ -223,7 +224,7 @@ namespace Grael2
                 micon.Parameters.AddWithValue("@nfin", "interno");
                 micon.Parameters.AddWithValue("@nofi", "clients");
                 micon.Parameters.AddWithValue("@noco", "cobranzas");
-                micon.Parameters.AddWithValue("@noca", "ayccaja");
+                micon.Parameters.AddWithValue("@noca", "cmasivo");
                 micon.Parameters.AddWithValue("@nocg", "guiati_a");
                 micon.Parameters.AddWithValue("@nofa", nomform);
                 MySqlDataAdapter da = new MySqlDataAdapter(micon);
@@ -306,18 +307,6 @@ namespace Grael2
                         if (row["campo"].ToString() == "detraccion" && row["param"].ToString() == "codley") codleyt = row["valor"].ToString().Trim();
                         if (row["campo"].ToString() == "factelect")
                         {
-                            /*
-                            if (row["param"].ToString() == "textaut") restexto = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "autoriz") autoriz_OSE_PSE = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "despedi") despedida = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "webose") webose = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "caracterNo") caractNo = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "ose-pse") nipfe = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "motivoBaja") glosaAnul = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "tipsDocbaja") tipdocAnu = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "modTran") texmotran = row["valor"].ToString().Trim();
-                            if (row["param"].ToString() == "codmotTran") codtxmotran = row["valor"].ToString().Trim();
-                            */
                             if (row["param"].ToString() == "correo_c1") correo_gen = row["valor"].ToString().Trim();
                             if (row["param"].ToString() == "autoriz") autoriz_bizlinks = row["valor"].ToString();                          // resolución de autorizacion de bizlinks                            
                             if (row["param"].ToString() == "webose") provee = row["valor"].ToString();
@@ -332,10 +321,10 @@ namespace Grael2
                             }
                         }
                     }
-                    if (row["formulario"].ToString() == "ayccaja" && row["campo"].ToString() == "estado")
+                    if (row["formulario"].ToString() == "cmasivo") 
                     {
-                        if (row["param"].ToString() == "abierto") codAbie = row["valor"].ToString().Trim();             // codigo caja abierta
-                        //if (row["param"].ToString() == "cerrado") codCier = row["valor"].ToString().Trim();             // codigo caja cerrada
+                        if (row["campo"].ToString() == "valores" && row["param"].ToString() == "valin") valini = int.Parse(row["valor"].ToString());            // valor ini del rango
+                        if (row["campo"].ToString() == "valores" && row["param"].ToString() == "valfi") valfin = int.Parse(row["valor"].ToString());            // valor fin del rango
                     }
                     if (row["formulario"].ToString() == "interno")              // codigo enlace interno de anulacion del cliente con en BD A0
                     {
@@ -528,25 +517,14 @@ namespace Grael2
                         {
                             parte = " and a.destino=@dest";
                         }
-                        /*
-                        string consulta =
-                            "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
-                            "concat(trim(b.nombre),' ',trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
-                            "a.destino,a.docremi,ifnull(e.serie, '002') as serie,concat(o.descrizionerid, ' - ',c.descrizionerid) as ruta,m.descrizionerid " +
-                            "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
-                            "left join desc_sds c on c.idcodice = a.destino " +
-                            "left join desc_doc d on d.idcodice = a.docdes " +
-                            "left join desc_sds o on o.idcodice = a.origen " +
-                            "left join desc_mon m on m.idcodice = a.moneda " +
-                            "left join series e on e.sede = a.destino and e.tipdoc = @tdbo " +
-                            "where a.fechope between @fini and @fina and a.status<> @canu and trim(a.tdvfac)= '' and a.docdes<> @cdes and " +
-                            "a.doctot > 0 and a.saldo <= 0 and a.moneda = @mone" + parte;
-                        */
                         string consulta =
                             "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
                             "concat(trim(b.nombre), ' ', trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
                             "a.destino,a.docremi,e.serie as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta,m.descrizionerid," +
-                            "b.direc,b.dist,b.provin,b.dpto,b.ubigeo " +
+                            "if (b.direc = '-' OR b.direc = ' ',a.dirdest2,b.direc) AS direc," +
+                            "if (b.dist = '-' OR b.dist = ' ',a.dirdest2,b.dist) AS dist," +
+                            "if (b.provin = '-' OR b.provin = ' ',a.dirdest3,b.provin) AS provin," +
+                            "if (b.dpto = '-' OR b.dpto = ' ',a.dirdest4,b.dpto) AS dpto, b.ubigeo " +
                             "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
                             "LEFT JOIN mactacte t ON t.sergr = a.sergre AND t.corgr = a.corgre " +
                             "left join desc_sds c on c.idcodice = a.destino " +
@@ -719,23 +697,15 @@ namespace Grael2
                 string teley1 = "SON: " + nl.Convertir(ntot.ToString(), true) + row[3].ToString();         // v textoLeyenda_1
                 string tiref1 = "";     // detalle
                 string nudor1 = "";     // detalle
-                string tiref2 = "";     // detalle
-                string nudor2 = "";     // detalle
-                string tiref3 = "";     // detalle
-                string nudor3 = "";     // detalle
                 string Ctiref1 = "";     // cabecera
                 string Cnudor1 = "";     // cabecera
-                string Ctiref2 = "";     // cabecera
-                string Cnudor2 = "";     // cabecera
-                string Ctiref3 = "";     // cabecera
-                string Cnudor3 = "";     // cabecera
                 // ***************** EN OTROS CASOS VAN LAS GUIAS DEL CLIENTE
                 string insertcab = "insert into SPE_EINVOICEHEADER (serieNumero,fechaEmision,tipoDocumento,tipoMoneda," +
                     "numeroDocumentoEmisor,tipoDocumentoEmisor,nombreComercialEmisor,razonSocialEmisor,correoEmisor,codigoLocalAnexoEmisor," +
                     "ubigeoEmisor,direccionEmisor,provinciaEmisor,departamentoEmisor,distritoEmisor,urbanizacion,paisEmisor,codigoAuxiliar40_1,textoAuxiliar40_1," +
                     "tipoDocumentoAdquiriente,numeroDocumentoAdquiriente,razonSocialAdquiriente,correoAdquiriente,totalImpuestos," +
                     "totalValorVentaNetoOpGravadas,codigoLeyenda_1,textoLeyenda_1,bl_estadoRegistro," +
-                    "totalIgv,totalVenta,tipoOperacion,totalValorVenta,totalPrecioVenta";   // ,codigoAuxiliar500_1,textoAuxiliar500_1
+                    "totalIgv,totalVenta,tipoOperacion,totalValorVenta,totalPrecioVenta";
 
                 double totdet = 0;
                 string leydet = leydet1 + " " + leydet2 + " " + Program.ctadetra;                   // textoLeyenda_2
@@ -745,7 +715,7 @@ namespace Grael2
                     "@ubiemi,@diremi,@provemi,@depaemi,@distemi,@urbemi,@pasiemi,@codaux40_1,@etiaux40_1," +
                     "@tidoad,@nudoad,@rasoad,@coradq,@totimp," +
                     "@tovane,@coley1,@teley1,@estreg," +
-                    "@totigv,@totvta,@tipope,@tovane,@totvta";  // ,@tiref1,@nudor1
+                    "@totigv,@totvta,@tipope,@tovane,@totvta";
                 insertcab = insertcab + ")";
                 // primero insertamos el detalle, luego la cabecera
                 // *****************************   detalle   *****************************
@@ -1038,18 +1008,8 @@ namespace Grael2
                             {
                                 if (graba(i) == true)
                                 {
-                                    //try
-                                    //{
-                                        OSE_Fact_Elect();
-                                        grabfactelec(i);
-                                    //}
-                                    //catch(Exception ex)
-                                    //{
-                                    //    MessageBox.Show("No se puede generar el documento de venta electrónico" + Environment.NewLine +
-                                    //        "Se debe generar una anulación interna para el presente documento" + Environment.NewLine +
-                                    //        ex.Message, "Error en proveedor de Fact.Electrónica");
-                                    //    iserror = "si";
-                                    //}
+                                    OSE_Fact_Elect();
+                                    grabfactelec(i);
                                 }
                                 else
                                 {
@@ -1063,11 +1023,6 @@ namespace Grael2
                     {
                         return;
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Los datos no son nuevos en doc.venta", "Verifique duplicidad", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    return;
                 }
             }
             if (modo == "EDITAR")
@@ -1116,7 +1071,7 @@ namespace Grael2
                 }
                 // calculos 
                 Random rand = new Random();
-                int ntot = rand.Next(5,9); // valor entre 5 y 8
+                int ntot = rand.Next(valini, valfin); // valor entre 5 y 8    
                 double igv = 1.00 + (double.Parse(v_igv) / 100);
                 double subt = ntot / igv;   // 1.18
                 double migv = ntot - subt;

@@ -38,5 +38,7 @@ OJO: se pasan como "clientes" con DNI a los nombres con ruc 10 restados el dni, 
    el codigo RC-20220424-005
 - form facelect, en anulación que pregunte si genera baja electrónica ......... ok 28/04/2022 		OJO, no mueble el correlativo de la fact
 - form cmasivo, adecuaciones para hacer facturas si cliente tiene ruc ......... ok 02/05/2022
-- form cmasivo, correcciones en el fact electronica, forma de pago ............ 
-- form cmasivo, debe jalarse la direccion, dist, etc al menos de las FT ....... 
+- form cmasivo, correcciones en el fact electronica, forma de pago ............ ok 03/05/2022
+- form cmasivo, debe jalarse la direccion, dist, etc al menos de las FT ....... ok 03/05/2022 
+- form cmasivo, pulir, quitar los hardcode, poner direcc cliente si hay ....... ok 04/05/2022
+- form main, poner en el titulo el nombre de la base de datos grael ........... ok 04/05/2022

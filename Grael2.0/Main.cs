@@ -169,6 +169,8 @@ namespace Grael2
             menuStrip1.Dock = DockStyle.Top;
             //
             dataload();                                         // jalamos datos comunes a todo el sistema
+            // 
+            this.Text = this.Text + " - Base de Datos: " + login.dataG;
         }
         private void jalainfo()
         {
