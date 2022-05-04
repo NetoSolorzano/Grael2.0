@@ -401,12 +401,13 @@ namespace Grael2
                 }
                 // datos para el combobox documento de venta
                 consu = "select distinct a.idcodice,a.descrizionerid,a.enlace1,a.codsunat,b.glosaser,b.serie " +
-                    "from desc_tdo a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and a.idcodice=@tipb";
+                    "from desc_tdo a LEFT JOIN series b ON b.tipdoc = a.IDCodice where a.numero=@bloq and a.codigo=@codv and a.idcodice in (@tipb,@tipf)";
                 using (MySqlCommand cdv = new MySqlCommand(consu, conn))
                 {
                     cdv.Parameters.AddWithValue("@bloq", 1);
                     cdv.Parameters.AddWithValue("@codv", "venta");
                     cdv.Parameters.AddWithValue("@tipb", codbole);
+                    cdv.Parameters.AddWithValue("@tipf", codfact);
                     using (MySqlDataAdapter datv = new MySqlDataAdapter(cdv))
                     {
                         dtdvt.Clear();
