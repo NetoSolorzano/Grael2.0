@@ -544,7 +544,8 @@ namespace Grael2
                         string consulta =
                             "select c.descrizionerid as sede,a.fechope,concat(a.sergre,'-',a.corgre) as guia,d.descrizionerid as DOC,a.numdes as numdoc," +
                             "concat(trim(b.nombre), ' ', trim(b.nombre2)) as cliente,a.doctot as totalGR,a.id,a.docdes,a.moneda," +
-                            "a.destino,a.docremi,e.serie as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta,m.descrizionerid " +
+                            "a.destino,a.docremi,e.serie as serie,concat(o.descrizionerid, ' - ', c.descrizionerid) as ruta,m.descrizionerid," +
+                            "b.direc,b.dist,b.provin,b.dpto,b.ubigeo " +
                             "from magrem a left join anag_cli b on b.docu = a.docdes and b.ruc = a.numdes " +
                             "LEFT JOIN mactacte t ON t.sergr = a.sergre AND t.corgr = a.corgre " +
                             "left join desc_sds c on c.idcodice = a.destino " +
@@ -585,9 +586,14 @@ namespace Grael2
                                         dr.GetString(11),
                                         dr.GetString(12),
                                         dr.GetString(13),
-                                        dr.GetString(14)
+                                        dr.GetString(14),
+                                        dr.GetString(15),
+                                        dr.GetString(16),
+                                        dr.GetString(17),
+                                        dr.GetString(18),
+                                        dr.GetString(19)
                                         );
-
+                                    // sede,a.fechope,guia,DOC,numdoc,cliente,totalGR,a.id,a.docdes,a.moneda,a.destino,a.docremi,serie,ruta,m.descrizionerid,b.direc,b.dist,b.provin,b.dpto,b.ubigeo
                                     retorna = true;
                                 }
                             }
@@ -894,12 +900,12 @@ namespace Grael2
                     return;
                 }
                 // adicionales cabecera     SPE_EINVOICEHEADER_ADD
-                string diradq = "-";
-                string ubiadq = "";
+                string diradq = dataGridView1.Rows[ind].Cells[18].Value.ToString().Trim();
+                string ubiadq = dataGridView1.Rows[ind].Cells[22].Value.ToString().Trim();
                 string urbadq = "-";
-                string proadq = "-";
-                string depadq = "-";
-                string disadq = "-";
+                string proadq = dataGridView1.Rows[ind].Cells[20].Value.ToString().Trim();
+                string depadq = dataGridView1.Rows[ind].Cells[21].Value.ToString().Trim();
+                string disadq = dataGridView1.Rows[ind].Cells[19].Value.ToString().Trim();
                 string paiadq = "PE";
                 string formpa = "0";        // TODAS CONTADO
                 string insadd = "insert into SPE_EINVOICEHEADER_ADD (" +
